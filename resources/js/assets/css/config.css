@@ -16,7 +16,7 @@ td .descripcion {
     font-style: italic;
 }
 
-.content-wrapper {
+.app-content {
     background-color: var(--bg6);
 }
 
@@ -92,28 +92,28 @@ td .descripcion {
     padding: 10px 15px;
 }
 
-.content-wrapper h1,
-.content-wrapper h2,
-.content-wrapper h3,
-.content-wrapper h4,
-.content-wrapper h5 {
+.app-content h1,
+.app-content h2,
+.app-content h3,
+.app-content h4,
+.app-content h5 {
     color: var(--bg3);
 }
 
-.content-wrapper .descripcion {
+.app-content .descripcion {
     color: white;
 }
 
-.content-wrapper .breadcrumb {
+.app-content .breadcrumb {
     padding: 5px;
 }
 
-.content-wrapper .breadcrumb li.breadcrumb-item a {
+.app-content .breadcrumb li.breadcrumb-item a {
     color: var(--bg1) !important;
 }
 
-.content-wrapper .breadcrumb li.active a,
-.content-wrapper .breadcrumb li.active {
+.app-content .breadcrumb li.active a,
+.app-content .breadcrumb li.active {
     font-weight: bold;
     color: var(--bg1);
 }
@@ -203,10 +203,11 @@ body .app-sidebar .nav > .nav-item > .nav-link {
     width: 100%;
 }
 
-ul.nav.nav-treeview {
-    max-height: 0;
+.app-sidebar .nav-item ul.nav.nav-treeview {
+    display: block;
     overflow: hidden;
-    transition: max-height 3s ease;
+    max-height: 0px;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* MI TABLE */

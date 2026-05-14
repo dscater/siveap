@@ -30,9 +30,6 @@ form .v-input.v-input--error {
     border: solid 1px var(--success);
 }
 
-#app .btn {
-    font-size: 1em;
-}
 #app input.form-control {
     font-size: 0.84em;
 }
@@ -304,4 +301,15 @@ input.checkboxTable:checked:disabled {
 
 .cliente-pago .total {
     background-color: var(--bgSuccess2);
+}
+
+.form-control {
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-control:focus {
+    border-color: #86b7fe;
+    box-shadow: none;
 }

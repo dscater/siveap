@@ -1,26 +1,22 @@
 <script setup>
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import { useRoles } from "@/composables/roles/useRoles";
-import { useAxios } from "@/composables/axios/useAxios";
+import { Head, Link, usePage } from "@inertiajs/vue3";
+import { useTipoTransmisions } from "@/composables/tipo_transmisions/useTipoTransmisions";
 import { ref, onMounted, onBeforeMount } from "vue";
-import { useAppStore } from "@/stores/aplicacion/appStore";
-// import { useMenu } from "@/composables/useMenu";
 import Formulario from "./Formulario.vue";
-// const { mobile, identificaDispositivo } = useMenu();
+import { useAppStore } from "@/stores/aplicacion/appStore";
+import { useAxios } from "@/composables/axios/useAxios";
 const { props: props_page } = usePage();
 const appStore = useAppStore();
+const { axiosDelete } = useAxios();
+
 onBeforeMount(() => {
     appStore.startLoading();
 });
 
-onMounted(() => {
-    appStore.stopLoading();
-});
-
-const { setRole, limpiarRole, form } = useRoles();
-const { axiosDelete } = useAxios();
+const { setTipoTransmision, limpiarTipoTransmision, form } =
+    useTipoTransmisions();
 
 const miTable = ref(null);
 const headers = [
@@ -28,11 +24,21 @@ const headers = [
         label: "",
         key: "id",
         sortable: true,
-        width: "4%",
+        width: "3%",
     },
     {
-        label: "NOMBRE DE ROLES",
+        label: "NOMBRE",
         key: "nombre",
+        sortable: true,
+    },
+    {
+        label: "LATITUD",
+        key: "latitud",
+        sortable: true,
+    },
+    {
+        label: "LONGITUD",
+        key: "longitud",
         sortable: true,
     },
     {
@@ -49,25 +55,22 @@ const multiSearch = ref({
 });
 
 const muestra_formulario = ref(false);
+const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarRole();
+    limpiarTipoTransmision();
     muestra_formulario.value = true;
-};
-
-const editarPermisos = (item) => {
-    router.get(route("roles.edit", item.id));
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarRole();
+        limpiarTipoTransmision();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarRole = (item) => {
+const eliminarTipoTransmision = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
         html: `<strong>${item.nombre}</strong>`,
@@ -76,27 +79,35 @@ const eliminarRole = (item) => {
         cancelButtonText: "No, cancelar",
         denyButtonText: `No, cancelar`,
         customClass: {
-            confirmButton: "btn-danger",
+            confirmButton: "bg-danger",
+            cancelButton: "bg-light text-dark border border-secondary",
         },
     }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
-            let respuesta = await axiosDelete(route("roles.destroy", item.id));
+            let respuesta = await axiosDelete(
+                route("tipo_transmisions.destroy", item.id),
+            );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
             }
         }
     });
 };
+
+onMounted(async () => {
+    appStore.stopLoading();
+});
 </script>
 <template>
-    <Head title="Roles"></Head>
+    <Head title="Tipo de Transmisiones"></Head>
+
     <Content>
         <template #header>
-            <div class="row mb-2">
+            <div class="row">
                 <div class="col-sm-6">
                     <h3 class="m-0">
-                        <i class="fa fa-list"></i> Roles y Permisos
+                        <i class="fa fa-list"></i> Tipo de Transmisiones
                     </h3>
                 </div>
                 <!-- /.col -->
@@ -105,13 +116,16 @@ const eliminarRole = (item) => {
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">Roles y Permisos</li>
+                        <li class="breadcrumb-item active">
+                            Tipo de Transmisiones
+                        </li>
                     </ol>
                 </div>
                 <!-- /.col -->
             </div>
             <!-- /.row -->
         </template>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
@@ -120,29 +134,31 @@ const eliminarRole = (item) => {
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'roles.create',
+                                    'tipo_transmisions.create',
                                 )
                             "
                             type="button"
-                            class="btn btn-primary"
+                            class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nuevo Role
+                            <i class="fa fa-plus"></i> Nuevo Tipo de Transmisión
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
                         <div class="row justify-content-end">
                             <div class="col-md-5">
-                                <div class="input-group">
+                                <div
+                                    class="input-group"
+                                    style="align-items: end"
+                                >
                                     <input
-                                        type="search"
                                         v-model="multiSearch.search"
                                         placeholder="Buscar"
                                         class="form-control border-1 border-right-0"
                                     />
                                     <div class="input-append">
                                         <button
-                                            class="btn btn-light bg-white rounded-0 border-left-0"
+                                            class="btn btn-default rounded-0 border-left-0"
                                             @click="updateDatos"
                                         >
                                             <i class="fa fa-search"></i>
@@ -160,7 +176,7 @@ const eliminarRole = (item) => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('roles.paginado')"
+                            :url="route('tipo_transmisions.paginado')"
                             :numPages="5"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
@@ -169,37 +185,36 @@ const eliminarRole = (item) => {
                             :header-class="'bg__primary'"
                             fixed-header
                         >
-                            <template #imagen="{ item }">
-                                <img :src="item.url_imagen" height="90px" />
+                            <template #foto="{ item }">
+                                <img
+                                    class="direct-chat-img"
+                                    :src="item.url_foto"
+                                    alt="Foto"
+                                />
+                            </template>
+
+                            <template #acceso="{ item }">
+                                <div
+                                    class="badge text-sm"
+                                    :class="[
+                                        item.acceso == 1
+                                            ? 'bg-success'
+                                            : 'bg-danger',
+                                    ]"
+                                >
+                                    {{
+                                        item.acceso == 1
+                                            ? "HABILITADO"
+                                            : "DESHABILITADO"
+                                    }}
+                                </div>
                             </template>
                             <template #accion="{ item }">
                                 <template
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'roles.edit',
-                                        )
-                                    "
-                                >
-                                    <el-tooltip
-                                        class="box-item"
-                                        effect="dark"
-                                        content="Permisos"
-                                        placement="left-start"
-                                    >
-                                        <button
-                                            class="btn btn-info"
-                                            @click="editarPermisos(item)"
-                                        >
-                                            <i class="fa fa-list"></i></button
-                                    ></el-tooltip>
-                                </template>
-
-                                <template
-                                    v-if="
-                                        props_page.auth?.user.permisos == '*' ||
-                                        props_page.auth?.user.permisos.includes(
-                                            'roles.edit',
+                                            'tipo_transmisions.edit',
                                         )
                                     "
                                 >
@@ -212,22 +227,19 @@ const eliminarRole = (item) => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setRole(item);
+                                                setTipoTransmision(item);
                                                 muestra_formulario = true;
                                             "
                                         >
                                             <i class="fa fa-pen"></i></button
                                     ></el-tooltip>
                                 </template>
-
                                 <template
                                     v-if="
-                                        item.id != 2 &&
-                                        (props_page.auth?.user.permisos ==
-                                            '*' ||
-                                            props_page.auth?.user.permisos.includes(
-                                                'roles.destroy',
-                                            ))
+                                        props_page.auth?.user.permisos == '*' ||
+                                        props_page.auth?.user.permisos.includes(
+                                            'tipo_transmisions.destroy',
+                                        )
                                     "
                                 >
                                     <el-tooltip
@@ -238,7 +250,9 @@ const eliminarRole = (item) => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="eliminarRole(item)"
+                                            @click="
+                                                eliminarTipoTransmision(item)
+                                            "
                                         >
                                             <i
                                                 class="fa fa-trash-alt"
@@ -251,12 +265,13 @@ const eliminarRole = (item) => {
                 </div>
             </div>
         </div>
-        <Formulario
-            v-if="muestra_formulario"
-            :muestra_formulario="muestra_formulario"
-            :form="form"
-            @envio-formulario="updateDatatable"
-            @cerrar-formulario="muestra_formulario = false"
-        ></Formulario>
     </Content>
+
+    <Formulario
+        v-if="muestra_formulario"
+        :muestra_formulario="muestra_formulario"
+        :form="form"
+        @envio-formulario="updateDatatable"
+        @cerrar-formulario="muestra_formulario = false"
+    ></Formulario>
 </template>

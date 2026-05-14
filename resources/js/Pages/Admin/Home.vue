@@ -280,12 +280,12 @@ onMounted(() => {
 
                         <p class="font-weight-600">{{ item.label }}</p>
                     </div>
-                    <div class="icon">
+                    <div class="small-box-icon">
                         <i class="text-dark fa" :class="[item.icon]"></i>
                     </div>
                     <Link
                         :href="route(item.url)"
-                        class="small-box-footer bg-item"
+                        class="small-box-footer bg-item link-light link-underline-opacity-0 link-underline-opacity-50-hover"
                         >Ver más <i class="fa fa-arrow-alt-circle-right"></i
                     ></Link>
                 </div>

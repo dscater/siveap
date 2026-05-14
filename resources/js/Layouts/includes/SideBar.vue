@@ -28,12 +28,19 @@ const sincronizarMenus = () => {
     ) {
         openMenus.usuarios = true;
     }
+
+    if (
+        route_current.value == "enfermedads.index" ||
+        route_current.value == "categoria_enfermedads.index" ||
+        route_current.value == "tipo_transmisions.index"
+    ) {
+        openMenus.enfermedads = true;
+    }
 };
 
 const openMenus = reactive({
     usuarios: false,
-    ventas: false,
-    inventario: false,
+    enfermedads: false,
 });
 
 router.on("navigate", (event) => {
@@ -141,7 +148,7 @@ onUnmounted(() => {});
                         v-if="
                             permisos == '*' ||
                             permisos.includes('usuarios.index') ||
-                            permisos.includes('clientes.index') ||
+                            permisos.includes('alerta_epidemiologicas.index') ||
                             permisos.includes('sucursals.index') ||
                             permisos.includes('tipo_certificados.index') ||
                             permisos.includes('certificados.index')
@@ -149,15 +156,94 @@ onUnmounted(() => {});
                     >
                         ADMINISTRACIÓN
                     </li>
-                    <!-- <ItemMenu
+                    <ItemMenu
                         v-if="
                             permisos == '*' ||
-                            permisos.includes('clientes.index')
+                            permisos.includes('alerta_epidemiologicas.index')
                         "
-                        :label="'Clientes'"
-                        :ruta="'clientes.index'"
-                        :icon="'fa fa-user-friends'"
-                    ></ItemMenu> -->
+                        :label="'Alertas Epidemiologicas'"
+                        :ruta="'alerta_epidemiologicas.index'"
+                        :icon="'fa fa-map'"
+                    ></ItemMenu>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('comunidads.index')
+                        "
+                        :label="'Comunidades'"
+                        :ruta="'comunidads.index'"
+                        :icon="'fa fa-list'"
+                    ></ItemMenu>
+                    <li
+                        class="nav-item"
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('enfermedads.index') ||
+                            permisos.includes('categoria_enfermedads.index') ||
+                            permisos.includes('tipo_transmisions.index')
+                        "
+                        :class="{ 'menu-open': openMenus.enfermedads }"
+                    >
+                        <a
+                            href="#"
+                            class="nav-link"
+                            :class="[
+                                route_current == 'enfermedads.index' ||
+                                route_current ==
+                                    'categoria_enfermedads.index' ||
+                                route_current == 'tipo_transmisions.index'
+                                    ? 'active menu-is-opening menu-open'
+                                    : '',
+                            ]"
+                            @click.prevent="toggleSubMenu('enfermedads')"
+                        >
+                            <i class="nav-icon fa fa-clipboard-list"></i>
+                            <p>
+                                Enfermedades
+                                <i class="nav-arrow fa fa-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul
+                            class="nav nav-treeview"
+                            role="navigation"
+                            aria-label="Navigation 4"
+                            :style="{
+                                maxHeight: openMenus.enfermedads
+                                    ? '500px'
+                                    : '0px',
+                            }"
+                        >
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes('enfermedads.index')
+                                "
+                                :label="'Enfermedades'"
+                                :ruta="'enfermedads.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes(
+                                        'categoria_enfermedads.index',
+                                    )
+                                "
+                                :label="'Categoría Enfermedades'"
+                                :ruta="'categoria_enfermedads.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes('tipo_transmisions.index')
+                                "
+                                :label="'Tipo de Transmisiones'"
+                                :ruta="'tipo_transmisions.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                        </ul>
+                    </li>
                     <li
                         class="nav-item"
                         v-if="
@@ -189,9 +275,7 @@ onUnmounted(() => {});
                             role="navigation"
                             aria-label="Navigation 4"
                             :style="{
-                                maxHeight: openMenus.usuarios ? '500px' : '0',
-                                overflow: 'hidden',
-                                transition: 'max-height 0.3s ease',
+                                maxHeight: openMenus.usuarios ? '500px' : '0px',
                             }"
                         >
                             <ItemMenu

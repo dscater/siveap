@@ -142,23 +142,19 @@ const eliminarSucursal = (item) => {
                     <div class="col-md-8 my-1">
                         <div class="row justify-content-end">
                             <div class="col-md-5">
-                                <div
-                                    class="input-group"
-                                    style="align-items: end"
-                                >
+                                <div class="input-group">
                                     <input
                                         v-model="multiSearch.search"
+                                        type="search"
                                         placeholder="Buscar"
                                         class="form-control border-1 border-right-0"
                                     />
-                                    <div class="input-append">
-                                        <button
-                                            class="btn btn-default rounded-0 border-left-0"
-                                            @click="updateDatos"
-                                        >
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
+                                    <button
+                                        class="btn btn-light bg-white rounded-0 border-left-0"
+                                        @click="updateDatos"
+                                    >
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
