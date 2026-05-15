@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 14-05-2026 a las 22:00:12
+-- Tiempo de generación: 15-05-2026 a las 22:06:06
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -104,6 +104,14 @@ CREATE TABLE `centros` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `centros`
+--
+
+INSERT INTO `centros` (`id`, `nombre`, `direccion`, `latitud`, `longitud`, `fecha_registro`, `created_at`, `updated_at`) VALUES
+(1, 'CENTRO 1', 'DIRECCION CENTRO #1', '-16.12535607198427', '-67.19860553741456', NULL, '2026-05-15 21:20:10', '2026-05-15 21:20:10'),
+(2, 'CENTRO 2', '', '-16.12803580219172', '-67.19367027282716', NULL, '2026-05-15 21:20:25', '2026-05-15 21:20:25');
 
 -- --------------------------------------------------------
 
@@ -229,7 +237,13 @@ INSERT INTO `historial_accions` (`id`, `user_id`, `accion`, `descripcion`, `dato
 (9, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"TIPO TRANSMISION 1\", \"created_at\": \"2026-05-14T21:59:16.000000Z\", \"updated_at\": \"2026-05-14T21:59:16.000000Z\"}', NULL, 'TIPO DE TRANSMISIÓN', '2026-05-14', '17:59:16', '2026-05-14 21:59:16', '2026-05-14 21:59:16'),
 (10, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:23.000000Z\"}', NULL, 'TIPO DE TRANSMISIÓN', '2026-05-14', '17:59:23', '2026-05-14 21:59:23', '2026-05-14 21:59:23'),
 (11, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:23.000000Z\"}', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2 ASD\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:41.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-14', '17:59:41', '2026-05-14 21:59:41', '2026-05-14 21:59:41'),
-(12, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2 ASD\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:41.000000Z\"}', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:47.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-14', '17:59:47', '2026-05-14 21:59:47', '2026-05-14 21:59:47');
+(12, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2 ASD\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:41.000000Z\"}', '{\"id\": 2, \"nombre\": \"TIPO TRANSMISION 2\", \"created_at\": \"2026-05-14T21:59:23.000000Z\", \"updated_at\": \"2026-05-14T21:59:47.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-14', '17:59:47', '2026-05-14 21:59:47', '2026-05-14 21:59:47'),
+(13, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"CENTRO 1\", \"latitud\": \"-16.12535607198427\", \"longitud\": \"-67.19860553741456\", \"direccion\": \"DIRECCION CENTRO #1\", \"created_at\": \"2026-05-15T21:20:10.000000Z\", \"updated_at\": \"2026-05-15T21:20:10.000000Z\"}', NULL, 'CENTROS', '2026-05-15', '17:20:10', '2026-05-15 21:20:10', '2026-05-15 21:20:10'),
+(14, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 2, \"nombre\": \"CENTRO 2\", \"latitud\": \"-16.12803580219172\", \"longitud\": \"-67.19367027282716\", \"direccion\": \"\", \"created_at\": \"2026-05-15T21:20:25.000000Z\", \"updated_at\": \"2026-05-15T21:20:25.000000Z\"}', NULL, 'CENTROS', '2026-05-15', '17:20:25', '2026-05-15 21:20:25', '2026-05-15 21:20:25'),
+(15, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN ROLE', '{\"id\": 3, \"nombre\": \"MÉDICO\", \"created_at\": \"2026-05-15T21:24:43.000000Z\", \"updated_at\": \"2026-05-15T21:24:43.000000Z\"}', NULL, 'ROLES', '2026-05-15', '17:24:43', '2026-05-15 21:24:43', '2026-05-15 21:24:43'),
+(16, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN ROLE', '{\"id\": 4, \"nombre\": \"SECRETARIA\", \"created_at\": \"2026-05-15T21:24:49.000000Z\", \"updated_at\": \"2026-05-15T21:24:49.000000Z\"}', NULL, 'ROLES', '2026-05-15', '17:24:49', '2026-05-15 21:24:49', '2026-05-15 21:24:49'),
+(17, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"123456\", \"id\": 2, \"dir\": \"ZONA LOS PEDREGALES #22\", \"fono\": \"78787878\", \"foto\": \"21778880973.jpg\", \"tipo\": \"ADMINISTRACIÓN\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": \"juan@gmail.com\", \"nombre\": \"JUAN\", \"materno\": \"MAMANI\", \"paterno\": \"PERES\", \"role_id\": \"2\", \"usuario\": \"JPERES\", \"centro_id\": null, \"created_at\": \"2026-05-15T21:36:13.000000Z\", \"updated_at\": \"2026-05-15T21:36:13.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:36:13', '2026-05-15 21:36:13', '2026-05-15 21:36:13'),
+(18, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"56765756\", \"id\": 3, \"dir\": \"\", \"fono\": \"67676767\", \"tipo\": \"CENTRO MÉDICO\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": null, \"nombre\": \"MARIO\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"role_id\": \"3\", \"usuario\": \"MGONZALES\", \"centro_id\": \"1\", \"created_at\": \"2026-05-15T21:39:19.000000Z\", \"updated_at\": \"2026-05-15T21:39:19.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:39:19', '2026-05-15 21:39:19', '2026-05-15 21:39:19');
 
 -- --------------------------------------------------------
 
@@ -390,7 +404,9 @@ CREATE TABLE `roles` (
 
 INSERT INTO `roles` (`id`, `nombre`, `permisos`, `usuarios`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'SUPER USUARIO', 1, 0, 1, '2026-05-13 14:34:05', '2026-05-13 14:34:05'),
-(2, 'ADMINISTADOR', 0, 1, 1, '2026-05-13 21:35:22', '2026-05-13 21:35:22');
+(2, 'ADMINISTADOR', 0, 1, 1, '2026-05-13 21:35:22', '2026-05-13 21:35:22'),
+(3, 'MÉDICO', 0, 1, 1, '2026-05-15 21:24:43', '2026-05-15 21:24:43'),
+(4, 'SECRETARIA', 0, 1, 1, '2026-05-15 21:24:49', '2026-05-15 21:24:49');
 
 -- --------------------------------------------------------
 
@@ -451,6 +467,7 @@ CREATE TABLE `users` (
   `foto` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `role_id` bigint UNSIGNED DEFAULT NULL,
   `acceso` int NOT NULL,
+  `tipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `centro_id` bigint UNSIGNED DEFAULT NULL,
   `centro_todos` int NOT NULL DEFAULT '0',
   `fecha_registro` date NOT NULL,
@@ -463,8 +480,10 @@ CREATE TABLE `users` (
 -- Volcado de datos para la tabla `users`
 --
 
-INSERT INTO `users` (`id`, `usuario`, `nombre`, `paterno`, `materno`, `ci`, `ci_exp`, `dir`, `correo`, `fono`, `password`, `foto`, `role_id`, `acceso`, `centro_id`, `centro_todos`, `fecha_registro`, `status`, `created_at`, `updated_at`) VALUES
-(1, 'admin', 'admin', 'admin', '', '0', '', '', '', '', '$2y$12$Xx2s8LvuO3NuhNn0CoCl9uyFhDToIwgVr1uTdkj0KaoH8NHDJjmbm', NULL, 1, 1, NULL, 1, '2026-05-13', 1, '2026-05-13 14:34:19', '2026-05-13 14:34:19');
+INSERT INTO `users` (`id`, `usuario`, `nombre`, `paterno`, `materno`, `ci`, `ci_exp`, `dir`, `correo`, `fono`, `password`, `foto`, `role_id`, `acceso`, `tipo`, `centro_id`, `centro_todos`, `fecha_registro`, `status`, `created_at`, `updated_at`) VALUES
+(1, 'admin', 'admin', 'admin', '', '0', '', '', '', '', '$2y$12$Xx2s8LvuO3NuhNn0CoCl9uyFhDToIwgVr1uTdkj0KaoH8NHDJjmbm', NULL, 1, 1, 'ADMINISTRACIÓN', NULL, 1, '2026-05-13', 1, '2026-05-13 14:34:19', '2026-05-13 14:34:19'),
+(2, 'JPERES', 'JUAN', 'PERES', 'MAMANI', '123456', 'LP', 'ZONA LOS PEDREGALES #22', 'juan@gmail.com', '78787878', '$2y$12$NscmHfNEzfQT.tp9XppJYugxRyZvAvzhVxkznh9pHxVvy2ohxSd6u', '21778880973.jpg', 2, 1, 'ADMINISTRACIÓN', NULL, 0, '2026-05-15', 1, '2026-05-15 21:36:13', '2026-05-15 21:36:13'),
+(3, 'MGONZALES', 'MARIO', 'GONZALES', '', '56765756', 'LP', '', NULL, '67676767', '$2y$12$4wzNi8P8J1X73GIGjBfWVOn1nZMc8Re3OUGM0dC8Y0hP2oZyeiBZ.', NULL, 3, 1, 'CENTRO MÉDICO', 1, 0, '2026-05-15', 1, '2026-05-15 21:39:19', '2026-05-15 21:39:19');
 
 --
 -- Índices para tablas volcadas
@@ -637,7 +656,7 @@ ALTER TABLE `categoria_enfermedads`
 -- AUTO_INCREMENT de la tabla `centros`
 --
 ALTER TABLE `centros`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `comunidads`
@@ -667,7 +686,7 @@ ALTER TABLE `enfermedads`
 -- AUTO_INCREMENT de la tabla `historial_accions`
 --
 ALTER TABLE `historial_accions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -715,7 +734,7 @@ ALTER TABLE `reglas_alertas`
 -- AUTO_INCREMENT de la tabla `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `seguimientos`
@@ -733,7 +752,7 @@ ALTER TABLE `tipo_transmisions`
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

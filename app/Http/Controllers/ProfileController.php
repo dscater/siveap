@@ -21,7 +21,7 @@ class ProfileController extends Controller
     public function edit(Request $request): Response
     {
         return Inertia::render('Admin/Profile/Edit', [
-            'user' => $request->user(),
+            'user' => $request->user()->load(["role"]),
         ]);
     }
 

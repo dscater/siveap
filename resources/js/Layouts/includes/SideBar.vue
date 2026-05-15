@@ -36,11 +36,19 @@ const sincronizarMenus = () => {
     ) {
         openMenus.enfermedads = true;
     }
+
+    if (
+        route_current.value == "reportes.usuarios" ||
+        route_current.value == "reportes.clientes"
+    ) {
+        openMenus.enfermedads = true;
+    }
 };
 
 const openMenus = reactive({
     usuarios: false,
     enfermedads: false,
+    reportes: false,
 });
 
 router.on("navigate", (event) => {
@@ -66,7 +74,7 @@ const salir = () => {
         cancelButtonText: "Cancelar",
         denyButtonText: `Cancelar`,
         customClass: {
-            confirmButton: "btn-success",
+            confirmButton: "bg-success",
         },
     }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
@@ -85,9 +93,9 @@ onUnmounted(() => {});
 </script>
 <template>
     <!-- Main Sidebar Container -->
-    <aside class="app-sidebar shadow elevation-1 bg-white">
+    <aside class="app-sidebar shadow bgWhite">
         <!-- Brand Logo -->
-        <div class="sidebar-brand">
+        <div class="sidebar-brand bg1">
             <a
                 :href="route('inicio')"
                 class="brand-link d-flex justify-content-center align-items-center py-0"
@@ -95,9 +103,10 @@ onUnmounted(() => {});
                 <img
                     :src="configuracionStore.oConfiguracion.url_logo"
                     alt="Logo"
-                    class="brand-image opacity-75 shadow"
+                    class="rounded-circle"
+                    style="max-height: 51px"
                 />
-                <span class="brand-text font-weight-600 ml-1">{{
+                <span class="brand-text font-weight-600 ml-1 text-white">{{
                     configuracionStore.oConfiguracion.nombre_sistema
                 }}</span>
             </a>
@@ -149,9 +158,7 @@ onUnmounted(() => {});
                             permisos == '*' ||
                             permisos.includes('usuarios.index') ||
                             permisos.includes('alerta_epidemiologicas.index') ||
-                            permisos.includes('sucursals.index') ||
-                            permisos.includes('tipo_certificados.index') ||
-                            permisos.includes('certificados.index')
+                            permisos.includes('centros.index')
                         "
                     >
                         ADMINISTRACIÓN
@@ -164,6 +171,24 @@ onUnmounted(() => {});
                         :label="'Alertas Epidemiologicas'"
                         :ruta="'alerta_epidemiologicas.index'"
                         :icon="'fa fa-map'"
+                    ></ItemMenu>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('caso_epidemiologicos.index')
+                        "
+                        :label="'Casos Epidemiológicos'"
+                        :ruta="'caso_epidemiologicos.index'"
+                        :icon="'fa fa-book-medical'"
+                    ></ItemMenu>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('pacientes.index')
+                        "
+                        :label="'Pacientes'"
+                        :ruta="'pacientes.index'"
+                        :icon="'fa fa-user-friends'"
                     ></ItemMenu>
                     <ItemMenu
                         v-if="
@@ -197,7 +222,7 @@ onUnmounted(() => {});
                             ]"
                             @click.prevent="toggleSubMenu('enfermedads')"
                         >
-                            <i class="nav-icon fa fa-clipboard-list"></i>
+                            <i class="nav-icon fa fa-viruses"></i>
                             <p>
                                 Enfermedades
                                 <i class="nav-arrow fa fa-chevron-right"></i>
@@ -225,6 +250,15 @@ onUnmounted(() => {});
                             <ItemMenu
                                 v-if="
                                     permisos == '*' ||
+                                    permisos.includes('enfermedads.index')
+                                "
+                                :label="'Reglas Alertas'"
+                                :ruta="'enfermedads.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
                                     permisos.includes(
                                         'categoria_enfermedads.index',
                                     )
@@ -244,6 +278,15 @@ onUnmounted(() => {});
                             ></ItemMenu>
                         </ul>
                     </li>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('centros.index')
+                        "
+                        :label="'Centros'"
+                        :ruta="'centros.index'"
+                        :icon="'fa fa-hospital'"
+                    ></ItemMenu>
                     <li
                         class="nav-item"
                         v-if="
@@ -303,27 +346,56 @@ onUnmounted(() => {});
                         v-if="
                             permisos == '*' ||
                             permisos.includes('reportes.usuarios') ||
-                            permisos.includes('reportes.clientes') ||
-                            permisos.includes('reportes.certificados') ||
-                            permisos.includes(
-                                'reportes.certificados_interno',
-                            ) ||
-                            permisos.includes('reportes.historial_accions') ||
-                            permisos.includes('reportes.gcemitidos') ||
-                            permisos.includes('reportes.gmemitidos')
+                            permisos.includes('reportes.clientes')
                         "
                     >
                         REPORTES
                     </li>
-                    <ItemMenu
+                    <li
+                        class="nav-item"
                         v-if="
                             permisos == '*' ||
-                            permisos.includes('reportes.usuarios')
+                            permisos.includes('reportes.usuarios') ||
+                            permisos.includes('reportes.clientes')
                         "
-                        :label="'Lista de Usuarios'"
-                        :ruta="'reportes.usuarios'"
-                        :icon="'fa fa-file-pdf'"
-                    ></ItemMenu>
+                        :class="{ 'menu-open': openMenus.reportes }"
+                    >
+                        <a
+                            href="#"
+                            class="nav-link"
+                            :class="[
+                                route_current == 'reportes.usuarios' ||
+                                route_current == 'reportes.clientes'
+                                    ? 'active menu-is-opening menu-open'
+                                    : '',
+                            ]"
+                            @click.prevent="toggleSubMenu('reportes')"
+                        >
+                            <i class="nav-icon fa fa-file-pdf"></i>
+                            <p>
+                                Reportes
+                                <i class="nav-arrow fa fa-chevron-right"></i>
+                            </p>
+                        </a>
+                        <ul
+                            class="nav nav-treeview"
+                            role="navigation"
+                            aria-label="Navigation 4"
+                            :style="{
+                                maxHeight: openMenus.reportes ? '500px' : '0px',
+                            }"
+                        >
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes('reportes.usuarios')
+                                "
+                                :label="'Lista de Usuarios'"
+                                :ruta="'reportes.usuarios'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                        </ul>
+                    </li>
                     <li class="nav-header font-weight-bold">OTROS</li>
                     <ItemMenu
                         v-if="
@@ -334,11 +406,11 @@ onUnmounted(() => {});
                         :ruta="'configuracions.index'"
                         :icon="'fa fa-cog'"
                     ></ItemMenu>
-                    <!-- <ItemMenu
+                    <ItemMenu
                         :label="'Perfil'"
                         :ruta="'profile.edit'"
-                        :icon="'fa fa-id-card'"
-                    ></ItemMenu> -->
+                        :icon="'fa fa-user'"
+                    ></ItemMenu>
                     <li class="nav-item">
                         <a
                             href="#"

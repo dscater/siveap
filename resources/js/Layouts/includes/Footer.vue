@@ -12,7 +12,7 @@ onBeforeUnmount(() => {
 
 <template>
     <!-- Main Footer -->
-    <footer class="app-footer">
+    <footer class="app-footer bgYellow2">
         <!-- To the right -->
         <!-- <div class="float-right d-none d-sm-inline">
             <a href="https://github.com/dscater" target="_blank"

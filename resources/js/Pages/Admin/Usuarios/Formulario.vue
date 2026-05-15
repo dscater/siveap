@@ -30,6 +30,13 @@ const listExpedido = [
     { value: "BN", label: "Beni" },
 ];
 
+const listRoles = ref([]);
+const cargarRoles = () => {
+    axios.get(route("roles.listado")).then((response) => {
+        listRoles.value = response.data.roles;
+    });
+};
+
 const listTipos = ref([]);
 const cargarTipoUsuarios = () => {
     axios.get(route("tipo_usuarios.listado")).then((response) => {
@@ -37,10 +44,10 @@ const cargarTipoUsuarios = () => {
     });
 };
 
-const listSucursals = ref([]);
-const cargarSucursals = () => {
-    axios.get(route("sucursals.listado")).then((response) => {
-        listSucursals.value = response.data.sucursals;
+const listCentros = ref([]);
+const cargarCentros = () => {
+    axios.get(route("centros.listado")).then((response) => {
+        listCentros.value = response.data.centros;
     });
 };
 
@@ -145,8 +152,9 @@ const cerrarFormulario = () => {
 };
 
 const cargarListas = () => {
+    cargarRoles();
+    cargarCentros();
     cargarTipoUsuarios();
-    cargarSucursals();
 };
 
 const options = ref([]);
@@ -351,8 +359,11 @@ onMounted(() => {
                             v-model="form.tipo"
                         >
                             <option value="">- Seleccione -</option>
-                            <option v-for="item in listTipos" :value="item">
-                                {{ item }}
+                            <option
+                                v-for="item in listTipos"
+                                :value="item.value"
+                            >
+                                {{ item.label }}
                             </option>
                         </select>
 
@@ -366,31 +377,58 @@ onMounted(() => {
                         </ul>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <label class="required">Seleccionar Sucursal</label>
+                        <label class="required">Seleccionar Role</label>
+                        <select
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.role_id,
+                            }"
+                            v-model="form.role_id"
+                        >
+                            <option value="">- Seleccione -</option>
+                            <option v-for="item in listRoles" :value="item.id">
+                                {{ item.nombre }}
+                            </option>
+                        </select>
+
+                        <ul
+                            v-if="form.errors?.role_id"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.role_id }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div
+                        class="col-md-4 mt-2"
+                        v-if="form.tipo == 'CENTRO MÉDICO'"
+                    >
+                        <label class="required">Seleccionar Centro</label>
                         <el-select
                             :class="{
-                                'parsley-error': form.errors?.sucursal_id,
+                                'parsley-error': form.errors?.centro_id,
                             }"
                             no-data-text="Sin datos"
                             no-data-match="Sin resultados"
                             size="large"
                             placeholder="- Seleccione -"
-                            v-model="form.sucursal_id"
+                            v-model="form.centro_id"
                             filterable
                         >
                             <el-option
-                                v-for="item in listSucursals"
+                                v-for="item in listCentros"
                                 :key="item.id"
                                 :value="item.id"
                                 :label="item.nombre"
                             ></el-option>
                         </el-select>
                         <ul
-                            v-if="form.errors?.sucursal_id"
+                            v-if="form.errors?.centro_id"
                             class="list-unstyled text-danger"
                         >
                             <li class="parsley-required">
-                                {{ form.errors?.sucursal_id }}
+                                {{ form.errors?.centro_id }}
                             </li>
                         </ul>
                     </div>

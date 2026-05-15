@@ -95,14 +95,18 @@ onMounted(() => {
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-8 offset-lg-2 col-md-12">
-                <div class="row login elevation-3">
-                    <div class="col-md-6">
+                <div class="row login elevation-2">
+                    <div class="col-md-6 text-center bg-">
                         <img
                             :src="oConfiguracion.url_logo"
                             alt="Logo"
-                            class="w-100 d-none d-md-block"
+                            class="logoPortada d-none d-md-block"
                             lazy
                         />
+                        <h1 class="fw-bold mt-2">
+                            {{ oConfiguracion.razon_social }}
+                        </h1>
+                        <h4>{{ oConfiguracion.nombre_sistema }}</h4>
                     </div>
                     <div class="col-md-6 bg-success">
                         <img
@@ -112,11 +116,9 @@ onMounted(() => {
                             height="120px"
                             lazy
                         />
-                        <h1 class="h3 font-weight-bold text-white mt-2">
-                            {{ oConfiguracion.nombre_sistema }}
-                        </h1>
+
                         <form @submit.prevent="enviarFormulario()">
-                            <h5 class="w-100 text-center h5 text-white">
+                            <h5 class="w-100 text-center h5 text-white mt-2">
                                 Iniciar Sesión
                             </h5>
                             <div class="row">
@@ -238,6 +240,8 @@ onMounted(() => {
 
 <style scoped>
 .row.login {
+    border-radius: 10px;
+    overflow: hidden;
     background-color: white;
 }
 .row.login > .col-md-6:nth-child(1) img {
@@ -251,5 +255,11 @@ onMounted(() => {
 
 .nombre_sistema:hover {
     color: var(--text-white1);
+}
+
+.logoPortada {
+    margin: auto;
+    margin-top: 10px;
+    max-height: 220px;
 }
 </style>

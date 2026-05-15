@@ -27,6 +27,7 @@ class UserTableSeeder extends Seeder
             "acceso" => 1,
             "centro_id" => NULL,
             "role_id" => 1,
+            "tipo" => "ADMINISTRACIÓN",
             "centro_todos" => 1,
             "fecha_registro" => date("Y-m-d"),
             "status" => 1,

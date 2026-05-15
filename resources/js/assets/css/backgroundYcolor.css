@@ -26,6 +26,18 @@ table .bg-principal,
     background-color: var(--bgWhite);
 }
 
+.bgYellow {
+    background-color: var(--bgYellow);
+}
+
+.bgYellow2 {
+    background-color: var(--bgYellow2);
+}
+
+.bgDark {
+    background-color: var(--bgDark);
+}
+
 .btn-alert-success:active,
 .btn-alert-success {
     background-color: var(--bgSuccess);
@@ -41,11 +53,6 @@ table .bg-principal,
 table .bg-dark-principal,
 .bg-dark-principal {
     background-color: var(--bgDarkPrincipal);
-    color: white;
-}
-
-.nav-header.bg-principal {
-    background-color: var(--bgDark);
     color: white;
 }
 

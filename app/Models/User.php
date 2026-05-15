@@ -30,10 +30,12 @@ class User extends Authenticatable
         "correo",
         "fono",
         "password",
+        "foto",
+        "role_id",
         "acceso",
         "tipo",
-        "foto",
-        "sucursal_id",
+        "centro_id",
+        "centro_todos",
         "fecha_registro",
         "status",
     ];
@@ -134,13 +136,13 @@ class User extends Authenticatable
         return $query;
     }
 
-    public function sucursal()
+    public function centro()
     {
-        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+        return $this->belongsTo(Centro::class, 'centro_id');
     }
 
-    public function login_user()
+    public function role()
     {
-        return $this->hasMany(LoginUser::class, 'user_id');
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\AlertaEpidemiologicaController;
 use App\Http\Controllers\CategoriaEnfermedadController;
-use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\CentroController;
 use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EnfermedadController;
@@ -10,7 +10,6 @@ use App\Http\Controllers\InicioController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RoleController;
-use App\Http\Controllers\SucursalController;
 use App\Http\Controllers\TipoTransmisionController;
 use App\Http\Controllers\TipoUsuarioController;
 use App\Http\Controllers\UserController;
@@ -76,6 +75,9 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store"]
     );
 
+    // TIPO USUARIOS
+    Route::get("tipo_usuarios/listado", [TipoUsuarioController::class, 'listado'])->name("tipo_usuarios.listado");
+
     // ALERTAS EPIDEMIOLOGICAS
     Route::get("alerta_epidemiologicas", [AlertaEpidemiologicaController::class, 'index'])->name("alerta_epidemiologicas.index");
 
@@ -95,6 +97,15 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     Route::resource("comunidads", ComunidadController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
+
+    // CENTROS
+    Route::get("centros/paginado", [CentroController::class, 'paginado'])->name("centros.paginado");
+    Route::get("centros/listado", [CentroController::class, 'listado'])->name("centros.listado");
+    Route::post("centros/actualizaPermiso/{role}", [CentroController::class, 'actualizaPermiso'])->name("centros.actualizaPermiso");
+    Route::resource("centros", CentroController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
 
     // CATEGORIA ENFERMEDADES
     Route::get("categoria_enfermedads/paginado", [CategoriaEnfermedadController::class, 'paginado'])->name("categoria_enfermedads.paginado");
@@ -117,6 +128,22 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     Route::get("enfermedads/listado", [EnfermedadController::class, 'listado'])->name("enfermedads.listado");
     Route::post("enfermedads/actualizaPermiso/{role}", [EnfermedadController::class, 'actualizaPermiso'])->name("enfermedads.actualizaPermiso");
     Route::resource("enfermedads", EnfermedadController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
+    // PACIENTES
+    Route::get("pacientes/paginado", [PacienteController::class, 'paginado'])->name("pacientes.paginado");
+    Route::get("pacientes/listado", [PacienteController::class, 'listado'])->name("pacientes.listado");
+    Route::post("pacientes/actualizaPermiso/{role}", [PacienteController::class, 'actualizaPermiso'])->name("pacientes.actualizaPermiso");
+    Route::resource("pacientes", PacienteController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
+    // CASOS
+    Route::get("caso_epidemiologicos/paginado", [CasoEpidemiologicoController::class, 'paginado'])->name("caso_epidemiologicos.paginado");
+    Route::get("caso_epidemiologicos/listado", [CasoEpidemiologicoController::class, 'listado'])->name("caso_epidemiologicos.listado");
+    Route::post("caso_epidemiologicos/actualizaPermiso/{role}", [CasoEpidemiologicoController::class, 'actualizaPermiso'])->name("caso_epidemiologicos.actualizaPermiso");
+    Route::resource("caso_epidemiologicos", CasoEpidemiologicoController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 

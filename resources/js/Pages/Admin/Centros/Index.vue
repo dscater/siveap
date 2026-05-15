@@ -2,10 +2,9 @@
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import { useUsuarios } from "@/composables/usuarios/useUsuarios";
+import { useCentros } from "@/composables/centros/useCentros";
 import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
-import FormPassword from "./FormPassword.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
 import { useAxios } from "@/composables/axios/useAxios";
 const { props: props_page } = usePage();
@@ -16,7 +15,7 @@ onBeforeMount(() => {
     appStore.startLoading();
 });
 
-const { setUsuario, limpiarUsuario, form } = useUsuarios();
+const { setCentro, limpiarCentro, form } = useCentros();
 
 const miTable = ref(null);
 const headers = [
@@ -27,63 +26,23 @@ const headers = [
         width: "3%",
     },
     {
-        label: "USUARIO",
-        key: "usuario",
-        sortable: true,
-    },
-    {
         label: "NOMBRE",
         key: "nombre",
         sortable: true,
     },
     {
-        label: "AP. PATERNO",
-        key: "paterno",
-        sortable: true,
-    },
-    {
-        label: "AP. MATERNO",
-        key: "materno",
-        sortable: true,
-    },
-    {
-        label: "C.I.",
-        key: "full_ci",
-        sortable: true,
-    },
-    {
-        label: "CORREO",
-        key: "correo",
-        sortable: true,
-    },
-    {
         label: "DIRECCIÓN",
-        key: "dir",
+        key: "direccion",
         sortable: true,
     },
     {
-        label: "CELULAR",
-        key: "fono",
+        label: "LATITUD",
+        key: "latitud",
         sortable: true,
     },
     {
-        label: "ROLE",
-        key: "role.nombre",
-        sortable: true,
-    },
-    {
-        label: "TIPO",
-        key: "tipo",
-        sortable: true,
-    },
-    {
-        label: "FOTO",
-        key: "foto",
-        sortable: true,
-    },
-    {
-        label: "ACCESO",
-        key: "acceso",
+        label: "LONGITUD",
+        key: "longitud",
         sortable: true,
     },
     {
@@ -103,34 +62,35 @@ const muestra_formulario = ref(false);
 const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarUsuario();
+    limpiarCentro();
     muestra_formulario.value = true;
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarUsuario();
+        limpiarCentro();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarUsuario = (item) => {
+const eliminarCentro = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
-        html: `<strong>${item.usuario}</strong>`,
+        html: `<strong>${item.nombre}</strong>`,
         showCancelButton: true,
         confirmButtonText: "Si, eliminar",
         cancelButtonText: "No, cancelar",
         denyButtonText: `No, cancelar`,
         customClass: {
-            confirmButton: "btn-danger",
+            confirmButton: "bg-danger",
+            cancelButton: "bg-light text-dark border border-secondary",
         },
     }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             let respuesta = await axiosDelete(
-                route("usuarios.destroy", item.id),
+                route("centros.destroy", item.id),
             );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
@@ -144,13 +104,13 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head title="Usuarios"></Head>
+    <Head title="Centros"></Head>
 
     <Content>
         <template #header>
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="m-0"><i class="fa fa-users"></i> Usuarios</h3>
+                    <h3 class="m-0"><i class="fa fa-list"></i> Centros</h3>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
@@ -158,7 +118,7 @@ onMounted(async () => {
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">Usuarios</li>
+                        <li class="breadcrumb-item active">Centros</li>
                     </ol>
                 </div>
                 <!-- /.col -->
@@ -174,32 +134,36 @@ onMounted(async () => {
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'usuarios.create',
+                                    'centros.create',
                                 )
                             "
                             type="button"
                             class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nuevo Usuario
+                            <i class="fa fa-plus"></i> Nuevo Centro
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
                         <div class="row justify-content-end">
                             <div class="col-md-5">
-                                <div class="input-group">
+                                <div
+                                    class="input-group"
+                                    style="align-items: end"
+                                >
                                     <input
                                         v-model="multiSearch.search"
                                         placeholder="Buscar"
-                                        type="search"
                                         class="form-control border-1 border-right-0"
                                     />
-                                    <button
-                                        class="btn btn-light bg-white rounded-0 border-left-0"
-                                        @click="updateDatos"
-                                    >
-                                        <i class="fa fa-search"></i>
-                                    </button>
+                                    <div class="input-append">
+                                        <button
+                                            class="btn btn-default rounded-0 border-left-0"
+                                            @click="updateDatos"
+                                        >
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -212,7 +176,7 @@ onMounted(async () => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('usuarios.paginado')"
+                            :url="route('centros.paginado')"
                             :numPages="5"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
@@ -221,17 +185,6 @@ onMounted(async () => {
                             :header-class="'bg__primary'"
                             fixed-header
                         >
-                            <template #tipo="{ item }">
-                                <div class="w-100 text-center">
-                                    <span>{{ item.tipo }}</span>
-                                    <span
-                                        v-if="item.tipo == 'CENTRO MÉDICO'"
-                                        class="text-muted font-weight-bold d-block"
-                                    >
-                                        "{{ item.centro.nombre }}"
-                                    </span>
-                                </div>
-                            </template>
                             <template #foto="{ item }">
                                 <img
                                     class="direct-chat-img"
@@ -242,7 +195,7 @@ onMounted(async () => {
 
                             <template #acceso="{ item }">
                                 <div
-                                    class="badge text-sm text-wrap"
+                                    class="badge text-sm"
                                     :class="[
                                         item.acceso == 1
                                             ? 'bg-success'
@@ -261,31 +214,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'usuarios.password',
-                                        )
-                                    "
-                                >
-                                    <el-tooltip
-                                        class="box-item"
-                                        effect="dark"
-                                        content="Cambiar contraseña"
-                                        placement="left-start"
-                                    >
-                                        <button
-                                            class="btn btn-info"
-                                            @click="
-                                                setUsuario(item);
-                                                muestra_formulario_pass = true;
-                                            "
-                                        >
-                                            <i class="fa fa-key"></i></button
-                                    ></el-tooltip>
-                                </template>
-                                <template
-                                    v-if="
-                                        props_page.auth?.user.permisos == '*' ||
-                                        props_page.auth?.user.permisos.includes(
-                                            'usuarios.edit',
+                                            'centros.edit',
                                         )
                                     "
                                 >
@@ -298,7 +227,7 @@ onMounted(async () => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setUsuario(item);
+                                                setCentro(item);
                                                 muestra_formulario = true;
                                             "
                                         >
@@ -309,7 +238,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'usuarios.destroy',
+                                            'centros.destroy',
                                         )
                                     "
                                 >
@@ -321,7 +250,7 @@ onMounted(async () => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="eliminarUsuario(item)"
+                                            @click="eliminarCentro(item)"
                                         >
                                             <i
                                                 class="fa fa-trash-alt"
@@ -343,11 +272,4 @@ onMounted(async () => {
         @envio-formulario="updateDatatable"
         @cerrar-formulario="muestra_formulario = false"
     ></Formulario>
-    <FormPassword
-        v-if="muestra_formulario_pass"
-        :muestra_formulario="muestra_formulario_pass"
-        :formUser="form"
-        @envio-formulario="muestra_formulario_pass = false"
-        @cerrar-formulario="muestra_formulario_pass = false"
-    ></FormPassword>
 </template>

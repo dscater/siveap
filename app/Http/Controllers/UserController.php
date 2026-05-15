@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CasoEpidemiologico;
 use App\Models\Certificado;
 use App\Models\Cliente;
 use App\Models\LoginUser;
+use App\Models\Paciente;
 use App\Models\User;
-use App\Services\LoginUserService;
 use App\Services\PermisoService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +18,7 @@ class UserController extends Controller
 {
 
 
-    public function __construct(private LoginUserService $login_user_service) {}
+    public function __construct() {}
 
     public function permisosUsuario(Request $request)
     {
@@ -30,7 +31,7 @@ class UserController extends Controller
     public function getUser()
     {
         return response()->JSON([
-            "user" => Auth::user()
+            "user" => Auth::user()->load(["role"])
         ]);
     }
 
@@ -50,15 +51,24 @@ class UserController extends Controller
                     "url" => "usuarios.index"
                 ];
             }
-            // if ($permisos == '*' || (is_array($permisos) && in_array('clientes.index', $permisos))) {
-            //     $array_infos[] = [
-            //         'label' => 'CLIENTES',
-            //         'cantidad' => Cliente::where('status', 1)->count(),
-            //         'color' => 'bgWhite',
-            //         'icon' => "fa-user-friends",
-            //         "url" => "clientes.index"
-            //     ];
-            // }
+            if ($permisos == '*' || (is_array($permisos) && in_array('pacientes.index', $permisos))) {
+                $array_infos[] = [
+                    'label' => 'CASOS EPIDEMIOLÓGICOS',
+                    'cantidad' => CasoEpidemiologico::count(),
+                    'color' => 'bgWhite',
+                    'icon' => "fa-user-friends",
+                    "url" => "pacientes.index"
+                ];
+            }
+            if ($permisos == '*' || (is_array($permisos) && in_array('pacientes.index', $permisos))) {
+                $array_infos[] = [
+                    'label' => 'PACIENTES',
+                    'cantidad' => Paciente::count(),
+                    'color' => 'bgWhite',
+                    'icon' => "fa-user-friends",
+                    "url" => "pacientes.index"
+                ];
+            }
         }
 
 

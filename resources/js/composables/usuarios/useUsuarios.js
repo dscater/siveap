@@ -14,10 +14,14 @@ export const useUsuarios = () => {
         correo: "",
         fono: "",
         password: "",
-        acceso: "",
-        tipo: "",
         foto: "",
-        sucursal_id: "",
+        role_id: "",
+        acceso: 1,
+        tipo: "",
+        centro_id: "",
+        centro_todos: "",
+        fecha_registro: "",
+        status: "",
         _method: "POST",
     };
 

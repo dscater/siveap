@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string("foto", 255)->nullable();
             $table->unsignedBigInteger("role_id")->nullable();
             $table->integer("acceso");
+            $table->string("tipo"); // ADMINISTRACIÓN|CENTRO MÉDICO
             $table->unsignedBigInteger("centro_id")->nullable();
             $table->integer("centro_todos")->default(0);
             $table->date("fecha_registro");

@@ -31,7 +31,7 @@ class UserService
     public function listadoPaginado(int $length, int $page, string $search, array $columnsSerachLike = [], array $columnsFilter = [], array $columnsBetweenFilter = [], array $orderBy = []): LengthAwarePaginator
     {
         $users = User::select("users.*")
-            ->with(["sucursal:id,nombre"])
+            ->with(["centro:id,nombre", "role:id,nombre"])
             ->where("users.id", "!=", 1);
 
         $users->buscarNombre($search);
@@ -152,7 +152,8 @@ class UserService
             "acceso" => $datos["acceso"],
             "password" => $datos["ci"],
             "tipo" => mb_strtoupper($datos["tipo"]),
-            "sucursal_id" => $datos["sucursal_id"],
+            "centro_id" => $datos["tipo"] == 'CENTRO MÉDICO' ? $datos["centro_id"] : null,
+            "role_id" => $datos["role_id"],
             "fecha_registro" => date("Y-m-d")
         ]);
 
@@ -187,9 +188,9 @@ class UserService
             "fono" => $datos["fono"],
             "acceso" => $datos["acceso"],
             "tipo" => mb_strtoupper($datos["tipo"]),
-            "sucursal_id" => $datos["sucursal_id"],
+            "centro_id" => $datos["tipo"] == 'CENTRO MÉDICO' ? $datos["centro_id"] : null,
+            "role_id" => $datos["role_id"],
         ]);
-
 
         // cargar foto
         if (isset($datos["foto"]) && !is_string($datos["foto"])) {
@@ -243,6 +244,7 @@ class UserService
     {
         $old_user = clone $user;
 
+        //TODO: VERIFICAR DEPENDENCIAS
         $usos = Certificado::where("user_id", $user->id)->get();
         if (count($usos) > 0) {
             throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");

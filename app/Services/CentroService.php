@@ -4,6 +4,8 @@ namespace App\Services;
 
 use App\Services\HistorialAccionService;
 use App\Models\Centro;
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
 use Exception;
 use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Collection;
@@ -80,8 +82,9 @@ class CentroService
     {
         $centro = Centro::create([
             "nombre" => mb_strtoupper($datos["nombre"]),
-            "descripcion" => mb_strtoupper($datos["descripcion"]) ?? null,
-            "fecha_registro" => date("Y-m-d")
+            "direccion" => mb_strtoupper($datos["direccion"]),
+            "latitud" => $datos["latitud"],
+            "longitud" => $datos["longitud"],
         ]);
 
         // registrar accion
@@ -103,7 +106,9 @@ class CentroService
 
         $centro->update([
             "nombre" => mb_strtoupper($datos["nombre"]),
-            "descripcion" => mb_strtoupper($datos["descripcion"]) ?? null,
+            "direccion" => mb_strtoupper($datos["direccion"]),
+            "latitud" => $datos["latitud"],
+            "longitud" => $datos["longitud"],
         ]);
 
         // registrar accion
@@ -120,6 +125,8 @@ class CentroService
      */
     public function eliminar(Centro $centro): bool|Exception
     {
+        // TODO: VERIFICAR RELACIONES
+
         $old_centro = clone $centro;
         $centro->delete();
 

@@ -21,7 +21,7 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             "nombre" => "required|min:2",
             "paterno" => "required|min:2",
             "materno" => "nullable",
@@ -33,8 +33,13 @@ class UserUpdateRequest extends FormRequest
             "acceso" => "required",
             "tipo" => "required",
             "foto" => "nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048",
-            "sucursal_id" => "required",
+            "role_id" => "required",
         ];
+        if ($this->tipo == 'CENTRO MÉDICO') {
+            $rules["centro_id"] = "required";
+        }
+
+        return $rules;
     }
 
     /**
@@ -55,7 +60,7 @@ class UserUpdateRequest extends FormRequest
             "password.min" => "Debes ingresar al menos :min caracteres",
             "acceso.required" => "Este campo es obligatorio",
             "tipo.required" => "Este campo es obligatorio",
-            "sucursal_id.required" => "Este campo es obligatorio",
+            "centro_id.required" => "Este campo es obligatorio",
         ];
     }
 }

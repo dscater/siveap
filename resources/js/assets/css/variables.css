@@ -1,5 +1,5 @@
 :root {
-    --bg1: #012261;
+    --bg1: #009047;
     --bg2: #005f8d;
     --bg3: #222324;
     --bg4: #e1f5fe;
@@ -19,7 +19,8 @@
     --bgDanger2: #b90000;
     --bgDanger3: #ffebeb;
     --bgWhite: #fdfdfd;
-    --bgYellow: yellow;
+    --bgYellow: #f6ea02;
+    --bgYellow2: #fff53f;
     --bgPrecargado: #f59e0b;
     --bgNuevo: #22c55e;
 }

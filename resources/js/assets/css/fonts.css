@@ -35,6 +35,14 @@ table.table tbody {
     /* font-size: 0.87em; */
 }
 
+.text-md {
+    font-size: 0.9rem;
+}
+
+.text-sm {
+    font-size: 0.82rem;
+}
+
 .text-xs {
     font-size: 0.75rem;
 }

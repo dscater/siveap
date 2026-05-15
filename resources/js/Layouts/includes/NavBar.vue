@@ -21,7 +21,7 @@ const salir = () => {
         cancelButtonText: "Cancelar",
         denyButtonText: `Cancelar`,
         customClass: {
-            confirmButton: "btn-success",
+            confirmButton: "bg-success",
         },
     }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
@@ -42,7 +42,7 @@ onUnmounted(() => {});
 </script>
 <template>
     <!-- Navbar -->
-    <nav class="app-header navbar navbar-expand navbar-light">
+    <nav class="app-header navbar navbar-expand navbar-dark bg-principal">
         <!-- Left navbar links -->
         <ul class="navbar-nav">
             <li class="nav-item">

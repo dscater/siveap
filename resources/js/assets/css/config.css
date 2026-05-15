@@ -130,7 +130,6 @@ td .descripcion {
     opacity: 0;
     height: 100vh;
     width: 100vw;
-    margin-top: -3.57rem;
 }
 
 .loading.show {
@@ -169,10 +168,14 @@ label.required::after {
 }
 
 /* SIDEBAR */
-body .app-sidebar {
+body .app-sidebar .sidebar-wrapper {
     /* position: fixed; */
-    /* background-color: var(--bgDarkGray); */
+    /* background-color: var(--bgYellow); */
     font-size: 0.8em;
+}
+
+.sidebar-wrapper .nav-header {
+    font-weight: bold;
 }
 
 .user-panel {
@@ -208,6 +211,10 @@ body .app-sidebar .nav > .nav-item > .nav-link {
     overflow: hidden;
     max-height: 0px;
     transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-main {
+    background-color: var(--bg6);
 }
 
 /* MI TABLE */
