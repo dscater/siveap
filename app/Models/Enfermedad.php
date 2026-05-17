@@ -10,17 +10,16 @@ class Enfermedad extends Model
         "nombre",
         "categoria_enfermedad_id",
         "tipo_transmision_id",
-        "umbral_alerta",
         "descripcion",
     ];
 
     public function categoria_enfermedad()
     {
-        return $this->belongsTo(CategoriaEnfermedad::class, 'categoria_enfermedad');
+        return $this->belongsTo(CategoriaEnfermedad::class, 'categoria_enfermedad_id');
     }
 
     public function tipo_transmision()
     {
-        return $this->belongsTo(TipoTransmision::class, 'tipo_transmision');
+        return $this->belongsTo(TipoTransmision::class, 'tipo_transmision_id');
     }
 }

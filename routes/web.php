@@ -7,6 +7,7 @@ use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\InicioController;
+use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RoleController;

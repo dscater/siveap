@@ -112,7 +112,7 @@ onMounted(() => {
                         <img
                             :src="oConfiguracion.url_logo2"
                             alt="Logo"
-                            class="logo mt-2 rounded-circle"
+                            class="logo mt-4 rounded-circle"
                             height="120px"
                             lazy
                         />

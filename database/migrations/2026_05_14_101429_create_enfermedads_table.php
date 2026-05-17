@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string("nombre");
             $table->unsignedBigInteger("categoria_enfermedad_id");
             $table->unsignedBigInteger("tipo_transmision_id");
-            $table->double("umbral_alerta", 8, 2);
             $table->text("descripcion")->nullable();
             $table->timestamps();
 

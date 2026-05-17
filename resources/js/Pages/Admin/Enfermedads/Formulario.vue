@@ -1,8 +1,8 @@
 <script setup>
 import MiModal from "@/Components/MiModal.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
+import axios from "axios";
 import { watch, ref, computed, defineEmits, onMounted, nextTick } from "vue";
-import MapMarker from "@/Components/MapMarker.vue";
 const props = defineProps({
     muestra_formulario: {
         type: Boolean,
@@ -19,8 +19,8 @@ const form = props.form;
 
 const tituloDialog = computed(() => {
     return form.id == 0
-        ? `<i class="fa fa-plus"></i> Nueva CategoriaEnfermedad`
-        : `<i class="fa fa-edit"></i> Editar CategoriaEnfermedad`;
+        ? `<i class="fa fa-plus"></i> Nueva Enfermedad`
+        : `<i class="fa fa-edit"></i> Editar Enfermedad`;
 });
 
 const textBtn = computed(() => {
@@ -37,8 +37,8 @@ const enviarFormulario = () => {
     enviando.value = true;
     let url =
         form["_method"] == "POST"
-            ? route("categoria_enfermedads.store")
-            : route("categoria_enfermedads.update", form.id);
+            ? route("enfermedads.store")
+            : route("enfermedads.update", form.id);
 
     form.post(url, {
         preserveScroll: true,
@@ -109,8 +109,23 @@ const cerrarFormulario = () => {
     muestra_form.value = false;
     document.getElementsByTagName("body")[0].classList.remove("modal-open");
 };
+const listTipoTransmisions = ref([]);
+const listCategoriaEnfermedads = ref([]);
+const cargarTipoTransmisions = () => {
+    axios.get(route("tipo_transmisions.listado")).then((response) => {
+        listTipoTransmisions.value = response.data.tipo_transmisions;
+    });
+};
+const cargarCategoriaEnfermedads = () => {
+    axios.get(route("categoria_enfermedads.listado")).then((response) => {
+        listCategoriaEnfermedads.value = response.data.categoria_enfermedads;
+    });
+};
 
-const cargarListas = () => {};
+const cargarListas = () => {
+    cargarTipoTransmisions();
+    cargarCategoriaEnfermedads();
+};
 
 onMounted(() => {
     cargarListas();
@@ -141,10 +156,8 @@ onMounted(() => {
                     <span class="text-danger">(*)</span> son obligatorios.
                 </p>
                 <div class="row">
-                    <div class="col-md-12 mt-2">
-                        <label class="required"
-                            >Nombre de la CategoriaEnfermedad</label
-                        >
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Nombre de la Enfermedad</label>
                         <input
                             type="text"
                             class="form-control"
@@ -162,16 +175,72 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-12 mt-2">
-                        <label class="required"
-                            >Indicar Ubicación
-                            <i class="fa fa-map-marker-alt"></i
-                        ></label>
-
-                        <MapMarker
-                            v-model:latitud="form.latitud"
-                            v-model:longitud="form.longitud"
-                        ></MapMarker>
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Categoría de Enfermedad</label>
+                        <el-select
+                            v-model="form.categoria_enfermedad_id"
+                            placeholder="- Seleccione -"
+                            filterable
+                            no-data-text="Sin datos"
+                            no-match-text="Sin resultados"
+                        >
+                            <el-option
+                                v-for="item in listCategoriaEnfermedads"
+                                :key="item.id"
+                                :value="item.id"
+                                :label="item.nombre"
+                            ></el-option>
+                        </el-select>
+                        <ul
+                            v-if="form.errors?.categoria_enfermedad_id"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.categoria_enfermedad_id }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Tipo de Transmisión</label>
+                        <el-select
+                            v-model="form.tipo_transmision_id"
+                            placeholder="- Seleccione -"
+                            filterable
+                            no-data-text="Sin datos"
+                            no-match-text="Sin resultados"
+                        >
+                            <el-option
+                                v-for="item in listTipoTransmisions"
+                                :key="item.id"
+                                :value="item.id"
+                                :label="item.nombre"
+                            ></el-option>
+                        </el-select>
+                        <ul
+                            v-if="form.errors?.tipo_transmision_id"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.tipo_transmision_id }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-12 mt-2">
+                        <label class="">Descripción</label>
+                        <el-input
+                            type="textarea"
+                            v-model="form.descripcion"
+                            autosize
+                        >
+                        </el-input>
+                        <ul
+                            v-if="form.errors?.descripcion"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.descripcion }}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </form>

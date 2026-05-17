@@ -2,7 +2,7 @@
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import { useCategoriaEnfermedads } from "@/composables/categoria_enfermedads/useCategoriaEnfermedads";
+import { useEnfermedads } from "@/composables/enfermedads/useEnfermedads";
 import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
@@ -15,8 +15,7 @@ onBeforeMount(() => {
     appStore.startLoading();
 });
 
-const { setCategoriaEnfermedad, limpiarCategoriaEnfermedad, form } =
-    useCategoriaEnfermedads();
+const { setEnfermedad, limpiarEnfermedad, form } = useEnfermedads();
 
 const miTable = ref(null);
 const headers = [
@@ -32,13 +31,13 @@ const headers = [
         sortable: true,
     },
     {
-        label: "LATITUD",
-        key: "latitud",
+        label: "CATEGORÍA",
+        key: "categoria_enfermedad.nombre",
         sortable: true,
     },
     {
-        label: "LONGITUD",
-        key: "longitud",
+        label: "TIPO DE TRANSMISIÓN",
+        key: "tipo_transmision.nombre",
         sortable: true,
     },
     {
@@ -58,19 +57,19 @@ const muestra_formulario = ref(false);
 const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarCategoriaEnfermedad();
+    limpiarEnfermedad();
     muestra_formulario.value = true;
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarCategoriaEnfermedad();
+        limpiarEnfermedad();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarCategoriaEnfermedad = (item) => {
+const eliminarEnfermedad = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
         html: `<strong>${item.nombre}</strong>`,
@@ -86,7 +85,7 @@ const eliminarCategoriaEnfermedad = (item) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             let respuesta = await axiosDelete(
-                route("categoria_enfermedads.destroy", item.id),
+                route("enfermedads.destroy", item.id),
             );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
@@ -100,15 +99,13 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head title="CategoriaEnfermedades"></Head>
+    <Head title="Enfermedades"></Head>
 
     <Content>
         <template #header>
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="m-0">
-                        <i class="fa fa-list"></i> CategoriaEnfermedades
-                    </h3>
+                    <h3 class="m-0"><i class="fa fa-list"></i> Enfermedades</h3>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
@@ -116,9 +113,7 @@ onMounted(async () => {
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">
-                            CategoriaEnfermedades
-                        </li>
+                        <li class="breadcrumb-item active">Enfermedades</li>
                     </ol>
                 </div>
                 <!-- /.col -->
@@ -134,14 +129,14 @@ onMounted(async () => {
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'categoria_enfermedads.create',
+                                    'enfermedads.create',
                                 )
                             "
                             type="button"
                             class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nueva CategoriaEnfermedad
+                            <i class="fa fa-plus"></i> Nueva Enfermedad
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
@@ -176,8 +171,9 @@ onMounted(async () => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('categoria_enfermedads.paginado')"
+                            :url="route('enfermedads.paginado')"
                             :numPages="5"
+                            :per-page="10"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
                             :syncOrderAsc="'DESC'"
@@ -214,7 +210,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'categoria_enfermedads.edit',
+                                            'enfermedads.edit',
                                         )
                                     "
                                 >
@@ -227,7 +223,7 @@ onMounted(async () => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setCategoriaEnfermedad(item);
+                                                setEnfermedad(item);
                                                 muestra_formulario = true;
                                             "
                                         >
@@ -238,7 +234,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'categoria_enfermedads.destroy',
+                                            'enfermedads.destroy',
                                         )
                                     "
                                 >
@@ -250,11 +246,7 @@ onMounted(async () => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="
-                                                eliminarCategoriaEnfermedad(
-                                                    item,
-                                                )
-                                            "
+                                            @click="eliminarEnfermedad(item)"
                                         >
                                             <i
                                                 class="fa fa-trash-alt"

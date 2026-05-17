@@ -5,8 +5,9 @@ export const useEnfermedads = () => {
     const initialState = {
         id: 0,
         nombre: "",
-        latitud: -16.125102,
-        longitud: -67.196268,
+        categoria_enfermedad_id: "",
+        tipo_transmision_id: "",
+        descripcion: "",
         _method: "POST",
     };
 

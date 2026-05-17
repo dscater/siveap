@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 15-05-2026 a las 22:06:06
+-- Tiempo de generación: 17-05-2026 a las 20:43:11
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -85,8 +85,14 @@ CREATE TABLE `categoria_enfermedads` (
 --
 
 INSERT INTO `categoria_enfermedads` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'CATEGORÍA 1', '2026-05-14 21:56:46', '2026-05-14 21:56:46'),
-(2, 'CATEGORIA 2', '2026-05-14 21:57:44', '2026-05-14 21:57:50');
+(1, 'VIRAL', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(2, 'BACTERIANA', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(3, 'PARASITARIA', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(4, 'RESPIRATORIA', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(5, 'GASTROINTESTINAL', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(6, 'VECTORIAL', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(7, 'ZOONÓTICA', '2026-05-17 20:12:09', '2026-05-17 20:12:09'),
+(8, 'DERMATOLÓGICA', '2026-05-17 20:12:09', '2026-05-17 20:12:09');
 
 -- --------------------------------------------------------
 
@@ -195,11 +201,34 @@ CREATE TABLE `enfermedads` (
   `nombre` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `categoria_enfermedad_id` bigint UNSIGNED NOT NULL,
   `tipo_transmision_id` bigint UNSIGNED NOT NULL,
-  `umbral_alerta` double NOT NULL,
   `descripcion` text COLLATE utf8mb4_unicode_ci,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `enfermedads`
+--
+
+INSERT INTO `enfermedads` (`id`, `nombre`, `categoria_enfermedad_id`, `tipo_transmision_id`, `descripcion`, `created_at`, `updated_at`) VALUES
+(1, 'DENGUE', 6, 5, 'ENFERMEDAD VIRAL TRANSMITIDA POR MOSQUITOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(2, 'MALARIA', 3, 5, 'ENFERMEDAD PARASITARIA TRANSMITIDA POR MOSQUITOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(3, 'CHIKUNGUNYA', 1, 5, 'ENFERMEDAD VIRAL TRANSMITIDA POR MOSQUITOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(4, 'ZIKA', 1, 5, 'VIRUS TRANSMITIDO PRINCIPALMENTE POR MOSQUITOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(5, 'COVI-19', 1, 1, 'ENFERMEDAD RESPIRATORIA CAUSADA POR CORONAVIRUS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(6, 'INFLUENZA', 4, 1, 'INFECCIÓN RESPIRATORIA VIRAL.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(7, 'TUBERCULOSIS', 2, 1, 'ENFERMEDAD BACTERIANA RESPIRATORIA.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(8, 'NEUMONÍA', 4, 1, 'INFECCIÓN QUE INFLAMA LOS PULMONES.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(9, 'DIARRE AGUDA', 5, 3, 'TRASTORNO GASTROINTESTINAL GENERALMENTE INFECCIOSO.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(10, 'CÓLERA', 2, 3, 'ENFERMEDAD BACTERIANA TRANSMITIDA POR AGUA CONTAMINADA.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(11, 'HEPATITI A', 1, 9, 'INFECCIÓN HEPÁTICA VIRAL.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(12, 'PARASITOSI INTESTINAL', 3, 9, 'INFECCIÓN INTESTINAL CAUSADA POR PARÁSITOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(13, 'LEPTOSPIROSIS', 2, 3, 'ENFERMEDAD BACTERIANA ASOCIADA A AGUA CONTAMINADA.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(14, 'RABIA', 7, 8, 'ENFERMEDAD VIRAL TRANSMITIDA POR ANIMALES.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(15, 'SARAMPIÓN', 1, 1, 'ENFERMEDAD VIRAL ALTAMENTE CONTAGIOSA.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(16, 'VARICELA', 1, 2, 'INFECCIÓN VIRAL CONTAGIOSA.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(17, 'ESCABIOSIS', 8, 2, 'ENFERMEDAD DE LA PIEL CAUSADA POR ÁCAROS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17'),
+(18, 'SALMONELOSIS', 2, 4, 'INFECCIÓN BACTERIANA TRANSMITIDA POR ALIMENTOS.', '2026-05-17 20:19:17', '2026-05-17 20:19:17');
 
 -- --------------------------------------------------------
 
@@ -243,7 +272,10 @@ INSERT INTO `historial_accions` (`id`, `user_id`, `accion`, `descripcion`, `dato
 (15, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN ROLE', '{\"id\": 3, \"nombre\": \"MÉDICO\", \"created_at\": \"2026-05-15T21:24:43.000000Z\", \"updated_at\": \"2026-05-15T21:24:43.000000Z\"}', NULL, 'ROLES', '2026-05-15', '17:24:43', '2026-05-15 21:24:43', '2026-05-15 21:24:43'),
 (16, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN ROLE', '{\"id\": 4, \"nombre\": \"SECRETARIA\", \"created_at\": \"2026-05-15T21:24:49.000000Z\", \"updated_at\": \"2026-05-15T21:24:49.000000Z\"}', NULL, 'ROLES', '2026-05-15', '17:24:49', '2026-05-15 21:24:49', '2026-05-15 21:24:49'),
 (17, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"123456\", \"id\": 2, \"dir\": \"ZONA LOS PEDREGALES #22\", \"fono\": \"78787878\", \"foto\": \"21778880973.jpg\", \"tipo\": \"ADMINISTRACIÓN\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": \"juan@gmail.com\", \"nombre\": \"JUAN\", \"materno\": \"MAMANI\", \"paterno\": \"PERES\", \"role_id\": \"2\", \"usuario\": \"JPERES\", \"centro_id\": null, \"created_at\": \"2026-05-15T21:36:13.000000Z\", \"updated_at\": \"2026-05-15T21:36:13.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:36:13', '2026-05-15 21:36:13', '2026-05-15 21:36:13'),
-(18, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"56765756\", \"id\": 3, \"dir\": \"\", \"fono\": \"67676767\", \"tipo\": \"CENTRO MÉDICO\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": null, \"nombre\": \"MARIO\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"role_id\": \"3\", \"usuario\": \"MGONZALES\", \"centro_id\": \"1\", \"created_at\": \"2026-05-15T21:39:19.000000Z\", \"updated_at\": \"2026-05-15T21:39:19.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:39:19', '2026-05-15 21:39:19', '2026-05-15 21:39:19');
+(18, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"56765756\", \"id\": 3, \"dir\": \"\", \"fono\": \"67676767\", \"tipo\": \"CENTRO MÉDICO\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": null, \"nombre\": \"MARIO\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"role_id\": \"3\", \"usuario\": \"MGONZALES\", \"centro_id\": \"1\", \"created_at\": \"2026-05-15T21:39:19.000000Z\", \"updated_at\": \"2026-05-15T21:39:19.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:39:19', '2026-05-15 21:39:19', '2026-05-15 21:39:19'),
+(19, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:14:20.000000Z\", \"descripcion\": \"ASDASDAD\", \"tipo_transmision_id\": \"3\", \"categoria_enfermedad_id\": \"2\"}', NULL, 'ENFERMDADES', '2026-05-17', '16:14:20', '2026-05-17 20:14:20', '2026-05-17 20:14:20'),
+(20, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:14:20.000000Z\", \"descripcion\": \"ASDASDAD\", \"tipo_transmision_id\": 3, \"categoria_enfermedad_id\": 2}', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:15:49.000000Z\", \"descripcion\": \"ASDASDADEE\", \"tipo_transmision_id\": \"3\", \"categoria_enfermedad_id\": \"2\"}', 'ENFERMDADES', '2026-05-17', '16:15:49', '2026-05-17 20:15:49', '2026-05-17 20:15:49'),
+(21, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 9, \"nombre\": \"FECHAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:19:10.000000Z\"}', '{\"id\": 9, \"nombre\": \"FECAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:20:55.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-17', '16:20:55', '2026-05-17 20:20:55', '2026-05-17 20:20:55');
 
 -- --------------------------------------------------------
 
@@ -443,8 +475,15 @@ CREATE TABLE `tipo_transmisions` (
 --
 
 INSERT INTO `tipo_transmisions` (`id`, `nombre`, `created_at`, `updated_at`) VALUES
-(1, 'TIPO TRANSMISION 1', '2026-05-14 21:59:16', '2026-05-14 21:59:16'),
-(2, 'TIPO TRANSMISION 2', '2026-05-14 21:59:23', '2026-05-14 21:59:47');
+(1, 'RESPIRATORIA', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(2, 'CONTACTO DIRECTO', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(3, 'AGUA CONTAMINADA', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(4, 'ALIMENTOS CONTAMINADOS', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(5, 'VECTORIAL', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(6, 'SEXUAL', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(7, 'SANGRE', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(8, 'ANIMAL-HUMANO', '2026-05-17 20:19:10', '2026-05-17 20:19:10'),
+(9, 'FECAL-ORAL', '2026-05-17 20:19:10', '2026-05-17 20:20:55');
 
 -- --------------------------------------------------------
 
@@ -650,7 +689,7 @@ ALTER TABLE `caso_epidemiologicos`
 -- AUTO_INCREMENT de la tabla `categoria_enfermedads`
 --
 ALTER TABLE `categoria_enfermedads`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `centros`
@@ -680,13 +719,13 @@ ALTER TABLE `configuracions`
 -- AUTO_INCREMENT de la tabla `enfermedads`
 --
 ALTER TABLE `enfermedads`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `historial_accions`
 --
 ALTER TABLE `historial_accions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -746,7 +785,7 @@ ALTER TABLE `seguimientos`
 -- AUTO_INCREMENT de la tabla `tipo_transmisions`
 --
 ALTER TABLE `tipo_transmisions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
