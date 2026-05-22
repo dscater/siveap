@@ -88,7 +88,7 @@ class CentroService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA SUCURSAL", $centro);
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UN CENTRO", $centro);
 
         return $centro;
     }
@@ -112,7 +112,7 @@ class CentroService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA SUCURSAL", $old_centro, $centro->withoutRelations());
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UN CENTRO", $old_centro, $centro->withoutRelations());
 
         return $centro;
     }
@@ -131,7 +131,7 @@ class CentroService
         $centro->delete();
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA SUCURSAL", $old_centro, $centro);
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UN CENTRO", $old_centro, $centro);
 
         return true;
     }

@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('reglas_alertas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger("enfermedad_id");
-            $table->double("umbral", 8, 2);
+            $table->double("umbral", 8, 2); // NUMERO DE CASOS ACTIVOS CONFIRMADOS
             $table->string("riesgo"); // BAJO, MEDIO, ALTO, CRITICO
-            $table->integer("status"); // 0,1 INACTIVO, ACTIVO
+            $table->integer("status")->default(1); // 0,1 INACTIVO, ACTIVO
             $table->timestamps();
 
             $table->foreign("enfermedad_id")->on("enfermedads")->references("id");

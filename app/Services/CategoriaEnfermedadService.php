@@ -85,7 +85,7 @@ class CategoriaEnfermedadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA SUCURSAL", $categoria_enfermedad);
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA CATEGORIA DE ENFERMEDAD", $categoria_enfermedad);
 
         return $categoria_enfermedad;
     }
@@ -106,7 +106,7 @@ class CategoriaEnfermedadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA SUCURSAL", $old_categoria_enfermedad, $categoria_enfermedad->withoutRelations());
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA CATEGORIA DE ENFERMEDAD", $old_categoria_enfermedad, $categoria_enfermedad->withoutRelations());
 
         return $categoria_enfermedad;
     }
@@ -125,7 +125,7 @@ class CategoriaEnfermedadService
         $categoria_enfermedad->delete();
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA SUCURSAL", $old_categoria_enfermedad, $categoria_enfermedad);
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA CATEGORIA DE ENFERMEDAD", $old_categoria_enfermedad, $categoria_enfermedad);
 
         return true;
     }

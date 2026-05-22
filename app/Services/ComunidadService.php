@@ -87,7 +87,7 @@ class ComunidadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA SUCURSAL", $comunidad);
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA COMUNIDAD", $comunidad);
 
         return $comunidad;
     }
@@ -110,7 +110,7 @@ class ComunidadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA SUCURSAL", $old_comunidad, $comunidad->withoutRelations());
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA COMUNIDAD", $old_comunidad, $comunidad->withoutRelations());
 
         return $comunidad;
     }
@@ -129,7 +129,7 @@ class ComunidadService
         $comunidad->delete();
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA SUCURSAL", $old_comunidad, $comunidad);
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA COMUNIDAD", $old_comunidad, $comunidad);
 
         return true;
     }

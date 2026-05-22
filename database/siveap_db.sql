@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 17-05-2026 a las 20:43:11
+-- Tiempo de generación: 22-05-2026 a las 19:29:05
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -275,7 +275,10 @@ INSERT INTO `historial_accions` (`id`, `user_id`, `accion`, `descripcion`, `dato
 (18, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN USUARIO', '{\"ci\": \"56765756\", \"id\": 3, \"dir\": \"\", \"fono\": \"67676767\", \"tipo\": \"CENTRO MÉDICO\", \"acceso\": \"1\", \"ci_exp\": \"LP\", \"correo\": null, \"nombre\": \"MARIO\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"role_id\": \"3\", \"usuario\": \"MGONZALES\", \"centro_id\": \"1\", \"created_at\": \"2026-05-15T21:39:19.000000Z\", \"updated_at\": \"2026-05-15T21:39:19.000000Z\", \"fecha_registro\": \"2026-05-15\"}', NULL, 'USUARIOS', '2026-05-15', '17:39:19', '2026-05-15 21:39:19', '2026-05-15 21:39:19'),
 (19, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:14:20.000000Z\", \"descripcion\": \"ASDASDAD\", \"tipo_transmision_id\": \"3\", \"categoria_enfermedad_id\": \"2\"}', NULL, 'ENFERMDADES', '2026-05-17', '16:14:20', '2026-05-17 20:14:20', '2026-05-17 20:14:20'),
 (20, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:14:20.000000Z\", \"descripcion\": \"ASDASDAD\", \"tipo_transmision_id\": 3, \"categoria_enfermedad_id\": 2}', '{\"id\": 1, \"nombre\": \"ASDASD\", \"created_at\": \"2026-05-17T20:14:20.000000Z\", \"updated_at\": \"2026-05-17T20:15:49.000000Z\", \"descripcion\": \"ASDASDADEE\", \"tipo_transmision_id\": \"3\", \"categoria_enfermedad_id\": \"2\"}', 'ENFERMDADES', '2026-05-17', '16:15:49', '2026-05-17 20:15:49', '2026-05-17 20:15:49'),
-(21, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 9, \"nombre\": \"FECHAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:19:10.000000Z\"}', '{\"id\": 9, \"nombre\": \"FECAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:20:55.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-17', '16:20:55', '2026-05-17 20:20:55', '2026-05-17 20:20:55');
+(21, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 9, \"nombre\": \"FECHAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:19:10.000000Z\"}', '{\"id\": 9, \"nombre\": \"FECAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:20:55.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-17', '16:20:55', '2026-05-17 20:20:55', '2026-05-17 20:20:55'),
+(22, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA REGLA DE ALERTA', '{\"id\": 1, \"riesgo\": \"MEDIO\", \"umbral\": \"6\", \"created_at\": \"2026-05-22T19:26:08.000000Z\", \"updated_at\": \"2026-05-22T19:26:08.000000Z\", \"enfermedad_id\": \"1\"}', NULL, 'REGLAS DE ALERTA', '2026-05-22', '15:26:08', '2026-05-22 19:26:08', '2026-05-22 19:26:08'),
+(23, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"MEDIO\", \"umbral\": \"6\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:26:35.000000Z\", \"enfermedad_id\": \"1\"}', NULL, 'REGLAS DE ALERTA', '2026-05-22', '15:26:35', '2026-05-22 19:26:35', '2026-05-22 19:26:35'),
+(24, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"MEDIO\", \"status\": 1, \"umbral\": 6, \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:26:35.000000Z\", \"enfermedad_id\": 1}', '{\"id\": 2, \"riesgo\": \"ALTO\", \"status\": 1, \"umbral\": \"12\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:28:32.000000Z\", \"enfermedad_id\": \"1\"}', 'REGLAS DE ALERTA', '2026-05-22', '15:28:32', '2026-05-22 19:28:32', '2026-05-22 19:28:32');
 
 -- --------------------------------------------------------
 
@@ -409,10 +412,18 @@ CREATE TABLE `reglas_alertas` (
   `enfermedad_id` bigint UNSIGNED NOT NULL,
   `umbral` double NOT NULL,
   `riesgo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `status` int NOT NULL,
+  `status` int NOT NULL DEFAULT '1',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `reglas_alertas`
+--
+
+INSERT INTO `reglas_alertas` (`id`, `enfermedad_id`, `umbral`, `riesgo`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 6, 'MEDIO', 1, '2026-05-22 19:26:08', '2026-05-22 19:26:08'),
+(2, 1, 12, 'ALTO', 1, '2026-05-22 19:26:35', '2026-05-22 19:28:32');
 
 -- --------------------------------------------------------
 
@@ -725,7 +736,7 @@ ALTER TABLE `enfermedads`
 -- AUTO_INCREMENT de la tabla `historial_accions`
 --
 ALTER TABLE `historial_accions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -767,7 +778,7 @@ ALTER TABLE `permisos`
 -- AUTO_INCREMENT de la tabla `reglas_alertas`
 --
 ALTER TABLE `reglas_alertas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `roles`

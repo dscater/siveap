@@ -250,10 +250,10 @@ onUnmounted(() => {});
                             <ItemMenu
                                 v-if="
                                     permisos == '*' ||
-                                    permisos.includes('enfermedads.index')
+                                    permisos.includes('reglas_alertas.index')
                                 "
                                 :label="'Reglas Alertas'"
-                                :ruta="'enfermedads.index'"
+                                :ruta="'reglas_alertas.index'"
                                 :icon="'fa fa-angle-right'"
                             ></ItemMenu>
                             <ItemMenu

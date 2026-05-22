@@ -9,6 +9,7 @@ use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReglasAlertaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TipoTransmisionController;
@@ -129,6 +130,14 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     Route::get("enfermedads/listado", [EnfermedadController::class, 'listado'])->name("enfermedads.listado");
     Route::post("enfermedads/actualizaPermiso/{role}", [EnfermedadController::class, 'actualizaPermiso'])->name("enfermedads.actualizaPermiso");
     Route::resource("enfermedads", EnfermedadController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
+    // ENFERMEDADES
+    Route::get("reglas_alertas/paginado", [ReglasAlertaController::class, 'paginado'])->name("reglas_alertas.paginado");
+    Route::get("reglas_alertas/listado", [ReglasAlertaController::class, 'listado'])->name("reglas_alertas.listado");
+    Route::post("reglas_alertas/actualizaPermiso/{role}", [ReglasAlertaController::class, 'actualizaPermiso'])->name("reglas_alertas.actualizaPermiso");
+    Route::resource("reglas_alertas", ReglasAlertaController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 

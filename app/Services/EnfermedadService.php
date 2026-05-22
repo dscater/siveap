@@ -89,7 +89,7 @@ class EnfermedadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA SUCURSAL", $enfermedad);
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA ENFERMEDAD", $enfermedad);
 
         return $enfermedad;
     }
@@ -113,7 +113,7 @@ class EnfermedadService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA SUCURSAL", $old_enfermedad, $enfermedad->withoutRelations());
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA ENFERMEDAD", $old_enfermedad, $enfermedad->withoutRelations());
 
         return $enfermedad;
     }
@@ -132,7 +132,7 @@ class EnfermedadService
         $enfermedad->delete();
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA SUCURSAL", $old_enfermedad, $enfermedad);
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA ENFERMEDAD", $old_enfermedad, $enfermedad);
 
         return true;
     }

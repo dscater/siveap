@@ -85,7 +85,7 @@ class TipoTransmisionService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA SUCURSAL", $tipo_transmision);
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UN TIPO DE TRANSMISIÓN", $tipo_transmision);
 
         return $tipo_transmision;
     }
@@ -106,7 +106,7 @@ class TipoTransmisionService
         ]);
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA SUCURSAL", $old_tipo_transmision, $tipo_transmision->withoutRelations());
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UN TIPO DE TRANSMISIÓN", $old_tipo_transmision, $tipo_transmision->withoutRelations());
 
         return $tipo_transmision;
     }
@@ -125,7 +125,7 @@ class TipoTransmisionService
         $tipo_transmision->delete();
 
         // registrar accion
-        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA SUCURSAL", $old_tipo_transmision, $tipo_transmision);
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UN TIPO DE TRANSMISIÓN", $old_tipo_transmision, $tipo_transmision);
 
         return true;
     }
