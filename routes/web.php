@@ -1,11 +1,14 @@
 <?php
 
 use App\Http\Controllers\AlertaEpidemiologicaController;
+use App\Http\Controllers\CasoEpidemiologicoController;
 use App\Http\Controllers\CategoriaEnfermedadController;
 use App\Http\Controllers\CentroController;
 use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EnfermedadController;
+use App\Http\Controllers\EstadoController;
+use App\Http\Controllers\GravedadController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\ProfileController;
@@ -13,8 +16,7 @@ use App\Http\Controllers\ReglasAlertaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\TipoTransmisionController;
-use App\Http\Controllers\TipoUsuarioController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\TipoCasoController;
 use App\Http\Controllers\UsuarioController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -77,8 +79,14 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store"]
     );
 
-    // TIPO USUARIOS
-    Route::get("tipo_usuarios/listado", [TipoUsuarioController::class, 'listado'])->name("tipo_usuarios.listado");
+    // TIPO CASOS
+    Route::get("tipo_casos/listado", [TipoCasoController::class, 'listado'])->name("tipo_casos.listado");
+
+    // GRAVEDAD
+    Route::get("gravedads/listado", [GravedadController::class, 'listado'])->name("gravedads.listado");
+
+    // ESTADOS
+    Route::get("estados/listado", [EstadoController::class, 'listado'])->name("estados.listado");
 
     // ALERTAS EPIDEMIOLOGICAS
     Route::get("alerta_epidemiologicas", [AlertaEpidemiologicaController::class, 'index'])->name("alerta_epidemiologicas.index");
@@ -133,7 +141,7 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 
-    // ENFERMEDADES
+    // REGLAS DE ALERTA
     Route::get("reglas_alertas/paginado", [ReglasAlertaController::class, 'paginado'])->name("reglas_alertas.paginado");
     Route::get("reglas_alertas/listado", [ReglasAlertaController::class, 'listado'])->name("reglas_alertas.listado");
     Route::post("reglas_alertas/actualizaPermiso/{role}", [ReglasAlertaController::class, 'actualizaPermiso'])->name("reglas_alertas.actualizaPermiso");
@@ -149,7 +157,7 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 
-    // CASOS
+    // CASOS EPIDEMIOLOGICOS
     Route::get("caso_epidemiologicos/paginado", [CasoEpidemiologicoController::class, 'paginado'])->name("caso_epidemiologicos.paginado");
     Route::get("caso_epidemiologicos/listado", [CasoEpidemiologicoController::class, 'listado'])->name("caso_epidemiologicos.listado");
     Route::post("caso_epidemiologicos/actualizaPermiso/{role}", [CasoEpidemiologicoController::class, 'actualizaPermiso'])->name("caso_epidemiologicos.actualizaPermiso");

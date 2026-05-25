@@ -1,72 +1,79 @@
 <script setup>
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
-import { useClientes } from "@/composables/clientes/useClientes";
-import { useAxios } from "@/composables/axios/useAxios";
-import { ref, onMounted, onBeforeMount } from "vue";
-import { useAppStore } from "@/stores/aplicacion/appStore";
+import { Head, Link, usePage } from "@inertiajs/vue3";
+import { useCasoEpidemiologicos } from "@/composables/caso_epidemiologicos/useCasoEpidemiologicos";
+import { ref, onMounted, onBeforeMount, onBeforeUnmount } from "vue";
 import Formulario from "./Formulario.vue";
-import Certificado from "./Certificado.vue";
+import { useAppStore } from "@/stores/aplicacion/appStore";
+import { useAxios } from "@/composables/axios/useAxios";
 const { props: props_page } = usePage();
 const appStore = useAppStore();
+const { axiosDelete } = useAxios();
+
 onBeforeMount(() => {
     appStore.startLoading();
 });
 
-onMounted(() => {
-    appStore.stopLoading();
-});
-
-const { setCliente, limpiarCliente, form } = useClientes();
-const { axiosDelete } = useAxios();
+const { setCasoEpidemiologico, limpiarCasoEpidemiologico, form } =
+    useCasoEpidemiologicos();
 
 const miTable = ref(null);
 const headers = [
     {
-        label: "NRO.",
-        key: "id",
+        label: "CÓDIGO",
+        key: "codigo",
         sortable: true,
-        width: "4%",
+        width: "3%",
     },
     {
-        label: "NOMBRE",
-        key: "nombre",
-        sortable: true,
-    },
-    {
-        label: "AP. PATERNO",
-        key: "paterno",
+        label: "PACIENTE",
+        key: "paciente",
         sortable: true,
     },
     {
-        label: "AP. MATERNO",
-        key: "materno",
+        label: "SEXO",
+        key: "paciente.sexo",
         sortable: true,
     },
     {
-        label: "C.I.",
-        key: "full_ci",
+        label: "ENFERMEDAD",
+        key: "enfermedad.nombre",
         sortable: true,
     },
     {
-        label: "FECHA NACIMIENTO",
-        key: "fecha_nac_t",
+        label: "FECHA SINTOMAS",
+        key: "fi_sintomas_t",
         sortable: true,
     },
     {
-        label: "EDAD",
-        key: "edad",
+        label: "FECHA DIAGNOSTICO",
+        key: "fecha_diagnostico_t",
         sortable: true,
     },
     {
-        label: "TELÉFONO/CELULAR",
-        key: "cel",
+        label: "CENTRO",
+        key: "centro.nombre",
         sortable: true,
     },
     {
-        label: "FECHA REGISTRO",
-        key: "fecha_registro",
+        label: "COMUNIDAD",
+        key: "comunidad.nombre",
+        sortable: true,
+    },
+    {
+        label: "TIPO CASO",
+        key: "tipo_caso",
+        sortable: true,
+    },
+    {
+        label: "GRAVEDAD",
+        key: "gravedad",
+        sortable: true,
+    },
+    {
+        label: "ESTADO",
+        key: "estado",
         sortable: true,
     },
     {
@@ -83,37 +90,38 @@ const multiSearch = ref({
 });
 
 const muestra_formulario = ref(false);
-const muestra_form_certificado = ref(false);
+const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarCliente();
+    limpiarCasoEpidemiologico();
     muestra_formulario.value = true;
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarCliente();
+        limpiarCasoEpidemiologico();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarCliente = (item) => {
+const eliminarCasoEpidemiologico = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
-        html: `<strong>${item.nombre} ${item.paterno} ${item.materno}</strong>`,
+        html: `<strong>${item.nombre}</strong>`,
         showCancelButton: true,
         confirmButtonText: "Si, eliminar",
         cancelButtonText: "No, cancelar",
         denyButtonText: `No, cancelar`,
         customClass: {
-            confirmButton: "btn-danger",
+            confirmButton: "bg-danger",
+            cancelButton: "bg-light text-dark border border-secondary",
         },
     }).then(async (result) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             let respuesta = await axiosDelete(
-                route("clientes.destroy", item.id),
+                route("caso_epidemiologicos.destroy", item.id),
             );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
@@ -121,30 +129,50 @@ const eliminarCliente = (item) => {
         }
     });
 };
+
+onMounted(async () => {
+    appStore.stopLoading();
+});
+
+onBeforeMount(() => {
+    document.getElementsByTagName("body")[0].classList.add("sidebar-mini");
+    document.getElementsByTagName("body")[0].classList.add("sidebar-collapse");
+});
+
+onBeforeUnmount(() => {
+    document.getElementsByTagName("body")[0].classList.remove("sidebar-mini");
+    document
+        .getElementsByTagName("body")[0]
+        .classList.remove("sidebar-collapse");
+});
 </script>
 <template>
-    <Head title="Clientes"></Head>
+    <Head title="Casos Epidemiológicos"></Head>
+
     <Content>
         <template #header>
             <div class="row">
                 <div class="col-sm-6">
-                    <h1 class="m-0">
-                        <i class="fa fa-user-friends"></i> Clientes
-                    </h1>
+                    <h3 class="m-0">
+                        <i class="fa fa-book-medical"></i> Casos Epidemiológicos
+                    </h3>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                    <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">Clientes</li>
+                        <li class="breadcrumb-item active">
+                            Casos Epidemiológicos
+                        </li>
                     </ol>
                 </div>
                 <!-- /.col -->
             </div>
             <!-- /.row -->
         </template>
+
         <div class="row">
             <div class="col-md-12">
                 <div class="row">
@@ -153,14 +181,14 @@ const eliminarCliente = (item) => {
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'clientes.create',
+                                    'caso_epidemiologicos.create',
                                 )
                             "
                             type="button"
                             class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nuevo Cliente
+                            <i class="fa fa-plus"></i> Nuevo Caso Epidemiológico
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
@@ -175,14 +203,12 @@ const eliminarCliente = (item) => {
                                         placeholder="Buscar"
                                         class="form-control border-1 border-right-0"
                                     />
-                                    <div class="input-append">
-                                        <button
-                                            class="btn btn-default rounded-0 border-left-0"
-                                            @click="updateDatos"
-                                        >
-                                            <i class="fa fa-search"></i>
-                                        </button>
-                                    </div>
+                                    <button
+                                        class="btn btn-light bg-white rounded-0"
+                                        @click="updateDatos"
+                                    >
+                                        <i class="fa fa-search"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -195,7 +221,7 @@ const eliminarCliente = (item) => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('clientes.paginado')"
+                            :url="route('caso_epidemiologicos.paginado')"
                             :numPages="5"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
@@ -204,38 +230,30 @@ const eliminarCliente = (item) => {
                             :header-class="'bg__primary'"
                             fixed-header
                         >
+                            <template #paciente="{ item }">
+                                <div>
+                                    <span>{{ item.paciente.full_name }}</span
+                                    ><br />
+                                    <span class="text-xs"
+                                        >({{ item.paciente.edad }} años)</span
+                                    >
+                                </div>
+                            </template>
+                            <template #fecha_nac="{ item }">
+                                <div>
+                                    <span>{{ item.fecha_nac_t }}</span
+                                    ><br />
+                                    <span class="text-xs"
+                                        >({{ item.edad }} años)</span
+                                    >
+                                </div>
+                            </template>
                             <template #accion="{ item }">
                                 <template
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'certificados.registroCliente',
-                                        )
-                                    "
-                                >
-                                    <el-tooltip
-                                        class="box-item"
-                                        effect="dark"
-                                        content="Certificado"
-                                        placement="left-start"
-                                    >
-                                        <button
-                                            class="btn btn-primary"
-                                            @click="
-                                                setCliente(item);
-                                                muestra_form_certificado = true;
-                                            "
-                                        >
-                                            <i
-                                                class="fa fa-clipboard-list"
-                                            ></i></button
-                                    ></el-tooltip>
-                                </template>
-                                <template
-                                    v-if="
-                                        props_page.auth?.user.permisos == '*' ||
-                                        props_page.auth?.user.permisos.includes(
-                                            'clientes.edit',
+                                            'caso_epidemiologicos.edit',
                                         )
                                     "
                                 >
@@ -248,19 +266,18 @@ const eliminarCliente = (item) => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setCliente(item);
+                                                setCasoEpidemiologico(item);
                                                 muestra_formulario = true;
                                             "
                                         >
                                             <i class="fa fa-pen"></i></button
                                     ></el-tooltip>
                                 </template>
-
                                 <template
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'clientes.destroy',
+                                            'caso_epidemiologicos.destroy',
                                         )
                                     "
                                 >
@@ -272,7 +289,9 @@ const eliminarCliente = (item) => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="eliminarCliente(item)"
+                                            @click="
+                                                eliminarCasoEpidemiologico(item)
+                                            "
                                         >
                                             <i
                                                 class="fa fa-trash-alt"
@@ -285,19 +304,13 @@ const eliminarCliente = (item) => {
                 </div>
             </div>
         </div>
-        <Formulario
-            v-if="muestra_formulario"
-            :form="form"
-            :muestra_formulario="muestra_formulario"
-            @envio-formulario="updateDatatable"
-            @cerrar-formulario="muestra_formulario = false"
-        ></Formulario>
-        <Certificado
-            v-if="muestra_form_certificado"
-            :form="form"
-            :muestra_formulario="muestra_form_certificado"
-            @envio-formulario="muestra_form_certificado = false"
-            @cerrar-formulario="muestra_form_certificado = false"
-        ></Certificado>
     </Content>
+
+    <Formulario
+        v-if="muestra_formulario"
+        :muestra_formulario="muestra_formulario"
+        :form="form"
+        @envio-formulario="updateDatatable"
+        @cerrar-formulario="muestra_formulario = false"
+    ></Formulario>
 </template>

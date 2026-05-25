@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 22-05-2026 a las 19:29:05
+-- Tiempo de generación: 25-05-2026 a las 16:25:28
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -66,6 +66,14 @@ CREATE TABLE `caso_epidemiologicos` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `caso_epidemiologicos`
+--
+
+INSERT INTO `caso_epidemiologicos` (`id`, `codigo`, `paciente_id`, `enfermedad_id`, `centro_id`, `comunidad_id`, `user_id`, `fi_sintomas`, `fecha_diagnostico`, `tipo_caso`, `gravedad`, `estado`, `contacto`, `hospitalizacion`, `fecha_registro`, `observaciones`, `created_at`, `updated_at`) VALUES
+(1, 'CE-2026-00001', 1, 1, 1, 1, 1, '2026-05-01', '2026-05-25', 'SOSPECHOSO', 'LEVE', 'SOSPECHOSO', 5, 0, '2026-05-25', 'observaciones', '2026-05-25 16:12:07', '2026-05-25 16:12:07'),
+(2, 'CE-2026-00002', 2, 4, 1, 1, 1, '2026-05-01', '2026-05-25', 'PROBABLE', 'MODERADO', 'PROBABLE', 10, 0, '2026-05-25', NULL, '2026-05-25 16:25:12', '2026-05-25 16:25:12');
 
 -- --------------------------------------------------------
 
@@ -278,7 +286,11 @@ INSERT INTO `historial_accions` (`id`, `user_id`, `accion`, `descripcion`, `dato
 (21, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA SUCURSAL', '{\"id\": 9, \"nombre\": \"FECHAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:19:10.000000Z\"}', '{\"id\": 9, \"nombre\": \"FECAL-ORAL\", \"created_at\": \"2026-05-17T20:19:10.000000Z\", \"updated_at\": \"2026-05-17T20:20:55.000000Z\"}', 'TIPO DE TRANSMISIÓN', '2026-05-17', '16:20:55', '2026-05-17 20:20:55', '2026-05-17 20:20:55'),
 (22, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA REGLA DE ALERTA', '{\"id\": 1, \"riesgo\": \"MEDIO\", \"umbral\": \"6\", \"created_at\": \"2026-05-22T19:26:08.000000Z\", \"updated_at\": \"2026-05-22T19:26:08.000000Z\", \"enfermedad_id\": \"1\"}', NULL, 'REGLAS DE ALERTA', '2026-05-22', '15:26:08', '2026-05-22 19:26:08', '2026-05-22 19:26:08'),
 (23, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"MEDIO\", \"umbral\": \"6\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:26:35.000000Z\", \"enfermedad_id\": \"1\"}', NULL, 'REGLAS DE ALERTA', '2026-05-22', '15:26:35', '2026-05-22 19:26:35', '2026-05-22 19:26:35'),
-(24, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"MEDIO\", \"status\": 1, \"umbral\": 6, \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:26:35.000000Z\", \"enfermedad_id\": 1}', '{\"id\": 2, \"riesgo\": \"ALTO\", \"status\": 1, \"umbral\": \"12\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:28:32.000000Z\", \"enfermedad_id\": \"1\"}', 'REGLAS DE ALERTA', '2026-05-22', '15:28:32', '2026-05-22 19:28:32', '2026-05-22 19:28:32');
+(24, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"MEDIO\", \"status\": 1, \"umbral\": 6, \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:26:35.000000Z\", \"enfermedad_id\": 1}', '{\"id\": 2, \"riesgo\": \"ALTO\", \"status\": 1, \"umbral\": \"12\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:28:32.000000Z\", \"enfermedad_id\": \"1\"}', 'REGLAS DE ALERTA', '2026-05-22', '15:28:32', '2026-05-22 19:28:32', '2026-05-22 19:28:32'),
+(25, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"456546654\", \"id\": 1, \"dir\": \"ASUNTA #3223\", \"fono\": \"67676767\", \"sexo\": \"MASCULINO\", \"ci_exp\": \"LP\", \"nombre\": \"JUAN\", \"latitud\": \"-16.123665761985627\", \"materno\": \"SOLIZ\", \"paterno\": \"MONRROY\", \"longitud\": \"-67.19748973381918\", \"fecha_nac\": \"2000-01-01\", \"created_at\": \"2026-05-25T14:29:57.000000Z\", \"updated_at\": \"2026-05-25T14:29:57.000000Z\", \"comunidad_id\": \"1\"}', NULL, 'PACIENTES', '2026-05-25', '10:29:57', '2026-05-25 14:29:57', '2026-05-25 14:29:57'),
+(26, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"56565656\", \"id\": 2, \"dir\": \"ASUNTA #2323\", \"fono\": null, \"sexo\": \"FEMENINO\", \"ci_exp\": \"LP\", \"nombre\": \"MARIA\", \"latitud\": \"-16.125283924900813\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"longitud\": \"-67.19494719477096\", \"fecha_nac\": \"2003-01-01\", \"created_at\": \"2026-05-25T14:44:57.000000Z\", \"updated_at\": \"2026-05-25T14:44:57.000000Z\", \"comunidad_id\": \"1\", \"fecha_registro\": \"2026-05-25\"}', NULL, 'PACIENTES', '2026-05-25', '10:44:57', '2026-05-25 14:44:57', '2026-05-25 14:44:57'),
+(27, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"SOSPECHOSO\", \"user_id\": 1, \"contacto\": \"5\", \"gravedad\": \"LEVE\", \"centro_id\": \"1\", \"tipo_caso\": \"SOSPECHOSO\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-25T16:12:07.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"1\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"1\", \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-25', '12:12:07', '2026-05-25 16:12:07', '2026-05-25 16:12:07'),
+(28, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 2, \"codigo\": \"CE-2026-00002\", \"estado\": \"PROBABLE\", \"user_id\": 1, \"contacto\": \"10\", \"gravedad\": \"MODERADO\", \"centro_id\": \"1\", \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:25:12.000000Z\", \"updated_at\": \"2026-05-25T16:25:12.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"2\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"4\", \"observaciones\": null, \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-25', '12:25:12', '2026-05-25 16:25:12', '2026-05-25 16:25:12');
 
 -- --------------------------------------------------------
 
@@ -377,15 +389,26 @@ CREATE TABLE `pacientes` (
   `paterno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `materno` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sexo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ci` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `ci_exp` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_nac` date NOT NULL,
   `dir` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `latitud` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `longitud` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `fono` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `fono` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `comunidad_id` bigint UNSIGNED NOT NULL,
+  `fecha_registro` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `pacientes`
+--
+
+INSERT INTO `pacientes` (`id`, `nombre`, `paterno`, `materno`, `sexo`, `ci`, `ci_exp`, `fecha_nac`, `dir`, `latitud`, `longitud`, `fono`, `comunidad_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
+(1, 'JUAN', 'MONRROY', 'SOLIZ', 'MASCULINO', '456546654', 'LP', '2000-01-01', 'ASUNTA #3223', '-16.123665761985627', '-67.19748973381918', '67676767', 1, '2026-05-25', '2026-05-25 14:29:57', '2026-05-25 14:29:57'),
+(2, 'MARIA', 'GONZALES', '', 'FEMENINO', '56565656', 'LP', '2003-01-01', 'ASUNTA #2323', '-16.125283924900813', '-67.19494719477096', NULL, 1, '2026-05-25', '2026-05-25 14:44:57', '2026-05-25 14:44:57');
 
 -- --------------------------------------------------------
 
@@ -694,7 +717,7 @@ ALTER TABLE `alerta_epidemiologicas`
 -- AUTO_INCREMENT de la tabla `caso_epidemiologicos`
 --
 ALTER TABLE `caso_epidemiologicos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria_enfermedads`
@@ -736,7 +759,7 @@ ALTER TABLE `enfermedads`
 -- AUTO_INCREMENT de la tabla `historial_accions`
 --
 ALTER TABLE `historial_accions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -766,7 +789,7 @@ ALTER TABLE `notificacion_users`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`

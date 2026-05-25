@@ -23,7 +23,7 @@ return new class extends Migration
             $table->date("fecha_diagnostico");
             $table->string("tipo_caso"); //SOSPECHOSO, PROBABLE, CONFIRMADO, DESCARTADO
             $table->string("gravedad"); // LEVE, MODERADO, GRAVE, CRITICO
-            $table->string("estado"); //  EN SEGUIMIENTO, ACTIVO, RECUPERADO, FALLECIDO, DESCARTADO
+            $table->string("estado"); // EN SEGUIMIENTO, ACTIVO, RECUPERADO, FALLECIDO, DESCARTADO
             $table->integer("contacto"); // Nro. de contacto con otras personas
             $table->integer("hospitalizacion"); // requiere hospitlizacion SI/NO (1,0)
             $table->date("fecha_registro");

@@ -32,7 +32,8 @@ const sincronizarMenus = () => {
     if (
         route_current.value == "enfermedads.index" ||
         route_current.value == "categoria_enfermedads.index" ||
-        route_current.value == "tipo_transmisions.index"
+        route_current.value == "tipo_transmisions.index" ||
+        route_current.value == "reglas_alertas.index"
     ) {
         openMenus.enfermedads = true;
     }

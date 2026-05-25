@@ -178,6 +178,10 @@ body .app-sidebar .sidebar-wrapper {
     font-weight: bold;
 }
 
+.sidebar-mini.sidebar-collapse .user-panel .info {
+    display: none;
+}
+
 .user-panel {
     display: flex;
     gap: 15px;

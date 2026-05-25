@@ -17,12 +17,15 @@ return new class extends Migration
             $table->string("paterno");
             $table->string("materno");
             $table->string("sexo");
+            $table->string("ci");
+            $table->string("ci_exp");
             $table->date("fecha_nac");
             $table->string("dir");
             $table->string("latitud");
             $table->string("longitud");
-            $table->string("fono");
+            $table->string("fono")->nullable();
             $table->unsignedBigInteger("comunidad_id");
+            $table->date("fecha_registro")->nullable();
             $table->timestamps();
 
             $table->foreign("comunidad_id")->on("comunidads")->references("id");
