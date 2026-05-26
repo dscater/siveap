@@ -1,0 +1,21 @@
+* versiones de Python: py -0
+  (Usar la versión 3.11 mejor rendimiento)
+// si no se tiene otra versión no anotar -3.11
+
+1) py -3.11 -m venv env
+
+2) env\Scripts\actívate
+   
+	(verificar versión python --version)
+
+3) Instalar librerías para usar Modelo Lineal General (GLM) con Poisson
+ pip install fastapi uvicorn pandas statsmodels numpy
+
+fastapi: Para crear Api's consumibles en Python
+uvicorn: Servidor que usara fastapi
+pandas: manipular datos/tablas
+statsmodels: librería para el manejo de estadísticas (aquí se usara GLM con Poisson)
+numpy: para el calculo matemático de los datos (matrices, transforamciones, cálculos)
+
+4) LEVANTAR SERVIDOR
+uvicorn app:app --reload
