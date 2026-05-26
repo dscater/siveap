@@ -25,4 +25,9 @@ class Seguimiento extends Model
     {
         return $this->belongsTo(CasoEpidemiologico::class, 'caso_epidemiologico_id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

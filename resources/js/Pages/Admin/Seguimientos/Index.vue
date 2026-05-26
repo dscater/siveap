@@ -2,11 +2,14 @@
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import { useCasoEpidemiologicos } from "@/composables/caso_epidemiologicos/useCasoEpidemiologicos";
-import { ref, onMounted, onBeforeMount, onBeforeUnmount } from "vue";
+import { useSeguimientos } from "@/composables/seguimientos/useSeguimientos";
+import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
 import { useAxios } from "@/composables/axios/useAxios";
+const props = defineProps({
+    caso_epidemiologico: Object,
+});
 const { props: props_page } = usePage();
 const appStore = useAppStore();
 const { axiosDelete } = useAxios();
@@ -15,65 +18,29 @@ onBeforeMount(() => {
     appStore.startLoading();
 });
 
-const { setCasoEpidemiologico, limpiarCasoEpidemiologico, form } =
-    useCasoEpidemiologicos();
+const { setSeguimiento, limpiarSeguimiento, form } = useSeguimientos();
 
 const miTable = ref(null);
 const headers = [
     {
-        label: "CÓDIGO",
-        key: "codigo",
+        label: "FECHA",
+        key: "fecha",
         sortable: true,
-        width: "3%",
-    },
-    {
-        label: "PACIENTE",
-        key: "paciente",
-        sortable: true,
-    },
-    {
-        label: "SEXO",
-        key: "paciente.sexo",
-        sortable: true,
-    },
-    {
-        label: "ENFERMEDAD",
-        key: "enfermedad.nombre",
-        sortable: true,
-    },
-    {
-        label: "FECHA SINTOMAS",
-        key: "fi_sintomas_t",
-        sortable: true,
-    },
-    {
-        label: "FECHA DIAGNOSTICO",
-        key: "fecha_diagnostico_t",
-        sortable: true,
-    },
-    {
-        label: "CENTRO",
-        key: "centro.nombre",
-        sortable: true,
-    },
-    {
-        label: "COMUNIDAD",
-        key: "comunidad.nombre",
-        sortable: true,
-    },
-    {
-        label: "TIPO CASO",
-        key: "tipo_caso",
-        sortable: true,
-    },
-    {
-        label: "GRAVEDAD",
-        key: "gravedad",
-        sortable: true,
+        width: "5%",
     },
     {
         label: "ESTADO",
         key: "estado",
+        sortable: true,
+    },
+    {
+        label: "OBSERVACIONES",
+        key: "observaciones",
+        sortable: true,
+    },
+    {
+        label: "REGISTRADO POR",
+        key: "user.full_name",
         sortable: true,
     },
     {
@@ -86,6 +53,7 @@ const headers = [
 
 const multiSearch = ref({
     search: "",
+    caso_epidemiologico_id: props.caso_epidemiologico.id,
     filtro: [],
 });
 
@@ -93,19 +61,21 @@ const muestra_formulario = ref(false);
 const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarCasoEpidemiologico();
+    limpiarSeguimiento();
+    form.caso_epidemiologico_id = props.caso_epidemiologico.id;
+    form.caso_epidemiologico = props.caso_epidemiologico;
     muestra_formulario.value = true;
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarCasoEpidemiologico();
+        limpiarSeguimiento();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarCasoEpidemiologico = (item) => {
+const eliminarSeguimiento = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
         html: `<strong>${item.nombre}</strong>`,
@@ -121,7 +91,7 @@ const eliminarCasoEpidemiologico = (item) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             let respuesta = await axiosDelete(
-                route("caso_epidemiologicos.destroy", item.id),
+                route("seguimientos.destroy", item.id),
             );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
@@ -133,18 +103,6 @@ const eliminarCasoEpidemiologico = (item) => {
 onMounted(async () => {
     appStore.stopLoading();
 });
-
-onBeforeMount(() => {
-    document.getElementsByTagName("body")[0].classList.add("sidebar-mini");
-    document.getElementsByTagName("body")[0].classList.add("sidebar-collapse");
-});
-
-onBeforeUnmount(() => {
-    document.getElementsByTagName("body")[0].classList.remove("sidebar-mini");
-    document
-        .getElementsByTagName("body")[0]
-        .classList.remove("sidebar-collapse");
-});
 </script>
 <template>
     <Head title="Casos Epidemiológicos"></Head>
@@ -154,7 +112,7 @@ onBeforeUnmount(() => {
             <div class="row">
                 <div class="col-sm-6">
                     <h3 class="m-0">
-                        <i class="fa fa-book-medical"></i> Casos Epidemiológicos
+                        <i class="fa fa-list"></i> Casos Epidemiológicos
                     </h3>
                 </div>
                 <!-- /.col -->
@@ -163,9 +121,12 @@ onBeforeUnmount(() => {
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">
-                            Casos Epidemiológicos
+                        <li class="breadcrumb-item">
+                            <Link :href="route('caso_epidemiologicos.index')"
+                                >Casos Epidemiológicos</Link
+                            >
                         </li>
+                        <li class="breadcrumb-item active">Seguimiento</li>
                     </ol>
                 </div>
                 <!-- /.col -->
@@ -174,21 +135,65 @@ onBeforeUnmount(() => {
         </template>
 
         <div class="row">
+            <div class="col-12 mb-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <b>Código Caso: </b
+                                >{{ caso_epidemiologico.codigo }}
+                            </div>
+                            <div class="col-6">
+                                <b>Estado del Caso: </b
+                                >{{ caso_epidemiologico.estado }}
+                            </div>
+                            <div class="col-6">
+                                <b>Enfermedad: </b
+                                >{{ caso_epidemiologico.enfermedad.nombre }}
+                            </div>
+                            <div class="col-6">
+                                <b>Gravedad: </b
+                                >{{ caso_epidemiologico.gravedad }}
+                            </div>
+                            <div class="col-6">
+                                <b>Observaciones: </b
+                                >{{ caso_epidemiologico.observaciones }}
+                            </div>
+                            <div class="col-6">
+                                <b>Comunidad: </b
+                                >{{ caso_epidemiologico.comunidad.nombre }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-12">
                 <div class="row">
                     <div class="col-md-4">
+                        <Link
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'caso_epidemiologicos.index',
+                                )
+                            "
+                            :href="route('caso_epidemiologicos.index')"
+                            class="btn btn-light bg-white text-sm me-1"
+                        >
+                            <i class="fa fa-arrow-left"></i> Volver
+                        </Link>
                         <button
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'caso_epidemiologicos.create',
+                                    'seguimientos.create',
                                 )
                             "
                             type="button"
                             class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nuevo Caso Epidemiológico
+                            <i class="fa fa-plus"></i> Nuevo Seguimiento
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
@@ -203,12 +208,14 @@ onBeforeUnmount(() => {
                                         placeholder="Buscar"
                                         class="form-control border-1 border-right-0"
                                     />
-                                    <button
-                                        class="btn btn-light bg-white rounded-0"
-                                        @click="updateDatos"
-                                    >
-                                        <i class="fa fa-search"></i>
-                                    </button>
+                                    <div class="input-append">
+                                        <button
+                                            class="btn btn-default rounded-0 border-left-0"
+                                            @click="updateDatos"
+                                        >
+                                            <i class="fa fa-search"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -221,7 +228,7 @@ onBeforeUnmount(() => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('caso_epidemiologicos.paginado')"
+                            :url="route('seguimientos.paginado')"
                             :numPages="5"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
@@ -230,22 +237,28 @@ onBeforeUnmount(() => {
                             :header-class="'bg__primary'"
                             fixed-header
                         >
-                            <template #paciente="{ item }">
-                                <div>
-                                    <span>{{ item.paciente.full_name }}</span
-                                    ><br />
-                                    <span class="text-xs"
-                                        >({{ item.paciente.edad }} años)</span
-                                    >
-                                </div>
+                            <template #foto="{ item }">
+                                <img
+                                    class="direct-chat-img"
+                                    :src="item.url_foto"
+                                    alt="Foto"
+                                />
                             </template>
-                            <template #fecha_nac="{ item }">
-                                <div>
-                                    <span>{{ item.fecha_nac_t }}</span
-                                    ><br />
-                                    <span class="text-xs"
-                                        >({{ item.edad }} años)</span
-                                    >
+
+                            <template #acceso="{ item }">
+                                <div
+                                    class="badge text-sm"
+                                    :class="[
+                                        item.acceso == 1
+                                            ? 'bg-success'
+                                            : 'bg-danger',
+                                    ]"
+                                >
+                                    {{
+                                        item.acceso == 1
+                                            ? "HABILITADO"
+                                            : "DESHABILITADO"
+                                    }}
                                 </div>
                             </template>
                             <template #accion="{ item }">
@@ -253,35 +266,7 @@ onBeforeUnmount(() => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'seguimientos.index',
-                                        )
-                                    "
-                                >
-                                    <el-tooltip
-                                        class="box-item"
-                                        effect="dark"
-                                        content="Seguimiento"
-                                        placement="left-start"
-                                    >
-                                        <Link
-                                            class="btn btn-primary"
-                                            :href="
-                                                route(
-                                                    'seguimientos.index',
-                                                    item.id,
-                                                )
-                                            "
-                                        >
-                                            {{ item.seguimientos_count }}
-                                            <br />
-                                            <i class="fa fa-list"></i></Link
-                                    ></el-tooltip>
-                                </template>
-                                <template
-                                    v-if="
-                                        props_page.auth?.user.permisos == '*' ||
-                                        props_page.auth?.user.permisos.includes(
-                                            'caso_epidemiologicos.edit',
+                                            'seguimientos.edit',
                                         )
                                     "
                                 >
@@ -294,7 +279,7 @@ onBeforeUnmount(() => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setCasoEpidemiologico(item);
+                                                setSeguimiento(item);
                                                 muestra_formulario = true;
                                             "
                                         >
@@ -305,7 +290,7 @@ onBeforeUnmount(() => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'caso_epidemiologicos.destroy',
+                                            'seguimientos.destroy',
                                         )
                                     "
                                 >
@@ -317,9 +302,7 @@ onBeforeUnmount(() => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="
-                                                eliminarCasoEpidemiologico(item)
-                                            "
+                                            @click="eliminarSeguimiento(item)"
                                         >
                                             <i
                                                 class="fa fa-trash-alt"

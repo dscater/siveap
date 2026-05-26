@@ -1,0 +1,406 @@
+<?php
+
+namespace App\Services;
+
+use App\Services\HistorialAccionService;
+use App\Models\AlertaEpidemiologica;
+use App\Models\CasoEpidemiologico;
+use App\Models\Comunidad;
+use App\Models\Enfermedad;
+use App\Models\Notificacion;
+use App\Models\ReglasAlerta;
+use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Exception;
+use Illuminate\Container\Attributes\Auth;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+
+class AlertaEpidemiologicaService
+{
+    private $modulo = "ALERTAS EPIDEMIOLOGICAS";
+    private $urlApi = 'http://127.0.0.1:8000/';
+
+    public function __construct(private  CargarArchivoService $cargarArchivoService, private HistorialAccionService $historialAccionService, private NotificacionService $notificacion_service) {}
+
+    public function listado(): Collection
+    {
+        $alerta_epidemiologicas = AlertaEpidemiologica::select("alerta_epidemiologicas.*")->get();
+        return $alerta_epidemiologicas;
+    }
+    /**
+     * Lista de alerta_epidemiologicas paginado con filtros
+     *
+     * @param integer $length
+     * @param integer $page
+     * @param string $search
+     * @param array $columnsSerachLike
+     * @param array $columnsFilter
+     * @return LengthAwarePaginator
+     */
+    public function listadoPaginado(int $length, int $page, string $search, array $columnsSerachLike = [], array $columnsFilter = [], array $columnsBetweenFilter = [], array $orderBy = []): LengthAwarePaginator
+    {
+        $alerta_epidemiologicas = AlertaEpidemiologica::select("alerta_epidemiologicas.*");
+
+        // Filtros exactos
+        foreach ($columnsFilter as $key => $value) {
+            if (!is_null($value)) {
+                $alerta_epidemiologicas->where("alerta_epidemiologicas.$key", $value);
+            }
+        }
+
+        // Filtros por rango
+        foreach ($columnsBetweenFilter as $key => $value) {
+            if (isset($value[0], $value[1])) {
+                $alerta_epidemiologicas->whereBetween("alerta_epidemiologicas.$key", $value);
+            }
+        }
+
+        // Búsqueda en múltiples columnas con LIKE
+        if (!empty($search) && !empty($columnsSerachLike)) {
+            $alerta_epidemiologicas->where(function ($query) use ($search, $columnsSerachLike) {
+                foreach ($columnsSerachLike as $col) {
+                    $query->orWhere("$col", "LIKE", "%$search%");
+                }
+            });
+        }
+
+        // Ordenamiento
+        foreach ($orderBy as $value) {
+            if (isset($value[0], $value[1])) {
+                $alerta_epidemiologicas->orderBy($value[0], $value[1]);
+            }
+        }
+
+
+        $alerta_epidemiologicas = $alerta_epidemiologicas->paginate($length, ['*'], 'page', $page);
+        return $alerta_epidemiologicas;
+    }
+
+    /**
+     * Crear alerta_epidemiologica
+     *
+     * @param array $datos
+     * @return AlertaEpidemiologica
+     */
+    public function crear(array $datos): AlertaEpidemiologica
+    {
+        $alerta_epidemiologica = AlertaEpidemiologica::create([
+            "nombre" => mb_strtoupper($datos["nombre"]),
+            "latitud" => $datos["latitud"],
+            "longitud" => $datos["longitud"],
+        ]);
+
+        // registrar accion
+        $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UNA ALERTA EPIDEMIOLOGICA", $alerta_epidemiologica);
+
+        return $alerta_epidemiologica;
+    }
+
+    /**
+     * Actualizar alerta_epidemiologica
+     *
+     * @param array $datos
+     * @param AlertaEpidemiologica $alerta_epidemiologica
+     * @return AlertaEpidemiologica
+     */
+    public function actualizar(array $datos, AlertaEpidemiologica $alerta_epidemiologica): AlertaEpidemiologica
+    {
+        $old_alerta_epidemiologica = clone $alerta_epidemiologica;
+
+        $alerta_epidemiologica->update([
+            "nombre" => mb_strtoupper($datos["nombre"]),
+            "latitud" => $datos["latitud"],
+            "longitud" => $datos["longitud"],
+        ]);
+
+        // registrar accion
+        $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UNA ALERTA EPIDEMIOLOGICA", $old_alerta_epidemiologica, $alerta_epidemiologica->withoutRelations());
+
+        return $alerta_epidemiologica;
+    }
+
+    /**
+     * Eliminar alerta_epidemiologica
+     *
+     * @param AlertaEpidemiologica $alerta_epidemiologica
+     * @return boolean
+     */
+    public function eliminar(AlertaEpidemiologica $alerta_epidemiologica): bool|Exception
+    {
+        // TODO: VERIFICAR RELACIONES
+
+        $old_alerta_epidemiologica = clone $alerta_epidemiologica;
+        $alerta_epidemiologica->delete();
+
+        // registrar accion
+        $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA ALERTA EPIDEMIOLOGICA", $old_alerta_epidemiologica, $alerta_epidemiologica);
+
+        return true;
+    }
+
+    public function verificarAlertas()
+    {
+        $enfermedades = Enfermedad::all();
+
+        $comunidades = Comunidad::all();
+
+        foreach ($enfermedades as $enfermedad) {
+
+            // BUSCAR REGLA ACTIVA
+            $regla = ReglasAlerta::query()
+                ->where('enfermedad_id', $enfermedad->id)
+                ->where('status', 1)
+                ->first();
+
+            // CONFIGURACIÓN POR DEFECTO
+            $umbral = $regla?->umbral ?? 5;
+
+            // TODO:
+            // mover a configuraciones generales
+            $ventanaDias = 7;
+
+            foreach ($comunidades as $comunidad) {
+
+                // OBTENER CASOS
+                $casos = CasoEpidemiologico::query()
+
+                    ->where('enfermedad_id', $enfermedad->id)
+
+                    ->where('comunidad_id', $comunidad->id)
+
+                    ->whereIn('tipo_caso', [
+                        'PROBABLE',
+                        'CONFIRMADO'
+                    ])
+
+                    ->whereBetween(
+                        'fecha_diagnostico',
+                        [
+                            now()->subDays($ventanaDias),
+                            now()
+                        ]
+                    )
+
+                    ->orderBy('fecha_diagnostico')
+
+                    ->get();
+
+                // SI NO EXISTEN CASOS
+                if ($casos->isEmpty()) {
+                    continue;
+                }
+
+                // TOTAL CONFIRMADOS
+                // $totalConfirmados = $casos->count();
+                $totalConfirmados = 100; //PRUEBAS
+
+                // VALIDAR UMBRAL
+                if ($totalConfirmados < $umbral) {
+
+                    Log::debug("
+                    {$enfermedad->nombre}
+                    no supera el umbral
+                ");
+
+                    // SI EXISTE ALERTA ACTIVA
+                    // MARCAR COMO CONTROLADO
+                    $alertaActiva = AlertaEpidemiologica::query()
+                        ->where('comunidad_id', $comunidad->id)
+                        ->where('enfermedad_id', $enfermedad->id)
+                        ->where('estado', 'ACTIVO')
+                        ->first();
+
+                    if ($alertaActiva) {
+
+                        $alertaActiva->update([
+                            'estado' => 'CONTROLADO',
+                            'fecha_control' => now(),
+                        ]);
+                    }
+
+                    continue;
+                }
+
+                // AGRUPAR POR FECHA
+                $dias = $casos
+
+                    ->groupBy(function ($item) {
+
+                        return $item
+                            ->fecha_diagnostico
+                            ->format('Y-m-d');
+                    })
+
+                    ->map(function ($items, $fecha) {
+
+                        return [
+                            'fecha' => $fecha,
+                            'confirmados' => $items->count(),
+                            'activos' => $items
+                                ->where('estado', 'ACTIVO')
+                                ->count(),
+                            'graves' => $items
+                                ->whereIn('gravedad', [
+                                    'GRAVE',
+                                    'CRITICO'
+                                ])
+                                ->count(),
+                            'fallecidos' => $items
+                                ->where('estado', 'FALLECIDO')
+                                ->count(),
+                        ];
+                    })
+
+                    ->values();
+
+                // PAYLOAD PARA FASTAPI
+                $payload = [
+                    'enfermedad_id' => $enfermedad->id,
+                    'comunidad_id' => $comunidad->id,
+                    'dias' => $dias
+                ];
+
+                // DATOS PRUEBA
+                $payload = $this->datosPruebaAlerta(
+                    $enfermedad->id,
+                    $comunidad->id
+                );
+
+                try {
+
+                    // ENVIAR A FASTAPI
+                    $response = Http::timeout(30)
+
+                        ->post(
+                            $this->urlApi . 'analizar',
+                            $payload
+                        );
+
+                    // ERROR API
+                    if ($response->failed()) {
+                        Log::error("
+                        Error FastAPI:
+                        {$response->body()}
+                    ");
+                        continue;
+                    }
+
+                    $resultado = $response->json();
+
+                    // BUSCAR ALERTA ACTIVA
+                    $alertaActiva = AlertaEpidemiologica::query()
+                        ->where('comunidad_id', $comunidad->id)
+                        ->where('enfermedad_id', $enfermedad->id)
+                        ->where('estado', 'ACTIVO')
+                        ->first();
+
+                    DB::beginTransaction();
+
+                    // SI YA EXISTE ALERTA
+                    if ($alertaActiva) {
+                        $alertaActiva->update([
+                            'nivel_alerta' => $resultado['riesgo'],
+                            'indice' => $resultado['indice'],
+                            'prediccion' => $resultado['prediccion'],
+                            'crecimiento' => $resultado['crecimiento'],
+                            'confirmados' => $resultado['confirmados'],
+                            'activos' => $resultado['activos'],
+                            'graves' => $resultado['graves'],
+                            'fallecidos' => $resultado['fallecidos'],
+                            'fecha' => now(),
+                            'ultima_actualizacion' => now(),
+                        ]);
+                        $alerta_epidemiologica = $alertaActiva;
+                    } else {
+                        // CREAR NUEVA ALERTA
+                        $alerta_epidemiologica =
+                            AlertaEpidemiologica::create([
+                                'comunidad_id' => $comunidad->id,
+                                'enfermedad_id' => $enfermedad->id,
+                                'nivel_alerta' => $resultado['riesgo'],
+                                'indice' => $resultado['indice'],
+                                'prediccion' => $resultado['prediccion'],
+                                'crecimiento' => $resultado['crecimiento'],
+                                'confirmados' => $resultado['confirmados'],
+                                'activos' => $resultado['activos'],
+                                'graves' => $resultado['graves'],
+                                'fallecidos' => $resultado['fallecidos'],
+                                'fecha' => now(),
+                                'ultima_actualizacion' => now(),
+                                'estado' => 'ACTIVO'
+                            ]);
+
+                        // GENERAR NOTIFICACIÓN
+                        $this->notificacion_service->crear([
+                            "descripcion" => "{$alerta_epidemiologica->nivel_alerta}: Se detectó incremento de casos de {$enfermedad->nombre}",
+                            "modulo" => "AlertaEpidemiologica",
+                            "tipo" => "ALERTA",
+                            "registro_id" => $alerta_epidemiologica->id,
+                        ]);
+                    }
+
+                    // SI EL RIESGO BAJA
+                    if ($resultado['indice'] <= 20) {
+                        $alerta_epidemiologica->update([
+                            'estado' => 'CONTROLADO',
+                            'fecha_control' => now(),
+                        ]);
+                    }
+                    DB::commit();
+                    // Log::debug($resultado);
+                } catch (\Exception $e) {
+
+                    DB::rollBack();
+
+                    Log::error($e->getMessage());
+                }
+            }
+        }
+    }
+
+    public function datosPruebaAlerta($enfermedad_id, $comunidad_id)
+    {
+        return [
+            'enfermedad_id' => $enfermedad_id,
+            'comunidad_id' => $comunidad_id,
+            'dias' => [
+                [
+                    'fecha' => '2026-05-20',
+                    'confirmados' => 2,
+                    'activos' => 2,
+                    'graves' => 0,
+                    'fallecidos' => 0,
+                ],
+
+                [
+                    'fecha' => '2026-05-21',
+                    'confirmados' => 4,
+                    'activos' => 3,
+                    'graves' => 1,
+                    'fallecidos' => 0,
+                ],
+
+                [
+                    'fecha' => '2026-05-22',
+                    'confirmados' => 7,
+                    'activos' => 6,
+                    'graves' => 2,
+                    'fallecidos' => 0,
+                ],
+
+                [
+                    'fecha' => '2026-05-23',
+                    'confirmados' => 10,
+                    'activos' => 8,
+                    'graves' => 3,
+                    'fallecidos' => 1,
+                ],
+            ]
+        ];
+    }
+}

@@ -11,10 +11,8 @@ use App\Models\Inscripcion;
 use App\Models\Pago;
 use App\Models\TipoCertificado;
 use App\Models\User;
-use App\Services\PagoService;
 use App\Services\ReporteService;
 use App\Services\ReporteServiceTcpdf;
-use App\Services\TipoPagoService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -176,7 +174,7 @@ class ReporteController extends Controller
     ];
 
     private $configuracion = null;
-    public function __construct(private PagoService $pagoService, private TipoPagoService $tipo_pago_service)
+    public function __construct()
     {
         $this->configuracion = Configuracion::first();
         if (!$this->configuracion) {

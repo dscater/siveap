@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class ReglasAlertaUpdateRequest extends FormRequest
+class SeguimientoUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,21 @@ class ReglasAlertaUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "enfermedad_id" => "required|unique:reglas_alertas,enfermedad_id," . $this->reglas_alerta->id,
-            "umbral" => "required",
-            "riesgo" => "required",
+            "caso_epidemiologico_id" => "required",
+            "fecha" => "required|date",
+            "estado" => "required",
+            "observaciones" => "nullable",
         ];
     }
 
     public function messages()
     {
         return [
-            "enfermedad_id.required" => "El campo enfermedad es obligatorio.",
-            "enfermedad_id.unique" => "La enfermedad ya tiene una regla.",
-            "umbral.required" => "El campo umbral es obligatorio.",
-            "riesgo.required" => "El campo riesgo es obligatorio.",
+            "caso_epidemiologico_id.required" => "Debes completar este campo",
+            "fecha.required" => "Debes completar este campo",
+            "fecha.date" => "Debes ingresar una fecha valida",
+            "estado.required" => "Debes completar este campo",
+            "observaciones.required" => "Debes completar este campo",
         ];
     }
 }

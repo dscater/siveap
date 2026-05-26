@@ -36,7 +36,8 @@ class CasoEpidemiologicoService
     public function listadoPaginado(int $length, int $page, string $search, array $columnsSerachLike = [], array $columnsFilter = [], array $columnsBetweenFilter = [], array $orderBy = []): LengthAwarePaginator
     {
         $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*")
-            ->with(["paciente", "enfermedad:id,nombre", "centro:id,nombre", "comunidad:id,nombre", "user:id,nombre,paterno,materno"]);
+            ->with(["paciente", "enfermedad:id,nombre", "centro:id,nombre", "comunidad:id,nombre", "user:id,nombre,paterno,materno"])
+            ->withCount(["seguimientos"]);
 
         // Filtros exactos
         foreach ($columnsFilter as $key => $value) {
@@ -142,7 +143,6 @@ class CasoEpidemiologicoService
             "enfermedad_id" => $datos["enfermedad_id"],
             "centro_id" => $datos["centro_id"],
             "comunidad_id" => $datos["comunidad_id"],
-            "user_id" => $datos["user_id"],
             "fi_sintomas" => $datos["fi_sintomas"],
             "fecha_diagnostico" => $datos["fecha_diagnostico"],
             "tipo_caso" => $datos["tipo_caso"],

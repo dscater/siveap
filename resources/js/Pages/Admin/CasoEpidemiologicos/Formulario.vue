@@ -398,7 +398,7 @@ onMounted(() => {
                             filterable
                         >
                             <el-option
-                                v-for="item in listTipoCasos"
+                                v-for="item in listEstados"
                                 :key="item.value"
                                 :value="item.value"
                                 :label="item.label"

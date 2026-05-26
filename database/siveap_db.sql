@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 25-05-2026 a las 16:25:28
+-- Tiempo de generación: 26-05-2026 a las 22:41:51
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -32,13 +32,29 @@ CREATE TABLE `alerta_epidemiologicas` (
   `comunidad_id` bigint UNSIGNED NOT NULL,
   `enfermedad_id` bigint UNSIGNED NOT NULL,
   `nivel_alerta` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `cantidad_casos` int NOT NULL,
+  `indice` double(8,2) NOT NULL,
+  `prediccion` double(8,2) NOT NULL,
+  `crecimiento` double(8,2) NOT NULL,
+  `confirmados` int NOT NULL,
+  `activos` int NOT NULL,
+  `graves` int NOT NULL,
+  `fallecidos` int NOT NULL,
   `fecha` date NOT NULL,
   `estado` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_fin` date DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `alerta_epidemiologicas`
+--
+
+INSERT INTO `alerta_epidemiologicas` (`id`, `comunidad_id`, `enfermedad_id`, `nivel_alerta`, `indice`, `prediccion`, `crecimiento`, `confirmados`, `activos`, `graves`, `fallecidos`, `fecha`, `estado`, `fecha_fin`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
+(2, 1, 4, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
+(3, 1, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
+(4, 2, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25');
 
 -- --------------------------------------------------------
 
@@ -72,8 +88,10 @@ CREATE TABLE `caso_epidemiologicos` (
 --
 
 INSERT INTO `caso_epidemiologicos` (`id`, `codigo`, `paciente_id`, `enfermedad_id`, `centro_id`, `comunidad_id`, `user_id`, `fi_sintomas`, `fecha_diagnostico`, `tipo_caso`, `gravedad`, `estado`, `contacto`, `hospitalizacion`, `fecha_registro`, `observaciones`, `created_at`, `updated_at`) VALUES
-(1, 'CE-2026-00001', 1, 1, 1, 1, 1, '2026-05-01', '2026-05-25', 'SOSPECHOSO', 'LEVE', 'SOSPECHOSO', 5, 0, '2026-05-25', 'observaciones', '2026-05-25 16:12:07', '2026-05-25 16:12:07'),
-(2, 'CE-2026-00002', 2, 4, 1, 1, 1, '2026-05-01', '2026-05-25', 'PROBABLE', 'MODERADO', 'PROBABLE', 10, 0, '2026-05-25', NULL, '2026-05-25 16:25:12', '2026-05-25 16:25:12');
+(1, 'CE-2026-00001', 1, 1, 1, 1, 1, '2026-05-01', '2026-05-25', 'PROBABLE', 'LEVE', 'EN SEGUIMIENTO', 5, 0, '2026-05-25', 'observaciones', '2026-05-25 16:12:07', '2026-05-26 21:53:16'),
+(2, 'CE-2026-00002', 2, 4, 1, 1, 1, '2026-05-01', '2026-05-25', 'PROBABLE', 'MODERADO', 'ACTIVO', 10, 0, '2026-05-25', NULL, '2026-05-25 16:25:12', '2026-05-26 20:51:45'),
+(3, 'CE-2026-00003', 3, 6, 2, 2, 1, '2026-05-01', '2026-05-26', 'CONFIRMADO', 'GRAVE', 'ACTIVO', 20, 0, '2026-05-26', NULL, '2026-05-26 21:52:20', '2026-05-26 21:52:20'),
+(4, 'CE-2026-00004', 4, 6, 1, 1, 1, '2026-05-04', '2026-05-26', 'CONFIRMADO', 'CRITICO', 'FALLECIDO', 5, 0, '2026-05-26', NULL, '2026-05-26 21:54:39', '2026-05-26 21:54:39');
 
 -- --------------------------------------------------------
 
@@ -290,7 +308,18 @@ INSERT INTO `historial_accions` (`id`, `user_id`, `accion`, `descripcion`, `dato
 (25, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"456546654\", \"id\": 1, \"dir\": \"ASUNTA #3223\", \"fono\": \"67676767\", \"sexo\": \"MASCULINO\", \"ci_exp\": \"LP\", \"nombre\": \"JUAN\", \"latitud\": \"-16.123665761985627\", \"materno\": \"SOLIZ\", \"paterno\": \"MONRROY\", \"longitud\": \"-67.19748973381918\", \"fecha_nac\": \"2000-01-01\", \"created_at\": \"2026-05-25T14:29:57.000000Z\", \"updated_at\": \"2026-05-25T14:29:57.000000Z\", \"comunidad_id\": \"1\"}', NULL, 'PACIENTES', '2026-05-25', '10:29:57', '2026-05-25 14:29:57', '2026-05-25 14:29:57'),
 (26, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"56565656\", \"id\": 2, \"dir\": \"ASUNTA #2323\", \"fono\": null, \"sexo\": \"FEMENINO\", \"ci_exp\": \"LP\", \"nombre\": \"MARIA\", \"latitud\": \"-16.125283924900813\", \"materno\": \"\", \"paterno\": \"GONZALES\", \"longitud\": \"-67.19494719477096\", \"fecha_nac\": \"2003-01-01\", \"created_at\": \"2026-05-25T14:44:57.000000Z\", \"updated_at\": \"2026-05-25T14:44:57.000000Z\", \"comunidad_id\": \"1\", \"fecha_registro\": \"2026-05-25\"}', NULL, 'PACIENTES', '2026-05-25', '10:44:57', '2026-05-25 14:44:57', '2026-05-25 14:44:57'),
 (27, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"SOSPECHOSO\", \"user_id\": 1, \"contacto\": \"5\", \"gravedad\": \"LEVE\", \"centro_id\": \"1\", \"tipo_caso\": \"SOSPECHOSO\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-25T16:12:07.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"1\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"1\", \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-25', '12:12:07', '2026-05-25 16:12:07', '2026-05-25 16:12:07'),
-(28, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 2, \"codigo\": \"CE-2026-00002\", \"estado\": \"PROBABLE\", \"user_id\": 1, \"contacto\": \"10\", \"gravedad\": \"MODERADO\", \"centro_id\": \"1\", \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:25:12.000000Z\", \"updated_at\": \"2026-05-25T16:25:12.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"2\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"4\", \"observaciones\": null, \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-25', '12:25:12', '2026-05-25 16:25:12', '2026-05-25 16:25:12');
+(28, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 2, \"codigo\": \"CE-2026-00002\", \"estado\": \"PROBABLE\", \"user_id\": 1, \"contacto\": \"10\", \"gravedad\": \"MODERADO\", \"centro_id\": \"1\", \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:25:12.000000Z\", \"updated_at\": \"2026-05-25T16:25:12.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"2\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"4\", \"observaciones\": null, \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-25', '12:25:12', '2026-05-25 16:25:12', '2026-05-25 16:25:12'),
+(29, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UN CASO EPIDEMIOLOGICO', '{\"id\": 2, \"codigo\": \"CE-2026-00002\", \"estado\": \"PROBABLE\", \"user_id\": 1, \"contacto\": 10, \"gravedad\": \"MODERADO\", \"centro_id\": 1, \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:25:12.000000Z\", \"updated_at\": \"2026-05-25T16:25:12.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": 2, \"comunidad_id\": 1, \"enfermedad_id\": 4, \"observaciones\": null, \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": 0, \"fecha_diagnostico\": \"2026-05-25\"}', '{\"id\": 2, \"codigo\": \"CE-2026-00002\", \"estado\": \"EN SEGUIMIENTO\", \"user_id\": 1, \"contacto\": \"10\", \"gravedad\": \"MODERADO\", \"centro_id\": \"1\", \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:25:12.000000Z\", \"updated_at\": \"2026-05-26T20:43:27.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"2\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"4\", \"observaciones\": null, \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', 'CASOS EPIDEMIOLOGICOS', '2026-05-26', '16:43:27', '2026-05-26 20:43:27', '2026-05-26 20:43:27'),
+(30, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UN CASO EPIDEMIOLOGICO', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"SOSPECHOSO\", \"user_id\": 1, \"contacto\": 5, \"gravedad\": \"LEVE\", \"centro_id\": 1, \"tipo_caso\": \"SOSPECHOSO\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-25T16:12:07.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": 1, \"comunidad_id\": 1, \"enfermedad_id\": 1, \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": 0, \"fecha_diagnostico\": \"2026-05-25\"}', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"EN SEGUIMIENTO\", \"user_id\": 1, \"contacto\": \"5\", \"gravedad\": \"LEVE\", \"centro_id\": \"1\", \"tipo_caso\": \"SOSPECHOSO\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-26T20:43:33.000000Z\", \"fi_sintomas\": \"2026-05-01\", \"paciente_id\": \"1\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"1\", \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25\"}', 'CASOS EPIDEMIOLOGICOS', '2026-05-26', '16:43:33', '2026-05-26 20:43:33', '2026-05-26 20:43:33'),
+(31, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN SEGUIMIENTO', '{\"id\": 1, \"fecha\": \"2026-05-26\", \"estado\": \"ACTIVO\", \"user_id\": 1, \"created_at\": \"2026-05-26T20:47:57.000000Z\", \"updated_at\": \"2026-05-26T20:47:57.000000Z\", \"observaciones\": \"OBSERVACION 1\", \"caso_epidemiologico_id\": \"2\"}', NULL, 'SEGUIMIENTO', '2026-05-26', '16:47:57', '2026-05-26 20:47:57', '2026-05-26 20:47:57'),
+(32, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN SEGUIMIENTO', '{\"id\": 2, \"fecha\": \"2026-05-26\", \"estado\": \"ACTIVO\", \"user_id\": 1, \"created_at\": \"2026-05-26T20:48:40.000000Z\", \"updated_at\": \"2026-05-26T20:48:40.000000Z\", \"observaciones\": \"OBSERVACION 1\", \"caso_epidemiologico_id\": \"2\"}', NULL, 'SEGUIMIENTO', '2026-05-26', '16:48:40', '2026-05-26 20:48:40', '2026-05-26 20:48:40'),
+(33, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UN SEGUIMIENTO', '{\"id\": 2, \"fecha\": \"2026-05-26\", \"estado\": \"ACTIVO\", \"user_id\": 1, \"created_at\": \"2026-05-26T20:48:40.000000Z\", \"updated_at\": \"2026-05-26T20:48:40.000000Z\", \"observaciones\": \"OBSERVACION 1\", \"caso_epidemiologico_id\": 2}', '{\"id\": 2, \"fecha\": \"2026-05-26\", \"estado\": \"ACTIVO\", \"user_id\": 1, \"created_at\": \"2026-05-26T20:48:40.000000Z\", \"updated_at\": \"2026-05-26T20:51:45.000000Z\", \"observaciones\": \"OBSERVACION 2\", \"caso_epidemiologico_id\": \"2\"}', 'SEGUIMIENTO', '2026-05-26', '16:51:45', '2026-05-26 20:51:45', '2026-05-26 20:51:45'),
+(34, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"345345\", \"id\": 3, \"dir\": \"ASUNTA #3232\", \"fono\": null, \"sexo\": \"MASCULINO\", \"ci_exp\": \"CB\", \"nombre\": \"MAX\", \"latitud\": \"-16.122441502163745\", \"materno\": \"\", \"paterno\": \"PONZE\", \"longitud\": \"-67.19580530036424\", \"fecha_nac\": \"2005-01-01\", \"created_at\": \"2026-05-26T21:51:52.000000Z\", \"updated_at\": \"2026-05-26T21:51:52.000000Z\", \"comunidad_id\": \"2\", \"fecha_registro\": \"2026-05-26\"}', NULL, 'PACIENTES', '2026-05-26', '17:51:52', '2026-05-26 21:51:52', '2026-05-26 21:51:52'),
+(35, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 3, \"codigo\": \"CE-2026-00003\", \"estado\": \"ACTIVO\", \"user_id\": 1, \"contacto\": \"20\", \"gravedad\": \"GRAVE\", \"centro_id\": \"2\", \"tipo_caso\": \"CONFIRMADO\", \"created_at\": \"2026-05-26T21:52:20.000000Z\", \"updated_at\": \"2026-05-26T21:52:20.000000Z\", \"fi_sintomas\": \"2026-05-01T04:00:00.000000Z\", \"paciente_id\": \"3\", \"comunidad_id\": \"2\", \"enfermedad_id\": \"6\", \"observaciones\": null, \"fecha_registro\": \"2026-05-26T04:00:00.000000Z\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-26T04:00:00.000000Z\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-26', '17:52:20', '2026-05-26 21:52:20', '2026-05-26 21:52:20'),
+(36, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UN CASO EPIDEMIOLOGICO', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"EN SEGUIMIENTO\", \"user_id\": 1, \"contacto\": 5, \"gravedad\": \"LEVE\", \"centro_id\": 1, \"tipo_caso\": \"SOSPECHOSO\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-26T20:43:33.000000Z\", \"fi_sintomas\": \"2026-05-01T04:00:00.000000Z\", \"paciente_id\": 1, \"comunidad_id\": 1, \"enfermedad_id\": 1, \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25T04:00:00.000000Z\", \"hospitalizacion\": 0, \"fecha_diagnostico\": \"2026-05-25T04:00:00.000000Z\"}', '{\"id\": 1, \"codigo\": \"CE-2026-00001\", \"estado\": \"EN SEGUIMIENTO\", \"user_id\": 1, \"contacto\": \"5\", \"gravedad\": \"LEVE\", \"centro_id\": \"1\", \"tipo_caso\": \"PROBABLE\", \"created_at\": \"2026-05-25T16:12:07.000000Z\", \"updated_at\": \"2026-05-26T21:53:16.000000Z\", \"fi_sintomas\": \"2026-05-01T08:00:00.000000Z\", \"paciente_id\": \"1\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"1\", \"observaciones\": \"observaciones\", \"fecha_registro\": \"2026-05-25T04:00:00.000000Z\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-25T08:00:00.000000Z\"}', 'CASOS EPIDEMIOLOGICOS', '2026-05-26', '17:53:16', '2026-05-26 21:53:16', '2026-05-26 21:53:16'),
+(37, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN PACIENTE', '{\"ci\": \"24234\", \"id\": 4, \"dir\": \"ASUNTA #$43345\", \"fono\": null, \"sexo\": \"FEMENINO\", \"ci_exp\": \"LP\", \"nombre\": \"MARIA\", \"latitud\": \"-16.125102\", \"materno\": \"\", \"paterno\": \"MARTINEZ\", \"longitud\": \"-67.196268\", \"fecha_nac\": \"1970-01-01\", \"created_at\": \"2026-05-26T21:54:08.000000Z\", \"updated_at\": \"2026-05-26T21:54:08.000000Z\", \"comunidad_id\": \"1\", \"fecha_registro\": \"2026-05-26\"}', NULL, 'PACIENTES', '2026-05-26', '17:54:08', '2026-05-26 21:54:08', '2026-05-26 21:54:08'),
+(38, 1, 'CREACIÓN', 'EL USUARIO admin REGISTRO UN CASO EPIDEMIOLOGICO', '{\"id\": 4, \"codigo\": \"CE-2026-00004\", \"estado\": \"FALLECIDO\", \"user_id\": 1, \"contacto\": \"5\", \"gravedad\": \"CRITICO\", \"centro_id\": \"1\", \"tipo_caso\": \"CONFIRMADO\", \"created_at\": \"2026-05-26T21:54:39.000000Z\", \"updated_at\": \"2026-05-26T21:54:39.000000Z\", \"fi_sintomas\": \"2026-05-04T04:00:00.000000Z\", \"paciente_id\": \"4\", \"comunidad_id\": \"1\", \"enfermedad_id\": \"6\", \"observaciones\": null, \"fecha_registro\": \"2026-05-26T04:00:00.000000Z\", \"hospitalizacion\": \"0\", \"fecha_diagnostico\": \"2026-05-26T04:00:00.000000Z\"}', NULL, 'CASOS EPIDEMIOLOGICOS', '2026-05-26', '17:54:39', '2026-05-26 21:54:39', '2026-05-26 21:54:39'),
+(39, 1, 'MODIFICACIÓN', 'EL USUARIO admin ACTUALIZÓ UNA REGLA DE ALERTA', '{\"id\": 2, \"riesgo\": \"ALTO\", \"status\": 1, \"umbral\": 12, \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-22T19:28:32.000000Z\", \"enfermedad_id\": 1}', '{\"id\": 2, \"riesgo\": \"ALTO\", \"status\": 1, \"umbral\": \"12\", \"created_at\": \"2026-05-22T19:26:35.000000Z\", \"updated_at\": \"2026-05-26T22:09:27.000000Z\", \"enfermedad_id\": \"4\"}', 'REGLAS DE ALERTA', '2026-05-26', '18:09:27', '2026-05-26 22:09:27', '2026-05-26 22:09:27');
 
 -- --------------------------------------------------------
 
@@ -353,6 +382,7 @@ CREATE TABLE `modulos` (
 
 CREATE TABLE `notificacions` (
   `id` bigint UNSIGNED NOT NULL,
+  `descripcion` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `modulo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `registro_id` bigint UNSIGNED NOT NULL,
   `tipo` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
@@ -361,6 +391,16 @@ CREATE TABLE `notificacions` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `notificacions`
+--
+
+INSERT INTO `notificacions` (`id`, `descripcion`, `modulo`, `registro_id`, `tipo`, `fecha`, `hora`, `created_at`, `updated_at`) VALUES
+(1, 'CRITICO: Se detectó incremento de casos de DENGUE', 'AlertaEpidemiologica', 1, 'ALERTA', '2026-05-26', '18:40:00', '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(2, 'CRITICO: Se detectó incremento de casos de ZIKA', 'AlertaEpidemiologica', 2, 'ALERTA', '2026-05-26', '18:40:00', '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(3, 'CRITICO: Se detectó incremento de casos de INFLUENZA', 'AlertaEpidemiologica', 3, 'ALERTA', '2026-05-26', '18:40:00', '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(4, 'CRITICO: Se detectó incremento de casos de INFLUENZA', 'AlertaEpidemiologica', 4, 'ALERTA', '2026-05-26', '18:40:00', '2026-05-26 22:40:59', '2026-05-26 22:40:59');
 
 -- --------------------------------------------------------
 
@@ -372,10 +412,28 @@ CREATE TABLE `notificacion_users` (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL,
   `notificacion_id` bigint UNSIGNED NOT NULL,
-  `visto` int NOT NULL,
+  `visto` int NOT NULL DEFAULT '0',
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `notificacion_users`
+--
+
+INSERT INTO `notificacion_users` (`id`, `user_id`, `notificacion_id`, `visto`, `created_at`, `updated_at`) VALUES
+(1, 1, 1, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(2, 2, 1, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(3, 3, 1, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(4, 1, 2, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(5, 2, 2, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(6, 3, 2, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(7, 1, 3, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(8, 2, 3, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(9, 3, 3, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(10, 1, 4, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(11, 2, 4, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59'),
+(12, 3, 4, 0, '2026-05-26 22:40:59', '2026-05-26 22:40:59');
 
 -- --------------------------------------------------------
 
@@ -408,7 +466,9 @@ CREATE TABLE `pacientes` (
 
 INSERT INTO `pacientes` (`id`, `nombre`, `paterno`, `materno`, `sexo`, `ci`, `ci_exp`, `fecha_nac`, `dir`, `latitud`, `longitud`, `fono`, `comunidad_id`, `fecha_registro`, `created_at`, `updated_at`) VALUES
 (1, 'JUAN', 'MONRROY', 'SOLIZ', 'MASCULINO', '456546654', 'LP', '2000-01-01', 'ASUNTA #3223', '-16.123665761985627', '-67.19748973381918', '67676767', 1, '2026-05-25', '2026-05-25 14:29:57', '2026-05-25 14:29:57'),
-(2, 'MARIA', 'GONZALES', '', 'FEMENINO', '56565656', 'LP', '2003-01-01', 'ASUNTA #2323', '-16.125283924900813', '-67.19494719477096', NULL, 1, '2026-05-25', '2026-05-25 14:44:57', '2026-05-25 14:44:57');
+(2, 'MARIA', 'GONZALES', '', 'FEMENINO', '56565656', 'LP', '2003-01-01', 'ASUNTA #2323', '-16.125283924900813', '-67.19494719477096', NULL, 1, '2026-05-25', '2026-05-25 14:44:57', '2026-05-25 14:44:57'),
+(3, 'MAX', 'PONZE', '', 'MASCULINO', '345345', 'CB', '2005-01-01', 'ASUNTA #3232', '-16.122441502163745', '-67.19580530036424', NULL, 2, '2026-05-26', '2026-05-26 21:51:52', '2026-05-26 21:51:52'),
+(4, 'MARIA', 'MARTINEZ', '', 'FEMENINO', '24234', 'LP', '1970-01-01', 'ASUNTA #$43345', '-16.125102', '-67.196268', NULL, 1, '2026-05-26', '2026-05-26 21:54:08', '2026-05-26 21:54:08');
 
 -- --------------------------------------------------------
 
@@ -446,7 +506,7 @@ CREATE TABLE `reglas_alertas` (
 
 INSERT INTO `reglas_alertas` (`id`, `enfermedad_id`, `umbral`, `riesgo`, `status`, `created_at`, `updated_at`) VALUES
 (1, 1, 6, 'MEDIO', 1, '2026-05-22 19:26:08', '2026-05-22 19:26:08'),
-(2, 1, 12, 'ALTO', 1, '2026-05-22 19:26:35', '2026-05-22 19:28:32');
+(2, 4, 12, 'ALTO', 1, '2026-05-22 19:26:35', '2026-05-26 22:09:27');
 
 -- --------------------------------------------------------
 
@@ -490,6 +550,14 @@ CREATE TABLE `seguimientos` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `seguimientos`
+--
+
+INSERT INTO `seguimientos` (`id`, `caso_epidemiologico_id`, `fecha`, `estado`, `observaciones`, `user_id`, `created_at`, `updated_at`) VALUES
+(1, 2, '2026-05-26', 'ACTIVO', 'OBSERVACION 1', 1, '2026-05-26 20:47:57', '2026-05-26 20:47:57'),
+(2, 2, '2026-05-26', 'ACTIVO', 'OBSERVACION 2', 1, '2026-05-26 20:48:40', '2026-05-26 20:51:45');
 
 -- --------------------------------------------------------
 
@@ -711,13 +779,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de la tabla `alerta_epidemiologicas`
 --
 ALTER TABLE `alerta_epidemiologicas`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `caso_epidemiologicos`
 --
 ALTER TABLE `caso_epidemiologicos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `categoria_enfermedads`
@@ -759,7 +827,7 @@ ALTER TABLE `enfermedads`
 -- AUTO_INCREMENT de la tabla `historial_accions`
 --
 ALTER TABLE `historial_accions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT de la tabla `migrations`
@@ -777,19 +845,19 @@ ALTER TABLE `modulos`
 -- AUTO_INCREMENT de la tabla `notificacions`
 --
 ALTER TABLE `notificacions`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `notificacion_users`
 --
 ALTER TABLE `notificacion_users`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`
@@ -813,7 +881,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT de la tabla `seguimientos`
 --
 ALTER TABLE `seguimientos`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `tipo_transmisions`

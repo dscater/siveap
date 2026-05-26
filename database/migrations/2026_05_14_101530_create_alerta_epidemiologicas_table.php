@@ -16,7 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger("comunidad_id");
             $table->unsignedBigInteger("enfermedad_id");
             $table->string("nivel_alerta");
-            $table->integer("cantidad_casos");
+            $table->double("indice", 8, 2);
+            $table->double("prediccion", 8, 2);
+            $table->double("crecimiento", 8, 2);
+            $table->integer("confirmados");
+            $table->integer("activos");
+            $table->integer("graves");
+            $table->integer("fallecidos");
             $table->date("fecha");
             $table->string("estado"); // ACTIVO, CONTROLADO
             $table->date("fecha_fin")->nullable();

@@ -127,8 +127,7 @@ class ReglasAlertaService
     {
         // TODO: VERIFICAR RELACIONES
         $old_reglas_alerta = clone $reglas_alerta;
-        $reglas_alerta->status = 0;
-        $reglas_alerta->save();
+        $reglas_alerta->delete();
 
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UNA REGLA DE ALERTA", $old_reglas_alerta, $reglas_alerta);

@@ -6,5 +6,28 @@ use Illuminate\Database\Eloquent\Model;
 
 class Notificacion extends Model
 {
-    //
+    protected $fillable = [
+        "descripcion",
+        "modulo",
+        "registro_id",
+        "tipo",
+        "fecha",
+        "hora",
+    ];
+
+    protected $appends = ["hace", "fecha_t", "fecha_c"];
+
+    public function getFechaCAttribute()
+    {
+        return date("d/m/Y H:i", strtotime($this->fecha . ' ' . $this->hora));
+    }
+
+    public function getFechaTAttribute()
+    {
+        return date("d/m/Y", strtotime($this->fecha));
+    }
+    public function getHaceAttribute()
+    {
+        return $this->created_at->diffForHumans();
+    }
 }

@@ -39,6 +39,15 @@ class CasoEpidemiologico extends Model
             ->format("d/m/Y");
     }
 
+    protected $casts = [
+
+        'fecha_diagnostico' => 'datetime',
+
+        'fi_sintomas' => 'datetime',
+
+        'fecha_registro' => 'datetime',
+    ];
+
 
     public function paciente()
     {
@@ -59,5 +68,9 @@ class CasoEpidemiologico extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function seguimientos()
+    {
+        return $this->hasMany(Seguimiento::class, 'caso_epidemiologico_id');
     }
 }

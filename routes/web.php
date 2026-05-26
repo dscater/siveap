@@ -15,6 +15,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReglasAlertaController;
 use App\Http\Controllers\ReporteController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\TipoTransmisionController;
 use App\Http\Controllers\TipoCasoController;
 use App\Http\Controllers\UsuarioController;
@@ -163,6 +164,15 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     Route::post("caso_epidemiologicos/actualizaPermiso/{role}", [CasoEpidemiologicoController::class, 'actualizaPermiso'])->name("caso_epidemiologicos.actualizaPermiso");
     Route::resource("caso_epidemiologicos", CasoEpidemiologicoController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
+    // SEGUIMIENTOS
+    Route::get("seguimientos/paginado", [SeguimientoController::class, 'paginado'])->name("seguimientos.paginado");
+    Route::get("seguimientos/listado", [SeguimientoController::class, 'listado'])->name("seguimientos.listado");
+    Route::post("seguimientos/actualizaPermiso/{role}", [SeguimientoController::class, 'actualizaPermiso'])->name("seguimientos.actualizaPermiso");
+    Route::get("seguimientos/{caso_epidemiologico}", [SeguimientoController::class, 'index'])->name("seguimientos.index");
+    Route::resource("seguimientos", SeguimientoController::class)->only(
+        ["store", "edit", "show", "update", "destroy"]
     );
 
     // REPORTES
