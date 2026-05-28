@@ -23,7 +23,7 @@ use Illuminate\Validation\ValidationException;
 class AlertaEpidemiologicaService
 {
     private $modulo = "ALERTAS EPIDEMIOLOGICAS";
-    private $urlApi = 'http://127.0.0.1:8000/';
+    private $urlApi = 'http://127.0.0.1:8000/analizar';
 
     public function __construct(private  CargarArchivoService $cargarArchivoService, private HistorialAccionService $historialAccionService, private NotificacionService $notificacion_service) {}
 
@@ -42,32 +42,29 @@ class AlertaEpidemiologicaService
      * @param array $columnsFilter
      * @return LengthAwarePaginator
      */
-    public function listadoPaginado(int $length, int $page, string $search, array $columnsSerachLike = [], array $columnsFilter = [], array $columnsBetweenFilter = [], array $orderBy = []): LengthAwarePaginator
-    {
-        $alerta_epidemiologicas = AlertaEpidemiologica::select("alerta_epidemiologicas.*");
+    public function listadoPaginado(
+        int $length,
+        int $page,
+        string $search,
+        array $orderBy = [],
+        string $estado = "",
+        string $comunidad_id = "",
+        string $enfermedad_id = "",
+    ): LengthAwarePaginator {
+        $alerta_epidemiologicas = AlertaEpidemiologica::select("alerta_epidemiologicas.*")
+            ->with(["comunidad:id,nombre", "enfermedad:id,nombre"]);
 
-        // Filtros exactos
-        foreach ($columnsFilter as $key => $value) {
-            if (!is_null($value)) {
-                $alerta_epidemiologicas->where("alerta_epidemiologicas.$key", $value);
-            }
-        }
+        $alerta_epidemiologicas->when($estado, function ($q) use ($estado) {
+            $q->where("estado", $estado);
+        });
 
-        // Filtros por rango
-        foreach ($columnsBetweenFilter as $key => $value) {
-            if (isset($value[0], $value[1])) {
-                $alerta_epidemiologicas->whereBetween("alerta_epidemiologicas.$key", $value);
-            }
-        }
+        $alerta_epidemiologicas->when($comunidad_id, function ($q) use ($comunidad_id) {
+            $q->where("comunidad_id", $comunidad_id);
+        });
 
-        // Búsqueda en múltiples columnas con LIKE
-        if (!empty($search) && !empty($columnsSerachLike)) {
-            $alerta_epidemiologicas->where(function ($query) use ($search, $columnsSerachLike) {
-                foreach ($columnsSerachLike as $col) {
-                    $query->orWhere("$col", "LIKE", "%$search%");
-                }
-            });
-        }
+        $alerta_epidemiologicas->when($enfermedad_id, function ($q) use ($enfermedad_id) {
+            $q->where("enfermedad_id", $enfermedad_id);
+        });
 
         // Ordenamiento
         foreach ($orderBy as $value) {
@@ -75,7 +72,6 @@ class AlertaEpidemiologicaService
                 $alerta_epidemiologicas->orderBy($value[0], $value[1]);
             }
         }
-
 
         $alerta_epidemiologicas = $alerta_epidemiologicas->paginate($length, ['*'], 'page', $page);
         return $alerta_epidemiologicas;
@@ -168,16 +164,12 @@ class AlertaEpidemiologicaService
 
                 // OBTENER CASOS
                 $casos = CasoEpidemiologico::query()
-
                     ->where('enfermedad_id', $enfermedad->id)
-
                     ->where('comunidad_id', $comunidad->id)
-
                     ->whereIn('tipo_caso', [
                         'PROBABLE',
                         'CONFIRMADO'
                     ])
-
                     ->whereBetween(
                         'fecha_diagnostico',
                         [
@@ -185,9 +177,7 @@ class AlertaEpidemiologicaService
                             now()
                         ]
                     )
-
                     ->orderBy('fecha_diagnostico')
-
                     ->get();
 
                 // SI NO EXISTEN CASOS
@@ -201,12 +191,10 @@ class AlertaEpidemiologicaService
 
                 // VALIDAR UMBRAL
                 if ($totalConfirmados < $umbral) {
-
                     Log::debug("
                     {$enfermedad->nombre}
                     no supera el umbral
                 ");
-
                     // SI EXISTE ALERTA ACTIVA
                     // MARCAR COMO CONTROLADO
                     $alertaActiva = AlertaEpidemiologica::query()
@@ -216,28 +204,22 @@ class AlertaEpidemiologicaService
                         ->first();
 
                     if ($alertaActiva) {
-
                         $alertaActiva->update([
                             'estado' => 'CONTROLADO',
                             'fecha_control' => now(),
                         ]);
                     }
-
                     continue;
                 }
 
                 // AGRUPAR POR FECHA
                 $dias = $casos
-
                     ->groupBy(function ($item) {
-
                         return $item
                             ->fecha_diagnostico
                             ->format('Y-m-d');
                     })
-
                     ->map(function ($items, $fecha) {
-
                         return [
                             'fecha' => $fecha,
                             'confirmados' => $items->count(),
@@ -255,29 +237,23 @@ class AlertaEpidemiologicaService
                                 ->count(),
                         ];
                     })
-
                     ->values();
-
                 // PAYLOAD PARA FASTAPI
-                $payload = [
-                    'enfermedad_id' => $enfermedad->id,
-                    'comunidad_id' => $comunidad->id,
-                    'dias' => $dias
-                ];
-
-                // DATOS PRUEBA
+                // $payload = [
+                //     'enfermedad_id' => $enfermedad->id,
+                //     'comunidad_id' => $comunidad->id,
+                //     'dias' => $dias
+                // ];
+                // DATOS PRUEBAS
                 $payload = $this->datosPruebaAlerta(
                     $enfermedad->id,
                     $comunidad->id
                 );
-
                 try {
-
                     // ENVIAR A FASTAPI
                     $response = Http::timeout(30)
-
                         ->post(
-                            $this->urlApi . 'analizar',
+                            $this->urlApi,
                             $payload
                         );
 

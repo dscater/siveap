@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 26-05-2026 a las 22:41:51
+-- Tiempo de generación: 28-05-2026 a las 16:42:11
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -51,10 +51,10 @@ CREATE TABLE `alerta_epidemiologicas` (
 --
 
 INSERT INTO `alerta_epidemiologicas` (`id`, `comunidad_id`, `enfermedad_id`, `nivel_alerta`, `indice`, `prediccion`, `crecimiento`, `confirmados`, `activos`, `graves`, `fallecidos`, `fecha`, `estado`, `fecha_fin`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
-(2, 1, 4, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
-(3, 1, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25'),
-(4, 2, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-26', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-26 22:41:25');
+(1, 1, 1, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-28', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-28 16:41:56'),
+(2, 1, 4, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-28', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-28 16:41:56'),
+(3, 1, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-28', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-28 16:41:56'),
+(4, 2, 6, 'CRITICO', 46.00, 10.00, 3.00, 10, 8, 3, 1, '2026-05-28', 'ACTIVO', NULL, '2026-05-26 22:40:59', '2026-05-28 16:41:56');
 
 -- --------------------------------------------------------
 

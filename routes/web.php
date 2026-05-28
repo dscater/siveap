@@ -11,6 +11,7 @@ use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GravedadController;
 use App\Http\Controllers\InicioController;
 use App\Http\Controllers\PacienteController;
+use App\Http\Controllers\PrediccionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReglasAlertaController;
 use App\Http\Controllers\ReporteController;
@@ -80,18 +81,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store"]
     );
 
-    // TIPO CASOS
-    Route::get("tipo_casos/listado", [TipoCasoController::class, 'listado'])->name("tipo_casos.listado");
-
-    // GRAVEDAD
-    Route::get("gravedads/listado", [GravedadController::class, 'listado'])->name("gravedads.listado");
-
-    // ESTADOS
-    Route::get("estados/listado", [EstadoController::class, 'listado'])->name("estados.listado");
-
-    // ALERTAS EPIDEMIOLOGICAS
-    Route::get("alerta_epidemiologicas", [AlertaEpidemiologicaController::class, 'index'])->name("alerta_epidemiologicas.index");
-
     // ROLES
     Route::get("roles/api", [RoleController::class, 'api'])->name("roles.api");
     Route::get("roles/paginado", [RoleController::class, 'paginado'])->name("roles.paginado");
@@ -101,13 +90,33 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 
+    // TIPO CASOS
+    Route::get("tipo_casos/listado", [TipoCasoController::class, 'listado'])->name("tipo_casos.listado");
+
+    // GRAVEDAD
+    Route::get("gravedads/listado", [GravedadController::class, 'listado'])->name("gravedads.listado");
+
+    // ESTADOS
+    Route::get("estados/listado", [EstadoController::class, 'listado'])->name("estados.listado");
+
     // COMUNIDADES
     Route::get("comunidads/paginado", [ComunidadController::class, 'paginado'])->name("comunidads.paginado");
     Route::get("comunidads/listado", [ComunidadController::class, 'listado'])->name("comunidads.listado");
-    Route::post("comunidads/actualizaPermiso/{role}", [ComunidadController::class, 'actualizaPermiso'])->name("comunidads.actualizaPermiso");
     Route::resource("comunidads", ComunidadController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
+
+    // ALERTAS EPIDEMIOLOGICAS
+    Route::get("alerta_epidemiologicas/paginado", [AlertaEpidemiologicaController::class, 'paginado'])->name("alerta_epidemiologicas.paginado");
+    Route::get("alerta_epidemiologicas/listado", [AlertaEpidemiologicaController::class, 'listado'])->name("alerta_epidemiologicas.listado");
+    Route::get("alerta_epidemiologicas/verificarAlertas", [AlertaEpidemiologicaController::class, 'verificarAlertas'])->name("alerta_epidemiologicas.verificarAlertas");
+    Route::resource("alerta_epidemiologicas", AlertaEpidemiologicaController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
+    // PREDICCIONES
+    Route::get("prediccions", [PrediccionController::class, 'index'])->name("prediccions.index");
+    Route::get("prediccions/realizarPrediccions", [PrediccionController::class, 'realizarPrediccions'])->name("prediccions.realizarPrediccions");
 
     // CENTROS
     Route::get("centros/paginado", [CentroController::class, 'paginado'])->name("centros.paginado");
@@ -121,7 +130,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // CATEGORIA ENFERMEDADES
     Route::get("categoria_enfermedads/paginado", [CategoriaEnfermedadController::class, 'paginado'])->name("categoria_enfermedads.paginado");
     Route::get("categoria_enfermedads/listado", [CategoriaEnfermedadController::class, 'listado'])->name("categoria_enfermedads.listado");
-    Route::post("categoria_enfermedads/actualizaPermiso/{role}", [CategoriaEnfermedadController::class, 'actualizaPermiso'])->name("categoria_enfermedads.actualizaPermiso");
     Route::resource("categoria_enfermedads", CategoriaEnfermedadController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -129,7 +137,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // TIPO TRANSMISIONS
     Route::get("tipo_transmisions/paginado", [TipoTransmisionController::class, 'paginado'])->name("tipo_transmisions.paginado");
     Route::get("tipo_transmisions/listado", [TipoTransmisionController::class, 'listado'])->name("tipo_transmisions.listado");
-    Route::post("tipo_transmisions/actualizaPermiso/{role}", [TipoTransmisionController::class, 'actualizaPermiso'])->name("tipo_transmisions.actualizaPermiso");
     Route::resource("tipo_transmisions", TipoTransmisionController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -137,7 +144,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // ENFERMEDADES
     Route::get("enfermedads/paginado", [EnfermedadController::class, 'paginado'])->name("enfermedads.paginado");
     Route::get("enfermedads/listado", [EnfermedadController::class, 'listado'])->name("enfermedads.listado");
-    Route::post("enfermedads/actualizaPermiso/{role}", [EnfermedadController::class, 'actualizaPermiso'])->name("enfermedads.actualizaPermiso");
     Route::resource("enfermedads", EnfermedadController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -145,7 +151,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // REGLAS DE ALERTA
     Route::get("reglas_alertas/paginado", [ReglasAlertaController::class, 'paginado'])->name("reglas_alertas.paginado");
     Route::get("reglas_alertas/listado", [ReglasAlertaController::class, 'listado'])->name("reglas_alertas.listado");
-    Route::post("reglas_alertas/actualizaPermiso/{role}", [ReglasAlertaController::class, 'actualizaPermiso'])->name("reglas_alertas.actualizaPermiso");
     Route::resource("reglas_alertas", ReglasAlertaController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -153,7 +158,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // PACIENTES
     Route::get("pacientes/paginado", [PacienteController::class, 'paginado'])->name("pacientes.paginado");
     Route::get("pacientes/listado", [PacienteController::class, 'listado'])->name("pacientes.listado");
-    Route::post("pacientes/actualizaPermiso/{role}", [PacienteController::class, 'actualizaPermiso'])->name("pacientes.actualizaPermiso");
     Route::resource("pacientes", PacienteController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -161,7 +165,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // CASOS EPIDEMIOLOGICOS
     Route::get("caso_epidemiologicos/paginado", [CasoEpidemiologicoController::class, 'paginado'])->name("caso_epidemiologicos.paginado");
     Route::get("caso_epidemiologicos/listado", [CasoEpidemiologicoController::class, 'listado'])->name("caso_epidemiologicos.listado");
-    Route::post("caso_epidemiologicos/actualizaPermiso/{role}", [CasoEpidemiologicoController::class, 'actualizaPermiso'])->name("caso_epidemiologicos.actualizaPermiso");
     Route::resource("caso_epidemiologicos", CasoEpidemiologicoController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
@@ -169,7 +172,6 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // SEGUIMIENTOS
     Route::get("seguimientos/paginado", [SeguimientoController::class, 'paginado'])->name("seguimientos.paginado");
     Route::get("seguimientos/listado", [SeguimientoController::class, 'listado'])->name("seguimientos.listado");
-    Route::post("seguimientos/actualizaPermiso/{role}", [SeguimientoController::class, 'actualizaPermiso'])->name("seguimientos.actualizaPermiso");
     Route::get("seguimientos/{caso_epidemiologico}", [SeguimientoController::class, 'index'])->name("seguimientos.index");
     Route::resource("seguimientos", SeguimientoController::class)->only(
         ["store", "edit", "show", "update", "destroy"]

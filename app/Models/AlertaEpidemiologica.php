@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class AlertaEpidemiologica extends Model
@@ -21,6 +22,19 @@ class AlertaEpidemiologica extends Model
         "estado", // ACTIVO, CONTROLADO
         "fecha_fin",
     ];
+
+    protected $appends = ["fecha_t", "fecha_fin_t"];
+
+    public function getFechaTAttribute()
+    {
+        return Carbon::parse($this->fecha)->format("d/m/Y");
+    }
+
+    public function getFechaFinTAttribute()
+    {
+        if (!$this->fecha_fin) return "-";
+        return Carbon::parse($this->fecha_fin)->format("d/m/Y");
+    }
 
     public function comunidad()
     {

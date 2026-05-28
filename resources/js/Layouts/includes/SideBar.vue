@@ -185,6 +185,15 @@ onUnmounted(() => {});
                     <ItemMenu
                         v-if="
                             permisos == '*' ||
+                            permisos.includes('prediccions.index')
+                        "
+                        :label="'Predicción Epidemiológica'"
+                        :ruta="'prediccions.index'"
+                        :icon="'fa fa-chart-line'"
+                    ></ItemMenu>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
                             permisos.includes('pacientes.index')
                         "
                         :label="'Pacientes'"
