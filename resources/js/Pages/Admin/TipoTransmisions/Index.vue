@@ -32,13 +32,8 @@ const headers = [
         sortable: true,
     },
     {
-        label: "LATITUD",
-        key: "latitud",
-        sortable: true,
-    },
-    {
-        label: "LONGITUD",
-        key: "longitud",
+        label: "DESCRIPCIÓN",
+        key: "descripcion",
         sortable: true,
     },
     {

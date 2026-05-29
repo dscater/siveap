@@ -208,7 +208,7 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-4 mt-2">
+                    <!-- <div class="col-md-4 mt-2">
                         <label class="required">Riesgo de alerta</label>
                         <el-select
                             v-model="form.riesgo"
@@ -232,7 +232,7 @@ onMounted(() => {
                                 {{ form.errors?.riesgo }}
                             </li>
                         </ul>
-                    </div>
+                    </div> -->
                 </div>
             </form>
         </template>

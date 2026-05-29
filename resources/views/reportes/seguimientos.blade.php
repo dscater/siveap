@@ -3,16 +3,16 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Usuarios</title>
+    <title>CasosEpidemiologicos</title>
     <style type="text/css">
         * {
             font-family: sans-serif;
         }
 
         @page {
-            margin-top: 1.5cm;
+            margin-top: 0.3cm;
             margin-bottom: 0.3cm;
-            margin-left: 0.3cm;
+            margin-left: 1cm;
             margin-right: 0.3cm;
         }
 
@@ -31,11 +31,11 @@
         }
 
         table thead tr th {
-            font-size: 7pt;
+            font-size: 8pt;
         }
 
         table tbody tr td {
-            font-size: 6pt;
+            font-size: 7pt;
         }
 
 
@@ -138,6 +138,18 @@
         .img_celda img {
             width: 45px;
         }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .derecha {
+            text-align: right;
+        }
+
+        .nuevo {
+            page-break-after: always;
+        }
     </style>
 </head>
 
@@ -153,53 +165,82 @@
         <h2 class="titulo">
             {{ $configuracion->first()->razon_social }}
         </h2>
-        <h4 class="texto">LISTA DE USUARIOS</h4>
+        <h4 class="texto">SEGUIMIENTOS POR CASOS EPIDEMIOLÓGICOS</h4>
         <h4 class="fecha">Expedido: {{ date('d-m-Y') }}</h4>
     </div>
-    <table border="1">
-        <thead class="bg-principal">
-            <tr>
-                <th width="3%">N°</th>
-                <th width="5%">FOTO</th>
-                <th>USUARIO</th>
-                <th>PATERNO</th>
-                <th>MATERNO</th>
-                <th>NOMBRE(S)</th>
-                <th>C.I.</th>
-                <th>DIRECCIÓN</th>
-                <th>CORREO</th>
-                <th>TELÉFONO/CELULAR</th>
-                <th>TIPO</th>
-                <th>ROLE</th>
-                <th>ACCESO</th>
-            </tr>
-        </thead>
-        <tbody>
-            @php
-                $cont = 1;
-            @endphp
-            @foreach ($usuarios as $user)
+    @php
+        $cont_caso = 0;
+    @endphp
+    @foreach ($casos_epidemiologicos as $item)
+        <table>
+            <tbody>
                 <tr>
-                    <td class="centreado">{{ $cont++ }}</td>
-                    <td class="img_celda centreado">
-                        <img src="{{ $user->foto_b64 }}" alt="Foto">
-
-                    </td>
-                    <td>{{ $user->usuario }}</td>
-                    <td class="">{{ $user->paterno }}</td>
-                    <td class="">{{ $user->materno }}</td>
-                    <td class="">{{ $user->nombre }}</td>
-                    <td class="">{{ $user->full_ci }}</td>
-                    <td class="">{{ $user->dir }}</td>
-                    <td class="">{{ $user->correo }}</td>
-                    <td class="">{{ $user->fono }}</td>
-                    <td class="">{{ $user->tipo }}</td>
-                    <td class="">{{ $user->role->nombre }}</td>
-                    <td class="centreado">{{ $user->acceso == 1 ? 'HABILITADO' : 'DENEGADO' }}</td>
+                    <td class="bold" width="12%">Código: </td>
+                    <td>{{ $item->codigo }}</td>
+                    <td class="bold">Fecha Inicio Sintomas: </td>
+                    <td>{{ $item->fi_sintomas_t }}</td>
+                    <td class="bold">Fecha Diagnostico: </td>
+                    <td>{{ $item->fecha_diagnostico_t }}</td>
                 </tr>
-            @endforeach
-        </tbody>
-    </table>
+                <tr>
+                    <td class="bold">Nombre Paciente: </td>
+                    <td>{{ $item->paciente->full_name }}</td>
+                    <td class="bold">Edad: </td>
+                    <td>{{ $item->paciente->edad }} años</td>
+                    <td class="bold">Sexo: </td>
+                    <td>{{ $item->paciente->sexo }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">Dirección: </td>
+                    <td>{{ $item->paciente->dir }}</td>
+                    <td class="bold">Teléfono: </td>
+                    <td>{{ $item->paciente->fono }}</td>
+                    <td class="bold">Comunidad: </td>
+                    <td>{{ $item->paciente->comunidad->nombre }}</td>
+                </tr>
+                <tr>
+                    <td class="bold">Hospitalización: </td>
+                    <td>{{ $item->hospitalizacion == 1 ? 'SI' : 'NO' }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+        <h4 class="texto">Seguimiento</h4>
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nro.</th>
+                    <th>Fecha</th>
+                    <th>Gravedad</th>
+                    <th>Estado</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @php
+                    $cont = 1;
+                @endphp
+                @foreach ($item->seguimientos as $seguimiento)
+                    <tr>
+                        <td>{{ $cont++ }}</td>
+                        <td>{{ $seguimiento->fecha_t }}</td>
+                        <td>{{ $seguimiento->gravedad }}</td>
+                        <td>{{ $seguimiento->estado }}</td>
+                        <td>{{ $seguimiento->observaciones }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+        @php
+            $cont_caso++;
+        @endphp
+        @if ($cont_caso < count($casos_epidemiologicos))
+            <div class="nuevo"></div>
+        @endif
+    @endforeach
 </body>
 
 </html>

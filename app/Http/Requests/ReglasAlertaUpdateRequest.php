@@ -25,7 +25,7 @@ class ReglasAlertaUpdateRequest extends FormRequest
         return [
             "enfermedad_id" => "required|unique:reglas_alertas,enfermedad_id," . $this->reglas_alerta->id,
             "umbral" => "required",
-            "riesgo" => "required",
+            // "riesgo" => "required",
         ];
     }
 

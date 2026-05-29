@@ -161,6 +161,22 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
+                    <div class="col-md-12 mt-2">
+                        <label class="">Descripción</label>
+                        <el-input
+                            type="textarea"
+                            v-model="form.descripcion"
+                            autosize
+                        ></el-input>
+                        <ul
+                            v-if="form.errors?.descripcion"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.descripcion }}
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </form>
         </template>

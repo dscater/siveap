@@ -17,6 +17,10 @@ const props = defineProps({
         type: Number,
         default: 14,
     },
+    readonly: {
+        type: Boolean,
+        default: false,
+    },
 });
 
 const emit = defineEmits(["update:latitud", "update:longitud"]);
@@ -74,22 +78,31 @@ onMounted(() => {
     }).addTo(map);
 
     marker = L.marker([props.latitud, props.longitud], {
-        draggable: true,
+        draggable: !props.readonly,
     }).addTo(map);
 
-    // CLICK EN MAPA
-    map.on("click", (e) => {
-        const { lat, lng } = e.latlng;
+    /**
+     * SOLO SI ES EDITABLE
+     */
+    if (!props.readonly) {
+        /**
+         * CLICK EN MAPA
+         */
+        map.on("click", (e) => {
+            const { lat, lng } = e.latlng;
 
-        actualizarUbicacion(lat, lng);
-    });
+            actualizarUbicacion(lat, lng);
+        });
 
-    // ARRASTRAR MARCADOR
-    marker.on("dragend", (e) => {
-        const position = marker.getLatLng();
+        /**
+         * ARRASTRAR MARCADOR
+         */
+        marker.on("dragend", () => {
+            const position = marker.getLatLng();
 
-        actualizarUbicacion(position.lat, position.lng);
-    });
+            actualizarUbicacion(position.lat, position.lng);
+        });
+    }
 });
 </script>
 
@@ -100,6 +113,7 @@ onMounted(() => {
                 type="button"
                 class="btn btn-outline-success btn-sm text-xs"
                 @click.prevent="getUbicacion"
+                v-if="!readonly"
             >
                 Usar mi ubicación <i class="fa fa-map-marker-alt"></i>
             </button>
@@ -107,6 +121,7 @@ onMounted(() => {
                 class="btn btn-light btn-sm text-xs ms-1"
                 type="button"
                 @click.prevent="resetPosicion"
+                v-if="!readonly"
             >
                 <i class="fa fa-sync"></i>
             </button>

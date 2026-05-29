@@ -82,6 +82,7 @@ class TipoTransmisionService
     {
         $tipo_transmision = TipoTransmision::create([
             "nombre" => mb_strtoupper($datos["nombre"]),
+            "descripcion" => mb_strtoupper($datos["descripcion"]),
         ]);
 
         // registrar accion
@@ -103,6 +104,7 @@ class TipoTransmisionService
 
         $tipo_transmision->update([
             "nombre" => mb_strtoupper($datos["nombre"]),
+            "descripcion" => mb_strtoupper($datos["descripcion"]),
         ]);
 
         // registrar accion

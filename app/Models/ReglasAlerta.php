@@ -9,7 +9,7 @@ class ReglasAlerta extends Model
     protected $fillable = [
         "enfermedad_id",
         "umbral", // NUMERO DE CASOS ACTIVOS CONFIRMADOS
-        "riesgo",
+        // "riesgo",
         "status",
     ];
 

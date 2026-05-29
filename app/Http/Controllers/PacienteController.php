@@ -104,7 +104,7 @@ class PacienteController extends Controller
      */
     public function show(Paciente $paciente): JsonResponse
     {
-        return response()->JSON($paciente);
+        return response()->JSON($paciente->load(["comunidad"]));
     }
 
     public function update(Paciente $paciente, PacienteUpdateRequest $request)

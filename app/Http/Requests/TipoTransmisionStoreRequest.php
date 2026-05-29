@@ -23,7 +23,8 @@ class TipoTransmisionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre" => "required|unique:tipo_transmisions,nombre"
+            "nombre" => "required|unique:tipo_transmisions,nombre",
+            "descripcion" => "nullable"
         ];
     }
 

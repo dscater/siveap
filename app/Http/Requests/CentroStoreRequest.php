@@ -25,8 +25,6 @@ class CentroStoreRequest extends FormRequest
         return [
             "nombre" => "required|unique:centros,nombre",
             "direccion" => "nullable",
-            "latitud" => "required",
-            "longitud" => "required",
         ];
     }
 

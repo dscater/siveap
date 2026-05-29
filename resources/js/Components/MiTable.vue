@@ -542,10 +542,10 @@ const ajustarAnchoColumnas = async () => {
                 colsColgroupHeader[indexCol].style.width = widthDefinido + "px";
                 colsColgroupContent[indexCol].style.width =
                     widthDefinido + "px";
+                listAnchoColumnas.value[indexCol] = widthDefinido;
                 if (colsColgroupFooter.length > 0) {
                     colsColgroupFooter[indexCol].style.width =
                         widthDefinido + "px";
-                    listAnchoColumnas.value[indexCol] = widthDefinido;
                 }
             });
         }
@@ -1137,7 +1137,7 @@ defineExpose({
                         ]"
                         ref="miTableRef"
                     >
-                        <colgroup ref="tableHeaderGroup">
+                        <colgroup ref="tableContentGroup">
                             <col v-for="item in listCols" />
                         </colgroup>
                         <tbody
@@ -1255,7 +1255,7 @@ defineExpose({
                 v-if="$slots.tableFooter"
             >
                 <table class="table table-bordered" ref="miTableFooterRef">
-                    <colgroup ref="tableHeaderGroup">
+                    <colgroup ref="tableFooterGroup">
                         <col v-for="item in listCols" />
                     </colgroup>
                     <tbody :class="[footerClass]">

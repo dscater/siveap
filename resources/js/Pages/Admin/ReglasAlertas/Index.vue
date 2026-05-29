@@ -36,11 +36,6 @@ const headers = [
         sortable: true,
     },
     {
-        label: "RIESGO",
-        key: "riesgo",
-        sortable: true,
-    },
-    {
         label: "ACCIÓN",
         key: "accion",
         fixed: "right",
@@ -72,7 +67,7 @@ const updateDatatable = async () => {
 const eliminarReglasAlerta = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
-        html: `<strong>${item.nombre}</strong>`,
+        html: `<strong>${item.enfermedad.nombre}</strong>`,
         showCancelButton: true,
         confirmButtonText: "Si, eliminar",
         cancelButtonText: "No, cancelar",

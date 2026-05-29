@@ -10,10 +10,8 @@ onBeforeMount(() => {
 });
 
 const cargarListas = () => {
-    cargarTipos();
+    cargarRoles();
 };
-
-const listSucursals = ref([]);
 
 onMounted(() => {
     cargarListas();
@@ -34,7 +32,7 @@ const listFormatos = ref([
 ]);
 
 const form = ref({
-    tipo: "todos",
+    role_id: "todos",
     formato: "pdf",
 });
 
@@ -46,7 +44,7 @@ const txtBtn = computed(() => {
     return "Generar Reporte";
 });
 
-const listTipos = ref([]);
+const listRoles = ref([]);
 
 const generarReporte = () => {
     generando.value = true;
@@ -57,14 +55,10 @@ const generarReporte = () => {
     }, 500);
 };
 
-const cargarTipos = () => {
-    axios.get(route("tipo_usuarios.listado")).then((response) => {
-        listTipos.value = response.data.map((item) => ({
-            id: item,
-            nombre: item,
-        }));
-
-        listTipos.value.unshift({
+const cargarRoles = () => {
+    axios.get(route("roles.listado")).then((response) => {
+        listRoles.value = response.data.roles;
+        listRoles.value.unshift({
             id: "todos",
             nombre: "TODOS",
         });
@@ -81,7 +75,7 @@ const cargarTipos = () => {
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                    <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
@@ -101,20 +95,20 @@ const cargarTipos = () => {
                         <form @submit.prevent="generarReporte">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label>Seleccionar tipo de usuario*</label>
+                                    <label>Seleccionar role de usuario*</label>
                                     <select
-                                        v-model="form.tipo"
+                                        v-model="form.role_id"
                                         class="form-control"
                                     >
                                         <option
-                                            v-for="item in listTipos"
+                                            v-for="item in listRoles"
                                             :value="item.id"
                                         >
                                             {{ item.nombre }}
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-12 text-center mt-2">
+                                <!-- <div class="col-md-12 text-center mt-2">
                                     <el-radio-group v-model="form.formato">
                                         <el-radio
                                             v-for="item in listFormatos"
@@ -124,7 +118,7 @@ const cargarTipos = () => {
                                             {{ item.label }}</el-radio
                                         >
                                     </el-radio-group>
-                                </div>
+                                </div> -->
                                 <div class="col-md-12 text-center mt-3">
                                     <button
                                         class="btn btn-primary"

@@ -170,6 +170,14 @@ class AlertaEpidemiologicaService
                         'PROBABLE',
                         'CONFIRMADO'
                     ])
+                    ->whereIn('gravedad', [
+                        'MODERADO',
+                        'GRAVE',
+                        'CRITICO',
+                    ])
+                    ->whereIn('estado', [
+                        'ACTIVO',
+                    ])
                     ->whereBetween(
                         'fecha_diagnostico',
                         [

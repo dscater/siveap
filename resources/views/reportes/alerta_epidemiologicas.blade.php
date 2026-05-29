@@ -3,14 +3,14 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Certificados</title>
+    <title>AlertasEpidemiologicas</title>
     <style type="text/css">
         * {
             font-family: sans-serif;
         }
 
         @page {
-            margin-top: 1.5cm;
+            margin-top: 1cm;
             margin-bottom: 0.3cm;
             margin-left: 0.3cm;
             margin-right: 0.3cm;
@@ -31,11 +31,11 @@
         }
 
         table thead tr th {
-            font-size: 9pt;
+            font-size: 8pt;
         }
 
         table tbody tr td {
-            font-size: 8pt;
+            font-size: 7pt;
         }
 
 
@@ -48,6 +48,13 @@
             height: 90px;
             top: -20px;
             left: 0px;
+        }
+
+        .logo2 img {
+            position: absolute;
+            height: 90px;
+            top: -20px;
+            right: 0px;
         }
 
         h2.titulo {
@@ -97,11 +104,27 @@
             text-align: center;
         }
 
+        .datos {
+            margin-left: 15px;
+            border-top: solid 1px;
+            border-collapse: collapse;
+            width: 250px;
+        }
+
+        .txt {
+            font-weight: bold;
+            text-align: right;
+            padding-right: 5px;
+        }
+
         .txt_center {
             font-weight: bold;
             text-align: center;
         }
 
+        .b_top {
+            border-top: solid 1px black;
+        }
 
         .gray {
             background: rgb(202, 202, 202);
@@ -115,16 +138,6 @@
         .img_celda img {
             width: 45px;
         }
-
-        .derecha {
-            text-align: right;
-        }
-
-        .lista {
-            border: solid 1px;
-            padding-left: 4px;
-            margin-left: 0px;
-        }
     </style>
 </head>
 
@@ -134,41 +147,54 @@
         <div class="logo">
             <img src="{{ $configuracion->first()->logo_b64 }}">
         </div>
+        <div class="logo2">
+            <img src="{{ $configuracion->first()->logo2_b64 }}">
+        </div>
         <h2 class="titulo">
             {{ $configuracion->first()->razon_social }}
         </h2>
-        <h4 class="texto">CERTIFICADOS EMITIDOS INTERNO</h4>
+        <h4 class="texto">ALERTAS EPIDEMIOLÓGICAS</h4>
         <h4 class="fecha">Expedido: {{ date('d-m-Y') }}</h4>
     </div>
     <table border="1">
         <thead class="bg-principal">
             <tr>
-                <th width="5%">N°</th>
-                <th>NRO. C.I.</th>
-                <th>NOMBRE</th>
-                <th>AP. PATERNO</th>
-                <th>AP. MATERNO</th>
-                <th>TELÉFONO</th>
-                <th width="6%">EDAD</th>
-                <th width="6%">CATEGORÍA</th>
-                <th>MÉDICO</th>
+                <th>NRO.</th>
+                <th>COMUNIDAD</th>
+                <th>ENFERMEDAD</th>
+                <th>NIVEL DE ALERTA</th>
+                <th>FECHA ALERTA</th>
+                <th>FECHA FIN</th>
+                <th>INDICE</th>
+                <th>PREDICCIÓN</th>
+                <th>CRECIMIENTO</th>
+                <th>CONFIRMADOS</th>
+                <th>ACTIVOS</th>
+                <th>GRAVES</th>
+                <th>FALLECIDOS</th>
+                <th>ESTADO</th>
             </tr>
         </thead>
         <tbody>
             @php
                 $cont = 1;
             @endphp
-            @foreach ($certificado_detalles as $item)
+            @foreach ($alerta_epidemiologicas as $item)
                 <tr>
-                    <td class="centreado">{{ $cont++ }}</td>
-                    <td>{{ $item->certificado->cliente->full_ci }}</td>
-                    <td>{{ $item->certificado->cliente->nombre }}</td>
-                    <td>{{ $item->certificado->cliente->paterno }}</td>
-                    <td>{{ $item->certificado->cliente->materno }}</td>
-                    <td>{{ $item->certificado->cliente->cel }}</td=>
-                    <td class="centreado">{{ $item->certificado->cliente->edad }}</td>
-                    <td class="centreado">{{ $item->categoria }}</td>
-                    <td>{{ $item->user->full_name }}</td>
+                    <td>{{ $cont++ }}</td>
+                    <td>{{ $item->comunidad->nombre }}</td>
+                    <td>{{ $item->enfermedad->nombre }}</td>
+                    <td>{{ $item->nivel_alerta }}</td>
+                    <td>{{ $item->fecha_t }}</td>
+                    <td>{{ $item->fecha_fin_t }}</td>
+                    <td>{{ $item->indice }}</td>
+                    <td>{{ $item->prediccion }}</td>
+                    <td>{{ $item->crecimento }}</td>
+                    <td>{{ $item->confirmados }}</td>
+                    <td>{{ $item->activos }}</td>
+                    <td>{{ $item->graves }}</td>
+                    <td>{{ $item->fallecidos }}</td>
+                    <td>{{ $item->estado }}</td>
                 </tr>
             @endforeach
         </tbody>

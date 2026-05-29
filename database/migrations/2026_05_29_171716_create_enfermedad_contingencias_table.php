@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('centros', function (Blueprint $table) {
+        Schema::create('enfermedad_contingencias', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre", 300)->unique();
-            $table->string("direccion", 900)->nullable();
-            $table->date("fecha_registro")->nullable();
+            $table->unsignedBigInteger("enfermedad_id");
+            $table->text("descripcion");
             $table->timestamps();
+            $table->foreign("enfermedad_id")->on("enfermedads")->references("id");
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('centros');
+        Schema::dropIfExists('enfermedad_contingencias');
     }
 };

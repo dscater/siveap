@@ -23,7 +23,8 @@ class TipoTransmisionUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre" => "required|unique:tipo_transmisions,nombre," . $this->tipo_transmision->id
+            "nombre" => "required|unique:tipo_transmisions,nombre," . $this->tipo_transmision->id,
+            "descripcion" => "nullable"
         ];
     }
 

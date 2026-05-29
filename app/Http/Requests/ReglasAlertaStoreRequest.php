@@ -25,7 +25,7 @@ class ReglasAlertaStoreRequest extends FormRequest
         return [
             "enfermedad_id" => "required|unique:reglas_alertas,enfermedad_id",
             "umbral" => "required",
-            "riesgo" => "required",
+            // "riesgo" => "required",
         ];
     }
 

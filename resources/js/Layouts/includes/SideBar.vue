@@ -375,7 +375,11 @@ onUnmounted(() => {});
                             class="nav-link"
                             :class="[
                                 route_current == 'reportes.usuarios' ||
-                                route_current == 'reportes.clientes'
+                                route_current ==
+                                    'reportes.casos_epidemiologicos' ||
+                                route_current ==
+                                    'reportes.alerta_epidemiologicas' ||
+                                route_current == 'reportes.seguimientos'
                                     ? 'active menu-is-opening menu-open'
                                     : '',
                             ]"
@@ -402,6 +406,37 @@ onUnmounted(() => {});
                                 "
                                 :label="'Lista de Usuarios'"
                                 :ruta="'reportes.usuarios'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes(
+                                        'reportes.casos_epidemiologicos',
+                                    )
+                                "
+                                :label="'Casos Epidemiológicos'"
+                                :ruta="'reportes.casos_epidemiologicos'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes(
+                                        'reportes.alerta_epidemiologicas',
+                                    )
+                                "
+                                :label="'Alertas Epidemiológicas'"
+                                :ruta="'reportes.alerta_epidemiologicas'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes('reportes.seguimientos')
+                                "
+                                :label="'Seguimiento por Casos'"
+                                :ruta="'reportes.seguimientos'"
                                 :icon="'fa fa-angle-right'"
                             ></ItemMenu>
                         </ul>

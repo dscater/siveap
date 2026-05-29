@@ -108,6 +108,12 @@ const cerrarFormulario = () => {
     muestra_form.value = false;
     document.getElementsByTagName("body")[0].classList.remove("modal-open");
 };
+const listGravedads = ref([]);
+const cargarGravedads = () => {
+    axios.get(route("gravedads.listado")).then((response) => {
+        listGravedads.value = response.data;
+    });
+};
 
 const listEstados = ref([]);
 const cargarEstados = () => {
@@ -118,6 +124,7 @@ const cargarEstados = () => {
 
 const cargarListas = () => {
     cargarEstados();
+    cargarGravedads();
 };
 
 onMounted(() => {
@@ -201,6 +208,31 @@ onMounted(() => {
                         >
                             <li class="parsley-required">
                                 {{ form.errors?.fecha }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Gravedad</label>
+                        <el-select
+                            v-model="form.gravedad"
+                            placeholder="- Seleccione -"
+                            no-data-text="Sin datos"
+                            no-match-text="Sin resultados"
+                            filterable
+                        >
+                            <el-option
+                                v-for="item in listGravedads"
+                                :key="item.value"
+                                :value="item.value"
+                                :label="item.label"
+                            ></el-option>
+                        </el-select>
+                        <ul
+                            v-if="form.errors?.gravedad"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.gravedad }}
                             </li>
                         </ul>
                     </div>

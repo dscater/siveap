@@ -7,6 +7,7 @@ import { ref, onMounted, onBeforeMount, onBeforeUnmount } from "vue";
 import Formulario from "./Formulario.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
 import { useAxios } from "@/composables/axios/useAxios";
+import InfoPaciente from "./InfoPaciente.vue";
 const { props: props_page } = usePage();
 const appStore = useAppStore();
 const { axiosDelete } = useAxios();
@@ -24,16 +25,13 @@ const headers = [
         label: "CÓDIGO",
         key: "codigo",
         sortable: true,
+        fixed: true,
         width: "3%",
     },
     {
         label: "PACIENTE",
         key: "paciente",
-        sortable: true,
-    },
-    {
-        label: "SEXO",
-        key: "paciente.sexo",
+        fixed: true,
         sortable: true,
     },
     {
@@ -74,6 +72,7 @@ const headers = [
     {
         label: "ESTADO",
         key: "estado",
+        fixed: "right",
         sortable: true,
     },
     {
@@ -90,7 +89,16 @@ const multiSearch = ref({
 });
 
 const muestra_formulario = ref(false);
-const muestra_formulario_pass = ref(false);
+const muestra_formulario_paciente = ref(false);
+const oPaciente = ref(null);
+
+const verInfoPaciente = (item) => {
+    oPaciente.value = null;
+    axios.get(route("pacientes.show", item.id)).then((response) => {
+        oPaciente.value = response.data;
+        muestra_formulario_paciente.value = true;
+    });
+};
 
 const agregarRegistro = () => {
     limpiarCasoEpidemiologico();
@@ -230,12 +238,31 @@ onBeforeUnmount(() => {
                             :header-class="'bg__primary'"
                             fixed-header
                         >
+                            <template #codigo="{ item }">
+                                <div>
+                                    <span class="fw-bold text-sm">{{
+                                        item.codigo
+                                    }}</span>
+                                </div>
+                            </template>
                             <template #paciente="{ item }">
                                 <div>
-                                    <span>{{ item.paciente.full_name }}</span
+                                    <span class="fw-bold"
+                                        >{{ item.paciente.full_name }}
+                                        <button
+                                            class="btn btn-sm btn-outline-primary text-xs py-0 px-1"
+                                            title="Datos Paciente"
+                                            @click="
+                                                verInfoPaciente(item.paciente)
+                                            "
+                                        >
+                                            <i
+                                                class="fa fa-external-link-alt"
+                                            ></i></button></span
                                     ><br />
-                                    <span class="text-xs"
-                                        >({{ item.paciente.edad }} años)</span
+                                    <span class="text-xxs"
+                                        >({{ item.paciente.sexo }} -
+                                        {{ item.paciente.edad }} años)</span
                                     >
                                 </div>
                             </template>
@@ -341,4 +368,11 @@ onBeforeUnmount(() => {
         @envio-formulario="updateDatatable"
         @cerrar-formulario="muestra_formulario = false"
     ></Formulario>
+
+    <InfoPaciente
+        v-if="muestra_formulario_paciente"
+        :muestra_formulario="muestra_formulario_paciente"
+        :form="oPaciente"
+        @cerrar-formulario="muestra_formulario_paciente = false"
+    ></InfoPaciente>
 </template>

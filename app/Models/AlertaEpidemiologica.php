@@ -10,7 +10,7 @@ class AlertaEpidemiologica extends Model
     protected $fillable = [
         "comunidad_id",
         "enfermedad_id",
-        "nivel_alerta",
+        "nivel_alerta", // BAJO, MEDIO, ALTO, CRITICO
         "indice",
         "prediccion",
         "crecimiento",

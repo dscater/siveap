@@ -85,7 +85,6 @@ class ReglasAlertaService
         $reglas_alerta = ReglasAlerta::create([
             "enfermedad_id" => $datos["enfermedad_id"],
             "umbral" => $datos["umbral"],
-            "riesgo" => $datos["riesgo"],
         ]);
 
         // registrar accion
@@ -108,7 +107,6 @@ class ReglasAlertaService
         $reglas_alerta->update([
             "enfermedad_id" => $datos["enfermedad_id"],
             "umbral" => $datos["umbral"],
-            "riesgo" => $datos["riesgo"],
         ]);
 
         // registrar accion

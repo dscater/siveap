@@ -83,8 +83,6 @@ class CentroService
         $centro = Centro::create([
             "nombre" => mb_strtoupper($datos["nombre"]),
             "direccion" => mb_strtoupper($datos["direccion"]),
-            "latitud" => $datos["latitud"],
-            "longitud" => $datos["longitud"],
         ]);
 
         // registrar accion
@@ -107,8 +105,6 @@ class CentroService
         $centro->update([
             "nombre" => mb_strtoupper($datos["nombre"]),
             "direccion" => mb_strtoupper($datos["direccion"]),
-            "latitud" => $datos["latitud"],
-            "longitud" => $datos["longitud"],
         ]);
 
         // registrar accion

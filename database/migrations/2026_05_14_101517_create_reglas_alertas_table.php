@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger("enfermedad_id");
             $table->double("umbral", 8, 2); // NUMERO DE CASOS ACTIVOS CONFIRMADOS
-            $table->string("riesgo"); // BAJO, MEDIO, ALTO, CRITICO
+            // $table->string("riesgo"); // BAJO, MEDIO, ALTO, CRITICO
             $table->integer("status")->default(1); // 0,1 INACTIVO, ACTIVO
             $table->timestamps();
 

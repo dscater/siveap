@@ -9,75 +9,48 @@ onBeforeMount(() => {
     appStore.startLoading();
 });
 
-const cargarListas = async () => {
-    await Promise.all([
-        cargarSucursals(),
-        cargarUsers(),
-        cargarTipoCertificados(),
-        // cargarClientes(),
-        // cargarTipoPagos(),
-    ]);
+const listComunidads = ref([]);
+const listEnfermedads = ref([]);
+const cargarComunidads = () => {
+    axios.get(route("comunidads.listado")).then((response) => {
+        listComunidads.value = response.data.comunidads;
+        listComunidads.value.unshift({
+            id: "todos",
+            nombre: "TODOS",
+        });
+    });
 };
-
-const listClientes = ref([]);
-const listSucursals = ref([]);
-const listUsers = ref([]);
-const listTipoPagos = ref([]);
-const listTipoCertificados = ref([]);
-
-const cargarClientes = async () => {
-    const response = await axios.get(route("clientes.listado"));
-    listClientes.value = response.data.clientes;
-    listClientes.value.unshift({
-        id: "todos",
-        full_name: "TODOS",
-        full_ci: "",
+const cargarEnfermedads = () => {
+    axios.get(route("enfermedads.listado")).then((response) => {
+        listEnfermedads.value = response.data.enfermedads;
+        listEnfermedads.value.unshift({
+            id: "todos",
+            nombre: "TODOS",
+        });
     });
 };
 
-const cargarSucursals = async () => {
-    const response = await axios.get(route("sucursals.listado"));
-    listSucursals.value = response.data.sucursals;
-    listSucursals.value.unshift({
-        id: "todos",
-        nombre: "TODOS",
-    });
-};
-const cargarUsers = async () => {
-    const response = await axios.get(route("usuarios.byTipo"), {
-        params: {
-            tipo: "MÉDICO",
-        },
-    });
-    listUsers.value = response.data.usuarios;
-    listUsers.value.unshift({
-        id: "todos",
-        full_name: "TODOS",
-    });
-};
-const cargarTipoPagos = async () => {
-    const response = await axios.get(route("tipo_pagos.listado"));
-    listTipoPagos.value = response.data;
-    listTipoPagos.value.unshift({
-        value: "todos",
-        label: "TODOS",
-    });
-};
-const cargarTipoCertificados = async () => {
-    const response = await axios.get(route("tipo_certificados.listado"));
-    listTipoCertificados.value = response.data.tipo_certificados;
-    listTipoCertificados.value.unshift({
-        id: "todos",
-        nombre: "TODOS",
+const listNivelAlertas = ref([]);
+const cargarNivelAlertas = () => {
+    axios.get(route("nivel_alertas.listado")).then((response) => {
+        listNivelAlertas.value = response.data;
+        listNivelAlertas.value.unshift({
+            value: "todos",
+            label: "TODOS",
+        });
     });
 };
 
-onMounted(async () => {
-    await cargarListas();
+const cargarListas = () => {
+    cargarComunidads();
+    cargarEnfermedads();
+    cargarNivelAlertas();
+};
+
+onMounted(() => {
+    cargarListas();
     appStore.stopLoading();
 });
-
-onBeforeMount(() => {});
 
 const listFormatos = ref([
     {
@@ -91,6 +64,20 @@ const listFormatos = ref([
         label: "EXCEL",
     },
 ]);
+const listEstados = ref([
+    {
+        value: "todos",
+        label: "TODOS",
+    },
+    {
+        value: "ACTIVO",
+        label: "ACTIVO",
+    },
+    {
+        value: "CONTROLADO",
+        label: "CONTROLADO",
+    },
+]);
 
 const obtenerFechaActual = () => {
     const fecha = new Date();
@@ -99,13 +86,11 @@ const obtenerFechaActual = () => {
     const dia = String(fecha.getDate()).padStart(2, "0"); // Día del mes
     return `${anio}-${mes}-${dia}`;
 };
-
 const form = ref({
-    cliente_id: "todos",
-    sucursal_id: "todos",
-    user_id: "todos",
-    tipo_pago: "todos",
-    tipo_certificado_id: "todos",
+    comunidad_id: "todos",
+    enfermedad_id: "todos",
+    nivel_alerta: "todos",
+    estado: "todos",
     fecha_ini: obtenerFechaActual(),
     fecha_fin: obtenerFechaActual(),
     formato: "pdf",
@@ -121,7 +106,7 @@ const txtBtn = computed(() => {
 
 const generarReporte = () => {
     generando.value = true;
-    const url = route("reportes.r_certificados", form.value);
+    const url = route("reportes.r_alerta_epidemiologicas", form.value);
     window.open(url, "_blank");
     setTimeout(() => {
         generando.value = false;
@@ -129,21 +114,21 @@ const generarReporte = () => {
 };
 </script>
 <template>
-    <Head title="Reporte Certificados Emitidos Externo"></Head>
+    <Head title="Reporte Alertas Epidemiológicas"></Head>
     <Content>
         <template #header>
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Certificados Emitidos Externo</h1>
+                    <h1 class="m-0">Alertas Epidemiológicas</h1>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
+                    <ol class="breadcrumb float-sm-end">
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
                         <li class="breadcrumb-item active">
-                            Reportes - Certificados Emitidos Externo
+                            Reportes - Alertas Epidemiológicas
                         </li>
                     </ol>
                 </div>
@@ -157,29 +142,15 @@ const generarReporte = () => {
                     <div class="card-body">
                         <form @submit.prevent="generarReporte">
                             <div class="row">
-                                <!-- <div class="col-md-12">
-                                    <label>Seleccionar Cliente*</label>
-                                    <el-select
-                                        v-model="form.cliente_id"
-                                        filterable
-                                    >
-                                        <el-option
-                                            v-for="item in listClientes"
-                                            :key="item.id"
-                                            :value="item.id"
-                                            :label="`${item.full_name} ${item.full_ci ? ' - ' + item.full_ci : ''}`"
-                                        >
-                                        </el-option>
-                                    </el-select>
-                                </div> -->
                                 <div class="col-md-12">
-                                    <label>Sucursal*</label>
+                                    <label>Seleccionar comunidad*</label>
                                     <el-select
-                                        v-model="form.sucursal_id"
+                                        v-model="form.comunidad_id"
                                         filterable
+                                        placeholder="- Seleccione -"
                                     >
                                         <el-option
-                                            v-for="item in listSucursals"
+                                            v-for="item in listComunidads"
                                             :key="item.id"
                                             :value="item.id"
                                             :label="item.nombre"
@@ -188,52 +159,55 @@ const generarReporte = () => {
                                     </el-select>
                                 </div>
                                 <div class="col-md-12">
-                                    <label>Seleccionar Médico*</label>
+                                    <label>Seleccionar Enfermedad*</label>
                                     <el-select
-                                        v-model="form.user_id"
+                                        v-model="form.enfermedad_id"
                                         filterable
+                                        placeholder="- Seleccione -"
                                     >
                                         <el-option
-                                            v-for="item in listUsers"
+                                            v-for="item in listEnfermedads"
                                             :key="item.id"
                                             :value="item.id"
-                                            :label="item.full_name"
+                                            :label="item.nombre"
                                         >
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <!-- <div class="col-md-12">
-                                    <label>Seleccionar Tipo de Pago*</label>
+                                <div class="col-md-12">
+                                    <label>Seleccionar Nivel de Alerta*</label>
                                     <el-select
-                                        v-model="form.tipo_pago"
+                                        v-model="form.nivel_alerta"
                                         filterable
+                                        placeholder="- Seleccione -"
                                     >
                                         <el-option
-                                            v-for="item in listTipoPagos"
+                                            v-for="item in listNivelAlertas"
                                             :key="item.value"
                                             :value="item.value"
                                             :label="item.label"
                                         >
                                         </el-option>
                                     </el-select>
-                                </div> -->
+                                </div>
                                 <div class="col-md-12">
-                                    <label>Tipo de Certificado*</label>
+                                    <label>Seleccionar Estado*</label>
                                     <el-select
-                                        v-model="form.tipo_certificado_id"
+                                        v-model="form.estado"
                                         filterable
+                                        placeholder="- Seleccione -"
                                     >
                                         <el-option
-                                            v-for="item in listTipoCertificados"
-                                            :key="item.id"
-                                            :value="item.id"
-                                            :label="item.nombre"
+                                            v-for="item in listEstados"
+                                            :key="item.value"
+                                            :value="item.value"
+                                            :label="item.label"
                                         >
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <div class="col-12 mt-1">
-                                    <label>Rango de Fechas</label>
+                                <div class="col-12">
+                                    <label>Fecha</label>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <input
@@ -251,7 +225,7 @@ const generarReporte = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12 text-center mt-2">
+                                <!-- <div class="col-md-12 text-center mt-2">
                                     <el-radio-group v-model="form.formato">
                                         <el-radio
                                             v-for="item in listFormatos"
@@ -261,7 +235,7 @@ const generarReporte = () => {
                                             {{ item.label }}</el-radio
                                         >
                                     </el-radio-group>
-                                </div>
+                                </div> -->
                                 <div class="col-md-12 text-center mt-3">
                                     <button
                                         class="btn btn-primary"

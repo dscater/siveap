@@ -9,6 +9,7 @@ class Seguimiento extends Model
     protected $fillable = [
         "caso_epidemiologico_id",
         "fecha",
+        "gravedad",
         "estado",
         "observaciones",
         "user_id",

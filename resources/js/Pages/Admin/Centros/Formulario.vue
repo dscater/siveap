@@ -179,17 +179,6 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-12 mt-2">
-                        <label class="required"
-                            >Indicar Ubicación
-                            <i class="fa fa-map-marker-alt"></i
-                        ></label>
-
-                        <MapMarker
-                            v-model:latitud="form.latitud"
-                            v-model:longitud="form.longitud"
-                        ></MapMarker>
-                    </div>
                 </div>
             </form>
         </template>

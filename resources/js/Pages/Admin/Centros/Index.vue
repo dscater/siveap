@@ -36,16 +36,6 @@ const headers = [
         sortable: true,
     },
     {
-        label: "LATITUD",
-        key: "latitud",
-        sortable: true,
-    },
-    {
-        label: "LONGITUD",
-        key: "longitud",
-        sortable: true,
-    },
-    {
         label: "ACCIÓN",
         key: "accion",
         fixed: "right",
@@ -110,7 +100,7 @@ onMounted(async () => {
         <template #header>
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="m-0"><i class="fa fa-list"></i> Centros</h3>
+                    <h3 class="m-0"><i class="fa fa-hospital"></i> Centros</h3>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">

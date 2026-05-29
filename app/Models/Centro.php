@@ -9,8 +9,6 @@ class Centro extends Model
     protected $fillable = [
         "nombre",
         "direccion",
-        "latitud",
-        "longitud",
         "fecha_registro",
     ];
 

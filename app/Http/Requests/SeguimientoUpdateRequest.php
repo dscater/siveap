@@ -26,6 +26,7 @@ class SeguimientoUpdateRequest extends FormRequest
             "caso_epidemiologico_id" => "required",
             "fecha" => "required|date",
             "estado" => "required",
+            "gravedad" => "required",
             "observaciones" => "nullable",
         ];
     }
@@ -37,6 +38,7 @@ class SeguimientoUpdateRequest extends FormRequest
             "fecha.required" => "Debes completar este campo",
             "fecha.date" => "Debes ingresar una fecha valida",
             "estado.required" => "Debes completar este campo",
+            "gravedad.required" => "Debes completar este campo",
             "observaciones.required" => "Debes completar este campo",
         ];
     }

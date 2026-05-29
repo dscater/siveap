@@ -85,12 +85,15 @@ class SeguimientoService
         $seguimiento = Seguimiento::create([
             "caso_epidemiologico_id" => mb_strtoupper($datos["caso_epidemiologico_id"]),
             "fecha" => $datos["fecha"],
+            "gravedad" => $datos["gravedad"],
             "estado" => $datos["estado"],
             "observaciones" => mb_strtoupper($datos["observaciones"]),
             "user_id" => Auth::user()->id
         ]);
 
+        // actualizar estado y gravedad del caso
         $caso_epidemiologico = $seguimiento->caso_epidemiologico;
+        $caso_epidemiologico->gravedad = $datos["gravedad"];
         $caso_epidemiologico->estado = $datos["estado"];
         $caso_epidemiologico->save();
 
@@ -114,12 +117,19 @@ class SeguimientoService
         $seguimiento->update([
             "caso_epidemiologico_id" => mb_strtoupper($datos["caso_epidemiologico_id"]),
             "fecha" => $datos["fecha"],
+            "gravedad" => $datos["gravedad"],
             "estado" => $datos["estado"],
             "observaciones" => mb_strtoupper($datos["observaciones"]),
         ]);
-        $caso_epidemiologico = $seguimiento->caso_epidemiologico;
-        $caso_epidemiologico->estado = $datos["estado"];
-        $caso_epidemiologico->save();
+
+        $esUltimo = Seguimiento::orderBy("id", "desc")->get()->first();
+        if ($esUltimo->id == $seguimiento->id) {
+            // SI ES ultimo actualizar estado y gravedad del caso
+            $caso_epidemiologico = $seguimiento->caso_epidemiologico;
+            $caso_epidemiologico->gravedad = $datos["gravedad"];
+            $caso_epidemiologico->estado = $datos["estado"];
+            $caso_epidemiologico->save();
+        }
 
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UN SEGUIMIENTO", $old_seguimiento, $seguimiento->withoutRelations());

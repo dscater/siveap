@@ -25,8 +25,6 @@ class CentroUpdateRequest extends FormRequest
         return [
             "nombre" => "required|unique:centros,nombre," . $this->centro->id,
             "direccion" => "nullable",
-            "latitud" => "required",
-            "longitud" => "required",
         ];
     }
 

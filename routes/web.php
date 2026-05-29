@@ -10,6 +10,7 @@ use App\Http\Controllers\EnfermedadController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GravedadController;
 use App\Http\Controllers\InicioController;
+use App\Http\Controllers\NivelAlertaController;
 use App\Http\Controllers\PacienteController;
 use App\Http\Controllers\PrediccionController;
 use App\Http\Controllers\ProfileController;
@@ -99,6 +100,9 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // ESTADOS
     Route::get("estados/listado", [EstadoController::class, 'listado'])->name("estados.listado");
 
+    // NIVEL ALERTAS
+    Route::get("nivel_alertas/listado", [NivelAlertaController::class, 'listado'])->name("nivel_alertas.listado");
+
     // COMUNIDADES
     Route::get("comunidads/paginado", [ComunidadController::class, 'paginado'])->name("comunidads.paginado");
     Route::get("comunidads/listado", [ComunidadController::class, 'listado'])->name("comunidads.listado");
@@ -180,5 +184,14 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // REPORTES
     Route::get('reportes/usuarios', [ReporteController::class, 'usuarios'])->name("reportes.usuarios");
     Route::get('reportes/r_usuarios', [ReporteController::class, 'r_usuarios'])->name("reportes.r_usuarios");
+
+    Route::get('reportes/casos_epidemiologicos', [ReporteController::class, 'casos_epidemiologicos'])->name("reportes.casos_epidemiologicos");
+    Route::get('reportes/r_casos_epidemiologicos', [ReporteController::class, 'r_casos_epidemiologicos'])->name("reportes.r_casos_epidemiologicos");
+
+    Route::get('reportes/alerta_epidemiologicas', [ReporteController::class, 'alerta_epidemiologicas'])->name("reportes.alerta_epidemiologicas");
+    Route::get('reportes/r_alerta_epidemiologicas', [ReporteController::class, 'r_alerta_epidemiologicas'])->name("reportes.r_alerta_epidemiologicas");
+
+    Route::get('reportes/seguimientos', [ReporteController::class, 'seguimientos'])->name("reportes.seguimientos");
+    Route::get('reportes/r_seguimientos', [ReporteController::class, 'r_seguimientos'])->name("reportes.r_seguimientos");
 });
 require __DIR__ . '/auth.php';

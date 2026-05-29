@@ -16,7 +16,7 @@ class CasoEpidemiologicoService
 {
     private $modulo = "CASOS EPIDEMIOLOGICOS";
 
-    public function __construct(private  CargarArchivoService $cargarArchivoService, private HistorialAccionService $historialAccionService) {}
+    public function __construct(private  CargarArchivoService $cargarArchivoService, private HistorialAccionService $historialAccionService, private SeguimientoService $seguimiento_service) {}
 
     public function listado(): Collection
     {
@@ -102,6 +102,16 @@ class CasoEpidemiologicoService
 
         $caso_epidemiologico->codigo = $this->generarCodigoCaso($caso_epidemiologico);
         $caso_epidemiologico->save();
+
+
+        // 1er seguimiento
+        $this->seguimiento_service->crear([
+            "caso_epidemiologico_id" => $caso_epidemiologico->id,
+            "fecha" => $caso_epidemiologico->fecha_diagnostico,
+            "gravedad" => $caso_epidemiologico->gravedad,
+            "estado" => $caso_epidemiologico->estado,
+            "observaciones" => $caso_epidemiologico->observaciones,
+        ]);
 
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UN CASO EPIDEMIOLOGICO", $caso_epidemiologico);

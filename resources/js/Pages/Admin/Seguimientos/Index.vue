@@ -29,6 +29,11 @@ const headers = [
         width: "5%",
     },
     {
+        label: "GRAVEDAD",
+        key: "gravedad",
+        sortable: true,
+    },
+    {
         label: "ESTADO",
         key: "estado",
         sortable: true,
@@ -64,6 +69,8 @@ const agregarRegistro = () => {
     limpiarSeguimiento();
     form.caso_epidemiologico_id = props.caso_epidemiologico.id;
     form.caso_epidemiologico = props.caso_epidemiologico;
+    form.gravedad = props.caso_epidemiologico.gravedad;
+    form.estado = props.caso_epidemiologico.estado;
     muestra_formulario.value = true;
 };
 

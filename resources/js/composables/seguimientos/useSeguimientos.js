@@ -15,6 +15,7 @@ export const useSeguimientos = () => {
         caso_epidemiologico_id: "",
         caso_epidemiologico: "",
         fecha: obtenerFechaActual(),
+        gravedad: "",
         estado: "",
         observaciones: "",
         user_id: "",
