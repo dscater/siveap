@@ -2,6 +2,8 @@
 import MiModal from "@/Components/MiModal.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { watch, ref, computed, defineEmits, onMounted, nextTick } from "vue";
+const { props: props_page } = usePage();
+
 const props = defineProps({
     muestra_formulario: {
         type: Boolean,
@@ -168,7 +170,18 @@ const cargarListas = () => {
     cargarEstados();
 };
 
+const identificaComunidad = () => {
+    if (form.paciente_id) {
+        form.comunidad_id = listPacientes.value.filter(
+            (elem) => elem.id == form.paciente_id,
+        )[0].comunidad_id;
+    }
+};
+
 onMounted(() => {
+    if (props_page.auth?.user.tipo == "CENTRO MÉDICO" && form.id == 0) {
+        form.centro_id = props_page.auth?.user.centro_id;
+    }
     cargarListas();
 });
 </script>
@@ -205,6 +218,7 @@ onMounted(() => {
                             no-data-text="Sin datos"
                             no-match-text="Sin resultados"
                             filterable
+                            @change="identificaComunidad"
                         >
                             <el-option
                                 v-for="item in listPacientes"
@@ -249,7 +263,10 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-4 mt-2">
+                    <div
+                        class="col-md-4 mt-2"
+                        v-if="props_page.auth?.user.tipo == 'ADMINISTRACIÓN'"
+                    >
                         <label class="required">Seleccionar Centro</label>
                         <el-select
                             v-model="form.centro_id"
@@ -301,6 +318,7 @@ onMounted(() => {
                         </ul>
                     </div>
                     <div class="col-md-4 mt-2">
+                        {{ form.fi_sintomas }}
                         <label class="required">Fecha Inicio Sintomas</label>
                         <input
                             type="date"

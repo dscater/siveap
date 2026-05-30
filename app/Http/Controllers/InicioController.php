@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlertaEpidemiologica;
+use App\Models\CasoEpidemiologico;
 use App\Models\Certificado;
 use App\Models\CertificadoDetalle;
 use Carbon\Carbon;
@@ -35,10 +37,11 @@ class InicioController extends Controller
         return Inertia::render("Auth/Login");
     }
 
-    public function certificadosEmitidosLinea(Request $request)
+    public function casosEpidemiologicosLinea(Request $request)
     {
         $tipo =  $request->tipo;
-
+        $centro_id =  $request->centro_id;
+        $enfermedad_id =  $request->enfermedad_id;
         $recorrido = [];
 
         if ($tipo == 'semanal') {
@@ -57,8 +60,7 @@ class InicioController extends Controller
             }
         }
         if ($tipo == 'gestion') {
-            $recorrido = Certificado::selectRaw("YEAR(fecha_registro) as gestion")
-                ->where("status", 1)
+            $recorrido = CasoEpidemiologico::selectRaw("YEAR(fecha_registro) as gestion")
                 ->groupBy("gestion")
                 ->orderBy("gestion")
                 ->pluck("gestion")
@@ -85,45 +87,46 @@ class InicioController extends Controller
         $total_final = 0;
         foreach ($recorrido as $item) {
             if ($tipo == 'semanal') {
-                $total = CertificadoDetalle::whereHas("certificado", function ($q) use ($item) {
-                    $q->whereDate('fecha_registro', $item);
-                    $q->where("status", 1);
-                    // $q->where("estado", 1);
-                });
-
-                $total->where("estado", 1);
-                if (Auth::user()->tipo == 'MÉDICO') {
-                    $total->where("user_id", Auth::user()->id);
+                $total = CasoEpidemiologico::whereDate('fecha_registro', $item);
+                if (!empty($centro_id)) {
+                    $total->where("centro_id", $centro_id);
+                }
+                if (!empty($enfermedad_id)) {
+                    $total->where("enfermedad_id", $enfermedad_id);
+                }
+                if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+                    $total->where("centro_id", Auth::user()->centro_id);
                 }
                 $total = $total->count();
                 $categories[] = date("d/m/Y", strtotime($item));
             }
 
             if ($tipo == 'meses') {
-                $total = CertificadoDetalle::whereHas("certificado", function ($q) use ($item) {
-                    $q->whereMonth('fecha_registro', $item);
-                    $q->whereYear('fecha_registro', Carbon::now()->year);
-                    $q->where("status", 1);
-                    // $q->where("estado", 1);
-                });
-                $total->where("estado", 1);
-                if (Auth::user()->tipo == 'MÉDICO') {
-                    $total->where("user_id", Auth::user()->id);
+                $total = CasoEpidemiologico::whereMonth('fecha_registro', $item);
+                if (!empty($centro_id)) {
+                    $total->where("centro_id", $centro_id);
                 }
-
+                if (!empty($enfermedad_id)) {
+                    $total->where("enfermedad_id", $enfermedad_id);
+                }
+                if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+                    $total->where("centro_id", Auth::user()->centro_id);
+                }
+                $total->whereYear('fecha_registro', Carbon::now()->year);
                 $total = $total->count();
                 $categories[] = $array_meses[$item];
             }
 
             if ($tipo == 'gestion') {
-                $total = CertificadoDetalle::whereHas("certificado", function ($q) use ($item) {
-                    $q->whereYear('fecha_registro', $item);
-                    $q->where("status", 1);
-                    // $q->where("estado", 1);
-                });
-                $total->where("estado", 1);
-                if (Auth::user()->tipo == 'MÉDICO') {
-                    $total->where("user_id", Auth::user()->id);
+                $total = CasoEpidemiologico::whereYear('fecha_registro', $item);
+                if (!empty($centro_id)) {
+                    $total->where("centro_id", $centro_id);
+                }
+                if (!empty($enfermedad_id)) {
+                    $total->where("enfermedad_id", $enfermedad_id);
+                }
+                if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+                    $total->where("centro_id", Auth::user()->centro_id);
                 }
                 $total = $total->count();
                 $categories[] = $item;
@@ -140,38 +143,60 @@ class InicioController extends Controller
         ]);
     }
 
-    public function cantidadTramitesNormal()
+    public function cantidadActivosControlados(Request $request)
     {
-        $normales = CertificadoDetalle::whereHas("certificado", function ($q) {
-            $q->where("tipo", "NORMAL");
-            $q->where("status", 1);
-        });
+        $enfermedad_id =  $request->enfermedad_id;
 
-        if (Auth::user()->tipo == 'MÉDICO') {
-            $normales->where("user_id", Auth::user()->id);
+        $activos = AlertaEpidemiologica::where("estado", "ACTIVO");
+
+        if (!empty($enfermedad_id)) {
+            $activos->where("enfermedad_id", $enfermedad_id);
         }
-        $normales = $normales->count();
 
-        $tramites = CertificadoDetalle::whereHas("certificado", function ($q) {
-            $q->where("tipo", "TRAMITE");
-            $q->where("status", 1);
-        });
-
-        if (Auth::user()->tipo == 'MÉDICO') {
-            $tramites->where("user_id", Auth::user()->id);
+        $activos = $activos->count();
+        $controlados = AlertaEpidemiologica::where("estado", "CONTROLADO");
+        if (!empty($enfermedad_id)) {
+            $controlados->where("enfermedad_id", $enfermedad_id);
         }
-        $tramites = $tramites->count();
+
+        $controlados = $controlados->count();
 
         $data = [
-            ["name" => "TRÁMITE", "y" => (float)$tramites],
-            ["name" => "NORMAL", "y" => (float)$normales],
+            ["name" => "ACTIVOS", "y" => (float)$activos, "color" => "#fadd36"],
+            ["name" => "CONTROLADOS", "y" => (float)$controlados, "color" => "#198754"],
         ];
 
-        $total_final = (float)$normales + (float)$tramites;
+        $total_final = (float)$activos + (float)$controlados;
 
         return response()->JSON([
             "data" => $data,
             "total_final" => $total_final
         ]);
+    }
+
+    public function topEnfermedades()
+    {
+        $topEnfermedades = CasoEpidemiologico::query()
+            ->selectRaw("
+        enfermedad_id,
+        COUNT(*) as total
+    ")
+            ->with('enfermedad')
+            ->whereIn(
+                'tipo_caso',
+                ['PROBABLE', 'CONFIRMADO']
+            )
+            ->groupBy('enfermedad_id')
+            ->orderByDesc('total')
+            ->limit(10)
+            ->get()
+            ->map(function ($item) {
+                return [
+                    'enfermedad' => $item->enfermedad->nombre,
+                    'casos' => $item->total
+                ];
+            });
+
+        return $topEnfermedades;
     }
 }

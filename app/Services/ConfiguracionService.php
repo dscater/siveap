@@ -34,6 +34,7 @@ class ConfiguracionService
                 "fono" => $datos["fono"],
                 "actividad" => $datos["actividad"],
                 "correo" => $datos["correo"],
+                "ventanaDias" => $datos["ventanaDias"]
             ]);
         } else {
             $configuracion->update([
@@ -45,6 +46,7 @@ class ConfiguracionService
                 "fono" => $datos["fono"],
                 "actividad" => $datos["actividad"],
                 "correo" => $datos["correo"],
+                "ventanaDias" => $datos["ventanaDias"]
             ]);
         }
 

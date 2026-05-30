@@ -26,6 +26,7 @@ return new class extends Migration
             $table->date("fecha");
             $table->string("estado"); // ACTIVO, CONTROLADO
             $table->date("fecha_fin")->nullable();
+            $table->double("indice_fin", 8, 2)->nullable();
             $table->timestamps();
 
             $table->foreign("comunidad_id")->on("comunidads")->references("id");

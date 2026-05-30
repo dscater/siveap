@@ -5,6 +5,7 @@ import { Head, Link, usePage } from "@inertiajs/vue3";
 import { usePacientes } from "@/composables/pacientes/usePacientes";
 import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
+import Ver from "./Ver.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
 import { useAxios } from "@/composables/axios/useAxios";
 const { props: props_page } = usePage();
@@ -74,7 +75,7 @@ const multiSearch = ref({
 });
 
 const muestra_formulario = ref(false);
-const muestra_formulario_pass = ref(false);
+const muestra_formulario_ver = ref(false);
 
 const agregarRegistro = () => {
     limpiarPaciente();
@@ -210,6 +211,21 @@ onMounted(async () => {
                                 </div>
                             </template>
                             <template #accion="{ item }">
+                                <el-tooltip
+                                    class="box-item"
+                                    effect="dark"
+                                    content="Ver"
+                                    placement="left-start"
+                                >
+                                    <button
+                                        class="btn btn-primary"
+                                        @click="
+                                            setPaciente(item);
+                                            muestra_formulario_ver = true;
+                                        "
+                                    >
+                                        <i class="fa fa-eye"></i></button
+                                ></el-tooltip>
                                 <template
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
@@ -272,4 +288,11 @@ onMounted(async () => {
         @envio-formulario="updateDatatable"
         @cerrar-formulario="muestra_formulario = false"
     ></Formulario>
+
+    <Ver
+        v-if="muestra_formulario_ver"
+        :muestra_formulario="muestra_formulario_ver"
+        :form="form"
+        @cerrar-formulario="muestra_formulario_ver = false"
+    ></Ver>
 </template>

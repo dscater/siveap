@@ -2,8 +2,11 @@
 
 namespace App\Services;
 
+use App\Models\AlertaEpidemiologica;
+use App\Models\CasoEpidemiologico;
 use App\Services\HistorialAccionService;
 use App\Models\Comunidad;
+use App\Models\Paciente;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Exception;
@@ -123,7 +126,18 @@ class ComunidadService
      */
     public function eliminar(Comunidad $comunidad): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
+        $usos = Paciente::where("comunidad_id", $comunidad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
+        $usos = CasoEpidemiologico::where("comunidad_id", $comunidad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
+        $usos = AlertaEpidemiologica::where("comunidad_id", $comunidad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
 
         $old_comunidad = clone $comunidad;
         $comunidad->delete();

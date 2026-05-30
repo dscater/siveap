@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Enfermedad;
 use App\Services\HistorialAccionService;
 use App\Models\TipoTransmision;
 use App\Models\User;
@@ -121,7 +122,10 @@ class TipoTransmisionService
      */
     public function eliminar(TipoTransmision $tipo_transmision): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
+        $usos = Enfermedad::where("tipo_transmision_id", $tipo_transmision->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
 
         $old_tipo_transmision = clone $tipo_transmision;
         $tipo_transmision->delete();

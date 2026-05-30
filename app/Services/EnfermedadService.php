@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\AlertaEpidemiologica;
+use App\Models\CasoEpidemiologico;
 use App\Services\HistorialAccionService;
 use App\Models\Enfermedad;
 use App\Models\User;
@@ -126,8 +128,16 @@ class EnfermedadService
      */
     public function eliminar(Enfermedad $enfermedad): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
 
+        $usos = CasoEpidemiologico::where("enfermedad_id", $enfermedad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
+
+        $usos = AlertaEpidemiologica::where("enfermedad_id", $enfermedad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
         $old_enfermedad = clone $enfermedad;
         $enfermedad->delete();
 

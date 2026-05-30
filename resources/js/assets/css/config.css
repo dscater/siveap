@@ -87,10 +87,10 @@ td .descripcion {
     color: var(--bg3);
 }
 
-.dropdown-menu {
+/* .dropdown-menu {
     background-color: var(--bg7);
     padding: 10px 15px;
-}
+} */
 
 .app-content h1,
 .app-content h2,
@@ -288,4 +288,30 @@ body .mi-table table thead tr th .iheader .accion.active {
 .small-box {
     border-radius: 10px !important;
     overflow: hidden;
+}
+
+/* NOTIFICACIONES */
+.contenedor_notificaciones {
+    max-height: 40vh;
+    overflow: auto;
+}
+
+.contenedor_notificaciones .item_notificacion {
+    border-bottom: solid 1px var(--bgGrayLight);
+    font-size: 0.85em;
+}
+
+.contenedor_notificaciones .item_notificacion .dropdown-item {
+    display: flex;
+}
+
+.contenedor_notificaciones .item_notificacion .dropdown-item .icon {
+    margin-right: 4px;
+}
+
+.contenedor_notificaciones .descripcion_notificacion {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap; /* evita salto de línea */
+    text-overflow: ellipsis; /* agrega ... */
 }

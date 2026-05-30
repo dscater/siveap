@@ -33,16 +33,19 @@ const sincronizarMenus = () => {
         route_current.value == "enfermedads.index" ||
         route_current.value == "categoria_enfermedads.index" ||
         route_current.value == "tipo_transmisions.index" ||
-        route_current.value == "reglas_alertas.index"
+        route_current.value == "reglas_alertas.index" ||
+        route_current.value == "enfermedad_contingencias.index"
     ) {
         openMenus.enfermedads = true;
     }
 
     if (
         route_current.value == "reportes.usuarios" ||
-        route_current.value == "reportes.clientes"
+        route_current.value == "reportes.casos_epidemiologicos" ||
+        route_current.value == "reportes.alerta_epidemiologicas" ||
+        route_current.value == "reportes.seguimientos"
     ) {
-        openMenus.enfermedads = true;
+        openMenus.reportes = true;
     }
 };
 
@@ -159,7 +162,10 @@ onUnmounted(() => {});
                             permisos == '*' ||
                             permisos.includes('usuarios.index') ||
                             permisos.includes('alerta_epidemiologicas.index') ||
-                            permisos.includes('centros.index')
+                            permisos.includes('centros.index') ||
+                            permisos.includes('casos_epidemiologicos.index') ||
+                            permisos.includes('prediccions.index') ||
+                            permisos.includes('notificacion_users.index')
                         "
                     >
                         ADMINISTRACIÓN
@@ -190,6 +196,15 @@ onUnmounted(() => {});
                         :label="'Predicción Epidemiológica'"
                         :ruta="'prediccions.index'"
                         :icon="'fa fa-chart-line'"
+                    ></ItemMenu>
+                    <ItemMenu
+                        v-if="
+                            permisos == '*' ||
+                            permisos.includes('notificacion_users.index')
+                        "
+                        :label="'Notificaciones'"
+                        :ruta="'notificacion_users.index'"
+                        :icon="'fa fa-bell'"
                     ></ItemMenu>
                     <ItemMenu
                         v-if="
@@ -255,6 +270,17 @@ onUnmounted(() => {});
                                 "
                                 :label="'Enfermedades'"
                                 :ruta="'enfermedads.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes(
+                                        'enfermedad_contingencias.index',
+                                    )
+                                "
+                                :label="'Contingencias'"
+                                :ruta="'enfermedad_contingencias.index'"
                                 :icon="'fa fa-angle-right'"
                             ></ItemMenu>
                             <ItemMenu
@@ -356,7 +382,13 @@ onUnmounted(() => {});
                         v-if="
                             permisos == '*' ||
                             permisos.includes('reportes.usuarios') ||
-                            permisos.includes('reportes.clientes')
+                            permisos.includes(
+                                'reportes.casos_epidemiologicos',
+                            ) ||
+                            permisos.includes(
+                                'reportes.alerta_epidemiologicas',
+                            ) ||
+                            permisos.includes('reportes.seguimientos')
                         "
                     >
                         REPORTES
@@ -366,7 +398,13 @@ onUnmounted(() => {});
                         v-if="
                             permisos == '*' ||
                             permisos.includes('reportes.usuarios') ||
-                            permisos.includes('reportes.clientes')
+                            permisos.includes(
+                                'reportes.casos_epidemiologicos',
+                            ) ||
+                            permisos.includes(
+                                'reportes.alerta_epidemiologicas',
+                            ) ||
+                            permisos.includes('reportes.seguimientos')
                         "
                         :class="{ 'menu-open': openMenus.reportes }"
                     >

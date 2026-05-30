@@ -50,7 +50,6 @@ def analizar(data: dict):
     y = df["confirmados"]
 
     try:
-
         # MODELO GLM POISSON
         modelo = sm.GLM(
             y,
@@ -59,26 +58,20 @@ def analizar(data: dict):
         )
 
         resultado = modelo.fit()
-
         predicciones = resultado.predict(X)
-
         prediccion_final = float(
             predicciones.iloc[-1]
         )
 
     except Exception as e:
-
         return {
             "error": str(e)
         }
 
     # ÚLTIMOS VALORES
     activos = int(df["activos"].iloc[-1])
-
     graves = int(df["graves"].iloc[-1])
-
     fallecidos = int(df["fallecidos"].iloc[-1])
-
     confirmados = int(df["confirmados"].iloc[-1])
 
     # SCORE EPIDEMIOLÓGICO
@@ -93,56 +86,40 @@ def analizar(data: dict):
     crecimiento = 0
 
     if len(df) >= 2:
-
         anterior = df["confirmados"].iloc[-2]
-
         actual = df["confirmados"].iloc[-1]
-
         crecimiento = actual - anterior
 
     # CLASIFICACIÓN RIESGO
     riesgo = "BAJO"
 
     if fallecidos > 0:
-
         riesgo = "CRITICO"
 
     elif indice >= 25:
-
         riesgo = "CRITICO"
 
     elif indice >= 15:
-
         riesgo = "ALTO"
 
     elif indice >= 8:
-
         riesgo = "MEDIO"
 
     # CRECIMIENTO ACELERADO
     if crecimiento >= 5 and riesgo != "CRITICO":
-
         riesgo = "ALTO"
 
     return {
-
         "riesgo": riesgo,
-
         "indice": indice,
-
         "prediccion": round(
             prediccion_final,
             2
         ),
-
         "crecimiento": int(crecimiento),
-
         "confirmados": confirmados,
-
         "activos": activos,
-
         "graves": graves,
-
         "fallecidos": fallecidos
     }
     
@@ -151,19 +128,14 @@ def analizar(data: dict):
 #==========================
 # =========================
 # MODELOS
-
 class Dia(BaseModel):
     fecha: str
     confirmados: int
 
 class PrediccionRequest(BaseModel):
-
     enfermedad_id: Optional[int] = None
-
     comunidad_id: Optional[int] = None
-
     dias_predecir: int
-
     dias: List[Dia]
 
 # =========================
@@ -180,7 +152,6 @@ def predecir(data: PrediccionRequest):
         }
         for x in data.dias
     ])
-
 
     if len(df) < 3:
         return {
@@ -240,37 +211,27 @@ def predecir(data: PrediccionRequest):
     resultado_predicciones = []
 
     for i, valor in enumerate(predicciones):
-
         fecha_futura = (
             ultima_fecha +
             timedelta(days=i + 1)
         )
 
         resultado_predicciones.append({
-
             "dia": i + 1,
-
             "fecha":
                 fecha_futura.strftime(
                     "%Y-%m-%d"
                 ),
-
             "casos_estimados":
                 round(float(valor), 2)
         })
 
     return {
-
         "riesgo": "ALTO",
-
-       "crecimiento":
-    round(
-        float(
-            resultado.params["dia_num"]
-        ),
-        2
-    ),
-
+        "crecimiento":round(
+            float(
+                resultado.params["dia_num"]
+            ),2),
         "predicciones":
             resultado_predicciones
     }

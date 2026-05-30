@@ -133,8 +133,10 @@ onMounted(() => {
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
-                                <h3 class="">
-                                    {{ props.role.nombre }}
+                                <h3 class="text-dark">
+                                    <span class="fw-normal"
+                                        >Permisos asignados a </span
+                                    >{{ props.role.nombre }}
                                 </h3>
                             </div>
                             <div
@@ -142,25 +144,7 @@ onMounted(() => {
                                 v-for="item in modulos_group"
                             >
                                 <p
-                                    class="font-weight-bold mb-2 nomModulo"
-                                    :class="[
-                                        {
-                                            'bg-primary': [
-                                                'Lengua',
-                                                'Matemáticas',
-                                                'Ciencias',
-                                                'Instrucción Policial',
-                                                'Historia Policial',
-                                                'Acondicionamiento Físico',
-                                            ].some((palabra) =>
-                                                item?.includes(palabra),
-                                            ),
-                                        },
-                                        {
-                                            'bg-principal':
-                                                item.includes('Evaluación'),
-                                        },
-                                    ]"
+                                    class="font-weight-bold mb-2 nomModulo bg-principal"
                                 >
                                     {{ item }}
                                 </p>

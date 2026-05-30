@@ -54,13 +54,29 @@ const filtroGrafico1 = ref([
     },
 ]);
 
+const listCentros = ref([]);
+const cargarCentros = () => {
+    axios.get(route("centros.listado")).then((response) => {
+        listCentros.value = response.data.centros;
+    });
+};
+
+const listEnfermedads = ref([]);
+const cargarEnfermedads = () => {
+    axios.get(route("enfermedads.listado")).then((response) => {
+        listEnfermedads.value = response.data.enfermedads;
+    });
+};
+
 const form1 = ref({
     tipo: "semanal",
+    centro_id: "",
+    enfermedad_id: "",
 });
 
 const generarReporte1 = () => {
     axios
-        .get(route("certificadosEmitidosLinea"), {
+        .get(route("casosEpidemiologicosLinea"), {
             params: form1.value,
         })
         .then((response) => {
@@ -90,11 +106,11 @@ const renderChart1 = (containerId, categories, total_final, data) => {
         },
         title: {
             align: "center",
-            text: `CERTIFICADOS EMITIDOS`,
+            text: `CASOS EPIDEMIOLÓGICOS REGISTRADOS`,
         },
         subtitle: {
             align: "center",
-            text: `Total emitidos: ${total_final}`,
+            text: `Total casos: ${total_final}`,
         },
         accessibility: {
             announceNewData: {
@@ -142,32 +158,39 @@ const renderChart1 = (containerId, categories, total_final, data) => {
 
         series: [
             {
-                name: "Certificados emitidos",
+                name: "Casos registrados",
                 data: data,
             },
         ],
     });
 };
 
+const form2 = ref({
+    enfermedad_id: "",
+});
 const generarReporte2 = () => {
-    axios.get(route("cantidadTramitesNormal")).then((response) => {
-        nextTick(() => {
-            const containerId = `container2`;
-            const container = document.getElementById(containerId);
-            // Verificar que el contenedor exista y tenga un tamaño válido
-            if (container) {
-                renderChart2(
-                    containerId,
-                    response.data.categories,
-                    response.data.total_final,
-                    response.data.data,
-                );
-            } else {
-                console.error(`Contenedor ${containerId} no válido.`);
-            }
+    axios
+        .get(route("cantidadActivosControlados"), {
+            params: form2.value,
+        })
+        .then((response) => {
+            nextTick(() => {
+                const containerId = `container2`;
+                const container = document.getElementById(containerId);
+                // Verificar que el contenedor exista y tenga un tamaño válido
+                if (container) {
+                    renderChart2(
+                        containerId,
+                        response.data.categories,
+                        response.data.total_final,
+                        response.data.data,
+                    );
+                } else {
+                    console.error(`Contenedor ${containerId} no válido.`);
+                }
+            });
+            // Create the chart
         });
-        // Create the chart
-    });
 };
 
 const renderChart2 = (containerId, categories, total_final, data) => {
@@ -177,7 +200,7 @@ const renderChart2 = (containerId, categories, total_final, data) => {
         },
         title: {
             align: "center",
-            text: `NORMAL/TRÁMITE`,
+            text: `ALERTAS ACTIVAS/CONTROLADAS`,
         },
         subtitle: {
             align: "center",
@@ -226,10 +249,11 @@ const renderChart2 = (containerId, categories, total_final, data) => {
         tooltip: {
             useHTML: true,
             formatter: function () {
+                console.log(this);
                 return `
                     <div style="text-align:center;">
                         <div style="display:inline-block; width:12px; height:12px; background:${this.point.color}; border-radius:50%; margin-right:5px;"></div>
-                        <strong style="color:${this.point.color};">${this.point.series.name}</strong>
+                        <strong style="color:${this.point.color};">${this.name}</strong>
                         <br>
                         <span class="text-md"><strong>Total:</strong> ${this.point.y}</span>
                     </div>
@@ -239,16 +263,90 @@ const renderChart2 = (containerId, categories, total_final, data) => {
 
         series: [
             {
-                name: "Certificados emitidos",
+                name: "Alertas",
                 data: data,
+                showInLegend: true,
             },
         ],
     });
 };
 
+const generarReporte3 = () => {
+    axios
+        .get(route("topEnfermedades"), {
+            params: form2.value,
+        })
+        .then((response) => {
+            nextTick(() => {
+                const containerId = `container3`;
+                const container = document.getElementById(containerId);
+                // Verificar que el contenedor exista y tenga un tamaño válido
+                console.log(response);
+                if (container) {
+                    renderChart3(containerId, response.data);
+                } else {
+                    console.error(`Contenedor ${containerId} no válido.`);
+                }
+            });
+            // Create the chart
+        });
+};
+
+const renderChart3 = (containerId, datos) => {
+    console.log(datos);
+    Highcharts.chart(containerId, {
+        chart: {
+            type: "bar",
+        },
+
+        title: {
+            text: "Top Registro de Casos por Enfermedad",
+        },
+
+        xAxis: {
+            categories: datos.map((item) => item.enfermedad),
+        },
+
+        yAxis: {
+            title: {
+                text: "Casos",
+            },
+        },
+
+        series: [
+            {
+                name: "Casos",
+                data: datos.map((item) => item.casos),
+            },
+        ],
+
+        credits: {
+            enabled: false,
+        },
+    });
+};
+
 onMounted(() => {
-    // generarReporte1();
-    // generarReporte2();
+    cargarCentros();
+    cargarEnfermedads();
+    if (
+        auth?.user.permisos == "*" ||
+        auth?.user.permisos.includes("caso_epidemiologicos.index")
+    ) {
+        generarReporte1();
+    }
+    if (
+        auth?.user.permisos == "*" ||
+        auth?.user.permisos.includes("alerta_epidemiologicas.index")
+    ) {
+        generarReporte2();
+    }
+    if (
+        auth?.user.permisos == "*" ||
+        auth?.user.permisos.includes("enfermedads.index")
+    ) {
+        generarReporte3();
+    }
     appStore.stopLoading();
 });
 </script>
@@ -291,16 +389,21 @@ onMounted(() => {
                 </div>
             </div>
         </div>
-
-        <!-- <div class="row">
-            <div class="col-md-8">
+        <div class="row">
+            <div
+                class="col-md-8 mt-2"
+                v-if="
+                    auth?.user.permisos == '*' ||
+                    auth?.user.permisos.includes('caso_epidemiologicos.index')
+                "
+            >
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <select
                                     v-model="form1.tipo"
-                                    class="form-control text-sm"
+                                    class="form-select text-xs"
                                     @change="generarReporte1"
                                 >
                                     <option
@@ -311,6 +414,47 @@ onMounted(() => {
                                     </option>
                                 </select>
                             </div>
+                            <div
+                                class="col-md-4"
+                                v-if="auth?.user.tipo == 'ADMINISTRACIÓN'"
+                            >
+                                <el-select
+                                    v-model="form1.centro_id"
+                                    placeholder="Centro"
+                                    @change="generarReporte1"
+                                    no-data-text="Sin datos"
+                                    no-match-text="Sin resultados"
+                                    filterable
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in listCentros"
+                                        :key="item.id"
+                                        :value="item.id"
+                                        :label="item.nombre"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-md-4">
+                                <el-select
+                                    v-model="form1.enfermedad_id"
+                                    placeholder="Enfermedad"
+                                    @change="generarReporte1"
+                                    no-data-text="Sin datos"
+                                    no-match-text="Sin resultados"
+                                    filterable
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in listEnfermedads"
+                                        :key="item.id"
+                                        :value="item.id"
+                                        :label="item.nombre"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
                             <div class="col-12">
                                 <div id="container"></div>
                             </div>
@@ -318,14 +462,52 @@ onMounted(() => {
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-6">
+            <div
+                class="col-md-4 mt-2 col-sm-6"
+                v-if="
+                    auth?.user.permisos == '*' ||
+                    auth?.user.permisos.includes('alerta_epidemiologicas.index')
+                "
+            >
                 <div class="card">
                     <div class="card-body">
-                        <div id="container2"></div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <el-select
+                                    v-model="form2.enfermedad_id"
+                                    placeholder="Enfermedad"
+                                    @change="generarReporte2"
+                                    no-data-text="Sin datos"
+                                    no-match-text="Sin resultados"
+                                    filterable
+                                    clearable
+                                >
+                                    <el-option
+                                        v-for="item in listEnfermedads"
+                                        :key="item.id"
+                                        :value="item.id"
+                                        :label="item.nombre"
+                                    >
+                                    </el-option>
+                                </el-select>
+                            </div>
+                            <div class="col-12">
+                                <div id="container2"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> -->
+            <div
+                class="col-12 mt-2"
+                v-if="
+                    auth?.user.permisos == '*' ||
+                    auth?.user.permisos.includes('enfermedads.index')
+                "
+            >
+                <div id="container3"></div>
+            </div>
+        </div>
     </Content>
 </template>
 <style scoped>

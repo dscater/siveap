@@ -2,17 +2,24 @@
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
+import { useAlertaEpidemiologicas } from "@/composables/alerta_epidemiologicas/useAlertaEpidemiologicas";
 import { ref, onMounted, onBeforeMount, onBeforeUnmount } from "vue";
+import { useAxios } from "@/composables/axios/useAxios";
 import { useAppStore } from "@/stores/aplicacion/appStore";
+import Formulario from "./Formulario.vue";
 import MapAlertas from "@/Components/MapAlertas.vue";
 import "leaflet/dist/leaflet.css";
+import Contingencia from "./Contingencia.vue";
 const props = defineProps({
     comunidads: Array,
     enfermedads: Array,
 });
 const { props: props_page } = usePage();
 const appStore = useAppStore();
+const { axiosDelete } = useAxios();
 
+const { setAlertaEpidemiologica, limpiarAlertaEpidemiologica, form } =
+    useAlertaEpidemiologicas();
 onBeforeMount(() => {
     appStore.startLoading();
 });
@@ -97,6 +104,12 @@ const headers = [
         key: "fallecidos",
         sortable: true,
     },
+    {
+        label: "ACCIÓN",
+        key: "accion",
+        sortable: true,
+        fixed: "right",
+    },
 ];
 
 const listEstados = ref([
@@ -124,8 +137,56 @@ const cargarAlertas = () => {
         });
 };
 
+const muestra_formulario_contingencia = ref(false);
+const muestra_formulario = ref(false);
+const oAlertaEpidemiologica = ref(null);
+const muestraContingencia = (item) => {
+    oAlertaEpidemiologica.value = null;
+    axios
+        .get(route("alerta_epidemiologicas.getInfo", item.id))
+        .then((response) => {
+            oAlertaEpidemiologica.value = response.data;
+            muestra_formulario_contingencia.value = true;
+        });
+};
+
+const updateDatatable = async () => {
+    if (miTable.value) {
+        await miTable.value.cargarDatos();
+        limpiarAlertaEpidemiologica();
+        cargarAlertas();
+        muestra_formulario.value = false;
+    }
+};
+
+const eliminarAlertaEpidemiologica = (item) => {
+    Swal.fire({
+        title: "¿Quierés eliminar este registro?",
+        html: `<strong>${item.comunidad.nombre}</strong> - ${item.enfermedad.nombre}`,
+        showCancelButton: true,
+        confirmButtonText: "Si, eliminar",
+        cancelButtonText: "No, cancelar",
+        denyButtonText: `No, cancelar`,
+        customClass: {
+            confirmButton: "bg-danger",
+            cancelButton: "bg-light text-dark border border-secondary",
+        },
+    }).then(async (result) => {
+        /* Read more about isConfirmed, isDenied below */
+        if (result.isConfirmed) {
+            let respuesta = await axiosDelete(
+                route("alerta_epidemiologicas.destroy", item.id),
+            );
+            if (respuesta && respuesta.sw) {
+                updateDatatable();
+            }
+        }
+    });
+};
+
 onMounted(async () => {
     cargarAlertas();
+    recargarMapa();
     appStore.stopLoading();
 });
 
@@ -140,6 +201,11 @@ onBeforeUnmount(() => {
         .getElementsByTagName("body")[0]
         .classList.remove("sidebar-collapse");
 });
+const mapKey = ref(0);
+
+function recargarMapa() {
+    mapKey.value++;
+}
 </script>
 <template>
     <Head title="Alertas Epidemiológicas"></Head>
@@ -170,7 +236,7 @@ onBeforeUnmount(() => {
 
         <div class="row">
             <div class="col-md-12">
-                <MapAlertas :alertas="alertas"></MapAlertas>
+                <MapAlertas :alertas="alertas" :key="mapKey"></MapAlertas>
             </div>
             <div class="col-md-12 mt-3">
                 <div class="row">
@@ -268,8 +334,118 @@ onBeforeUnmount(() => {
                             }}
                         </div>
                     </template>
-                    <template #accion="{ item }"> </template>
+                    <template #accion="{ item }">
+                        <template
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'alerta_epidemiologicas.index',
+                                )
+                            "
+                        >
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                content="Contingencia"
+                                placement="left-start"
+                            >
+                                <button
+                                    type="button"
+                                    class="btn btn-info"
+                                    @click="muestraContingencia(item)"
+                                >
+                                    <i
+                                        class="fa fa-clipboard-check"
+                                    ></i></button
+                            ></el-tooltip>
+                        </template>
+                        <template
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'alerta_epidemiologicas.index',
+                                )
+                            "
+                        >
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                content="Ver"
+                                placement="left-start"
+                            >
+                                <Link
+                                    :href="
+                                        route(
+                                            'alerta_epidemiologicas.show',
+                                            item.id,
+                                        )
+                                    "
+                                    class="btn btn-primary"
+                                >
+                                    <i class="fa fa-eye"></i></Link
+                            ></el-tooltip>
+                        </template>
+                        <template
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'alerta_epidemiologicas.edit',
+                                )
+                            "
+                        >
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                content="Editar"
+                                placement="left-start"
+                            >
+                                <button
+                                    class="btn btn-warning"
+                                    @click="
+                                        setAlertaEpidemiologica(item);
+                                        muestra_formulario = true;
+                                    "
+                                >
+                                    <i class="fa fa-pen"></i></button
+                            ></el-tooltip>
+                        </template>
+                        <template
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'alerta_epidemiologicas.destroy',
+                                )
+                            "
+                        >
+                            <el-tooltip
+                                class="box-item"
+                                effect="dark"
+                                content="Eliminar"
+                                placement="left-start"
+                            >
+                                <button
+                                    class="btn btn-danger"
+                                    @click="eliminarAlertaEpidemiologica(item)"
+                                >
+                                    <i class="fa fa-trash-alt"></i></button
+                            ></el-tooltip>
+                        </template>
+                    </template>
                 </MiTable>
+                <Contingencia
+                    v-if="muestra_formulario_contingencia"
+                    :muestra_formulario="muestra_formulario_contingencia"
+                    :form="oAlertaEpidemiologica"
+                    @cerrar-formulario="muestra_formulario_contingencia = false"
+                ></Contingencia>
+
+                <Formulario
+                    v-if="muestra_formulario"
+                    :muestra_formulario="muestra_formulario"
+                    :form="form"
+                    @envio-formulario="updateDatatable"
+                    @cerrar-formulario="muestra_formulario = false"
+                ></Formulario>
             </div>
         </div>
     </Content>

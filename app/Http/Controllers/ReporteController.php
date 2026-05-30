@@ -358,6 +358,10 @@ class ReporteController extends Controller
             $casos_epidemiologicos->where('centro_id', $centro_id);
         }
 
+        if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+            $casos_epidemiologicos->where("centro_id", Auth::user()->centro_id);
+        }
+
         if ($enfermedad_id != 'todos') {
             $casos_epidemiologicos->where('enfermedad_id', $enfermedad_id);
         }
@@ -472,6 +476,10 @@ class ReporteController extends Controller
 
         if ($centro_id != 'todos') {
             $casos_epidemiologicos->where('centro_id', $centro_id);
+        }
+
+        if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+            $casos_epidemiologicos->where("centro_id", Auth::user()->centro_id);
         }
 
         if ($caso_epidemiologico_id != 'todos') {

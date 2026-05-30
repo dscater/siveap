@@ -32,6 +32,7 @@ class ConfiguracionRequest extends FormRequest
             "correo" => "nullable",
             "logo" => "nullable",
             "logo2" => "nullable",
+            "ventanaDias" => "required|numeric"
         ];
     }
 
@@ -50,6 +51,8 @@ class ConfiguracionRequest extends FormRequest
             "logo2.required" => "Debes completar este campo",
             "fono.required" => "Debes completar este campo",
             "dir.required" => "Debes completar este campo",
+            "ventanaDias.required" => "Debes completar este campo",
+            "ventanaDias.numeric" => "Debes ingresar un valor númerico",
         ];
     }
 }

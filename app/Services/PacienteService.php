@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CasoEpidemiologico;
 use App\Services\HistorialAccionService;
 use App\Models\Paciente;
 use App\Models\User;
@@ -143,7 +144,10 @@ class PacienteService
      */
     public function eliminar(Paciente $paciente): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
+        $usos = CasoEpidemiologico::where("paciente_id", $paciente->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
 
         $old_paciente = clone $paciente;
         $paciente->delete();

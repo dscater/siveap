@@ -3,6 +3,7 @@ import Content from "@/Components/Content.vue";
 import { computed, onBeforeMount, onMounted, ref } from "vue";
 import { Head, usePage, Link } from "@inertiajs/vue3";
 import { useAppStore } from "@/stores/aplicacion/appStore";
+const { props: props_page } = usePage();
 const appStore = useAppStore();
 
 onBeforeMount(() => {
@@ -195,7 +196,13 @@ const generarReporte = () => {
                                         </el-option>
                                     </el-select>
                                 </div>
-                                <div class="col-md-12">
+                                <div
+                                    class="col-md-12"
+                                    v-if="
+                                        props_page.auth?.user.tipo ==
+                                        'ADMINISTRACIÓN'
+                                    "
+                                >
                                     <label>Seleccionar Centro*</label>
                                     <el-select
                                         v-model="form.centro_id"

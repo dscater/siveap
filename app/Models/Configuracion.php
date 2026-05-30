@@ -20,6 +20,7 @@ class Configuracion extends Model
         "correo",
         "logo",
         "logo2",
+        "ventanaDias",
     ];
 
     protected $casts = [];

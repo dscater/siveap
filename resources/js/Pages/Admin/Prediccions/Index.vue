@@ -144,7 +144,7 @@ onBeforeUnmount(() => {
             <h3>
                 {{ comunidad.comunidad }}
             </h3>
-            <div class="row">
+            <div class="row" v-if="comunidad.enfermedades.length > 0">
                 <div
                     class="col-md-6 mt-2"
                     v-for="item in comunidad.enfermedades"
@@ -155,6 +155,11 @@ onBeforeUnmount(() => {
                         :historico="item.historico"
                         :predicciones="item.predicciones"
                     />
+                </div>
+            </div>
+            <div class="row" v-else>
+                <div class="col-12">
+                    <h5>Sin datos suficientes para predicción</h5>
                 </div>
             </div>
         </div>

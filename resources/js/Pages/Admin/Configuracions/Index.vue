@@ -44,6 +44,7 @@ if (props_page.configuracion != null) {
         logo: "",
         url_logo2: "",
         logo2: "",
+        ventanaDias: "",
     });
 }
 
@@ -137,6 +138,7 @@ onMounted(() => {
         </template>
         <form @submit.prevent="enviarFormulario()">
             <div class="row">
+                <h5><i class="fa fa-list"></i> Datos del Sistema</h5>
                 <div class="col-md-4 form-group mb-3">
                     <label class="required">Nombre del sistema</label>
                     <input
@@ -267,6 +269,25 @@ onMounted(() => {
                     </div>
                     <span class="text-danger" v-if="form.errors?.logo2">{{
                         form.errors.logo2
+                    }}</span>
+                </div>
+            </div>
+            <div class="row">
+                <h5><i class="fa fa-map"></i> Configuración de Alertas</h5>
+                <div class="col-md-6 form-group mb-3">
+                    <label class="required">Ventana de análisis (días)</label>
+                    <input
+                        type="number"
+                        step="1"
+                        class="form-control"
+                        v-model="form.ventanaDias"
+                    />
+                    <small class="text-muted text-xs">
+                        Se considerarán los casos diagnosticados en los últimos
+                        N días.
+                    </small>
+                    <span class="text-danger" v-if="form.errors?.ventanaDias">{{
+                        form.errors.ventanaDias
                     }}</span>
                 </div>
             </div>

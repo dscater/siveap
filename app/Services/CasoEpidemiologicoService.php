@@ -10,6 +10,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class CasoEpidemiologicoService
@@ -20,7 +21,14 @@ class CasoEpidemiologicoService
 
     public function listado(): Collection
     {
-        $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*")->get();
+        $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*");
+
+        if (Auth::user()->tipo = 'CENTRO MÉDICO') {
+            $caso_epidemiologicos->where("centro_id", Auth::user()->centro_id);
+        }
+
+        $caso_epidemiologicos = $caso_epidemiologicos->get();
+
         return $caso_epidemiologicos;
     }
     /**
@@ -38,6 +46,10 @@ class CasoEpidemiologicoService
         $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*")
             ->with(["paciente", "enfermedad:id,nombre", "centro:id,nombre", "comunidad:id,nombre", "user:id,nombre,paterno,materno"])
             ->withCount(["seguimientos"]);
+
+        if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+            $caso_epidemiologicos->where("centro_id", Auth::user()->centro_id);
+        }
 
         // Filtros exactos
         foreach ($columnsFilter as $key => $value) {
@@ -82,11 +94,16 @@ class CasoEpidemiologicoService
      */
     public function crear(array $datos): CasoEpidemiologico
     {
+        $centro_id = $datos["centro_id"];
+        if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+            $centro_id = Auth::user()->centro_id;
+        }
+
         $caso_epidemiologico = CasoEpidemiologico::create([
             "codigo" => "",
             "paciente_id" => $datos["paciente_id"],
             "enfermedad_id" => $datos["enfermedad_id"],
-            "centro_id" => $datos["centro_id"],
+            "centro_id" => $centro_id,
             "comunidad_id" => $datos["comunidad_id"],
             "user_id" => Auth::user()->id,
             "fi_sintomas" => $datos["fi_sintomas"],
@@ -148,10 +165,14 @@ class CasoEpidemiologicoService
     {
         $old_caso_epidemiologico = clone $caso_epidemiologico;
 
+        $centro_id = $datos["centro_id"];
+        if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+            $centro_id = Auth::user()->centro_id;
+        }
         $caso_epidemiologico->update([
             "paciente_id" => $datos["paciente_id"],
             "enfermedad_id" => $datos["enfermedad_id"],
-            "centro_id" => $datos["centro_id"],
+            "centro_id" => $centro_id,
             "comunidad_id" => $datos["comunidad_id"],
             "fi_sintomas" => $datos["fi_sintomas"],
             "fecha_diagnostico" => $datos["fecha_diagnostico"],
@@ -177,8 +198,6 @@ class CasoEpidemiologicoService
      */
     public function eliminar(CasoEpidemiologico $caso_epidemiologico): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
-
         $old_caso_epidemiologico = clone $caso_epidemiologico;
         $caso_epidemiologico->delete();
 

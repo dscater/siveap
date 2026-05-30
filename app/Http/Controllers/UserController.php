@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AlertaEpidemiologica;
 use App\Models\CasoEpidemiologico;
 use App\Models\Certificado;
 use App\Models\Cliente;
@@ -51,13 +52,22 @@ class UserController extends Controller
                     "url" => "usuarios.index"
                 ];
             }
-            if ($permisos == '*' || (is_array($permisos) && in_array('pacientes.index', $permisos))) {
+            if ($permisos == '*' || (is_array($permisos) && in_array('caso_epidemiologicos.index', $permisos))) {
                 $array_infos[] = [
                     'label' => 'CASOS EPIDEMIOLÓGICOS',
                     'cantidad' => CasoEpidemiologico::count(),
                     'color' => 'bgWhite',
                     'icon' => "fa-user-friends",
-                    "url" => "pacientes.index"
+                    "url" => "caso_epidemiologicos.index"
+                ];
+            }
+            if ($permisos == '*' || (is_array($permisos) && in_array('alerta_epidemiologicas.index', $permisos))) {
+                $array_infos[] = [
+                    'label' => 'ALERTAS EPIDEMIOLÓGICAS',
+                    'cantidad' => AlertaEpidemiologica::count(),
+                    'color' => 'bgWhite',
+                    'icon' => "fa-map",
+                    "url" => "alerta_epidemiologicas.index"
                 ];
             }
             if ($permisos == '*' || (is_array($permisos) && in_array('pacientes.index', $permisos))) {

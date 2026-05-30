@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\CasoEpidemiologico;
 use App\Models\Certificado;
 use App\Models\User;
 use App\Models\Venta;
@@ -153,6 +154,7 @@ class UserService
             "password" => $datos["ci"],
             "tipo" => mb_strtoupper($datos["tipo"]),
             "centro_id" => $datos["tipo"] == 'CENTRO MÉDICO' ? $datos["centro_id"] : null,
+            "centro_todos" => $datos["tipo"] == 'CENTRO MÉDICO' ? 0 : 1,
             "role_id" => $datos["role_id"],
             "fecha_registro" => date("Y-m-d")
         ]);
@@ -244,8 +246,7 @@ class UserService
     {
         $old_user = clone $user;
 
-        //TODO: VERIFICAR DEPENDENCIAS
-        $usos = Certificado::where("user_id", $user->id)->get();
+        $usos = CasoEpidemiologico::where("user_id", $user->id)->get();
         if (count($usos) > 0) {
             throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
         }

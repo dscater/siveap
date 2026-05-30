@@ -21,6 +21,7 @@ class AlertaEpidemiologica extends Model
         "fecha",
         "estado", // ACTIVO, CONTROLADO
         "fecha_fin",
+        "indice_fin",
     ];
 
     protected $appends = ["fecha_t", "fecha_fin_t"];

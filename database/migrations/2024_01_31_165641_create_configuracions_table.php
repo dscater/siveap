@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string("correo", 255)->nullable();
             $table->string("logo")->nullable();
             $table->string("logo2")->nullable();
+            $table->integer("ventanaDias")->default(7);
             $table->timestamps();
         });
     }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Services\HistorialAccionService;
 use App\Models\CategoriaEnfermedad;
+use App\Models\Enfermedad;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Exception;
@@ -119,7 +120,10 @@ class CategoriaEnfermedadService
      */
     public function eliminar(CategoriaEnfermedad $categoria_enfermedad): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
+        $usos = Enfermedad::where("categoria_enfermedad_id", $categoria_enfermedad->id)->count();
+        if (count($usos) > 0) {
+            throw new Exception("No es posible eliminar el registro porque esta ligado a otros registros");
+        }
 
         $old_categoria_enfermedad = clone $categoria_enfermedad;
         $categoria_enfermedad->delete();

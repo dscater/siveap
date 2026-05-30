@@ -58,6 +58,7 @@ const headers = [
         label: "COMUNIDAD",
         key: "comunidad.nombre",
         sortable: true,
+        keySortable: "comunidad_id",
     },
     {
         label: "TIPO CASO",

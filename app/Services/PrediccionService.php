@@ -15,9 +15,8 @@ use Illuminate\Validation\ValidationException;
 
 class PrediccionService
 {
-    private $modulo = "PREDICCIONES";
     private $urlApi = 'http://127.0.0.1:8000/predecir';
-
+    private $prueba = false;
 
     public function realizarPredicciones(
         $dias_predecir = 7,
@@ -66,14 +65,10 @@ class PrediccionService
              * DATA COMUNIDAD
              */
             $comunidadData = [
-                'comunidad_id' =>
-                $comunidad->id,
-                'comunidad' =>
-                $comunidad->nombre,
-                'latitud' =>
-                $comunidad->latitud,
-                'longitud' =>
-                $comunidad->longitud,
+                'comunidad_id' => $comunidad->id,
+                'comunidad' => $comunidad->nombre,
+                'latitud' => $comunidad->latitud,
+                'longitud' => $comunidad->longitud,
                 'enfermedades' => []
             ];
 
@@ -86,14 +81,9 @@ class PrediccionService
                  * CONSULTAR CASOS
                  */
                 $casos = CasoEpidemiologico::query()
-                    ->where(
-                        'comunidad_id',
-                        $comunidad->id
-                    )
-                    ->where(
-                        'enfermedad_id',
-                        $enfermedad->id
-                    )
+                    ->where('comunidad_id', $comunidad->id)
+                    ->where('enfermedad_id', $enfermedad->id)
+                    // no interesa el estado; solo si se confirmo o es probable
                     ->whereIn(
                         'tipo_caso',
                         [
@@ -129,37 +119,30 @@ class PrediccionService
                             $item->fecha_diagnostico
                         )->format('Y-m-d');
                     })
-
                     ->map(function ($items, $fecha) {
-
                         return [
-
-                            'fecha' =>
-                            $fecha,
-
-                            'confirmados' =>
-                            $items->count(),
+                            'fecha' => $fecha,
+                            'confirmados' => $items->count(),
                         ];
                     })
-
                     ->values()
-
                     ->toArray();
-
-
 
                 /**
                  * PAYLOAD FASTAPI
                  */
-                // $payload = [
-                //     'enfermedad_id' => $enfermedad->id,
-                //     'comunidad_id' => $comunidad->id,
-                //     'dias_predecir' => $dias_predecir,
-                //     'dias' => $dias
-                // ];
+                if ($this->prueba) {
+                    // PRUEBAS
+                    $payload = $this->datosPrueba($enfermedad_id, $comunidad_id, $dias_predecir);
+                } else {
+                    $payload = [
+                        'enfermedad_id' => $enfermedad->id,
+                        'comunidad_id' => $comunidad->id,
+                        'dias_predecir' => $dias_predecir,
+                        'dias' => $dias
+                    ];
+                }
 
-                // PRUEBAS
-                $payload = $this->datosPrueba($enfermedad_id, $comunidad_id, $dias_predecir);
 
                 /**
                  * VALIDAR MINIMO
@@ -184,78 +167,59 @@ class PrediccionService
                  * VALIDAR ERROR API
                  */
                 if ($response->failed()) {
-
                     Log::error(
                         $response->body()
                     );
-
                     continue;
                 }
 
                 /**
                  * RESPUESTA
                  */
-                $prediccion =
-                    $response->json();
+                $prediccion = $response->json();
 
                 /**
                  * AGREGAR ENFERMEDAD
                  */
                 $comunidadData['enfermedades'][] = [
-                    'enfermedad_id' =>
-                    $enfermedad->id,
-                    'enfermedad' =>
-                    $enfermedad->nombre,
-                    'riesgo' =>
-                    $prediccion['riesgo'],
-                    'crecimiento' =>
-                    $prediccion['crecimiento'],
-                    'historico' =>
-                    $dias,
-                    'predicciones' =>
-                    $prediccion['predicciones'],
+                    'enfermedad_id' => $enfermedad->id,
+                    'enfermedad' => $enfermedad->nombre,
+                    'riesgo' => $prediccion['riesgo'],
+                    'crecimiento' => $prediccion['crecimiento'],
+                    'historico' => $dias,
+                    'predicciones' => $prediccion['predicciones'],
                 ];
             }
 
             /**
              * VALIDAR SI TIENE ENFERMEDADES
              */
-            if (
-                count(
-                    $comunidadData['enfermedades']
-                ) > 0
-            ) {
-
-                $resultados[] =
-                    $comunidadData;
-            }
+            // if (count($comunidadData['enfermedades']) > 0) {
+            $resultados[] = $comunidadData;
+            // }
         }
 
         return $resultados;
     }
 
-
     public function datosPrueba($enfermedad_id, $comunidad_id, $dias_predecir)
     {
         return  [
-            'enfermedad_id' =>
-            $enfermedad_id,
-            'comunidad_id' =>
-            $comunidad_id,
-            'dias_predecir' =>
-            $dias_predecir,
+            'enfermedad_id' => $enfermedad_id,
+            'comunidad_id' => $comunidad_id,
+            'dias_predecir' => $dias_predecir,
             'dias' => [
                 [
                     'fecha' => '2026-05-01',
-                    'confirmados' => 2,
+                    'confirmados' => random_int(6, 12),
                 ],
                 [
                     'fecha' => '2026-05-02',
-                    'confirmados' => 4,
+                    'confirmados' => random_int(1, 20),
                 ],
                 [
                     'fecha' => '2026-05-03',
-                    'confirmados' => 7,
+                    'confirmados' => random_int(0, 20),
                 ]
             ]
         ];

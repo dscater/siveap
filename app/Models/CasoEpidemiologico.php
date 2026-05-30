@@ -40,14 +40,10 @@ class CasoEpidemiologico extends Model
     }
 
     protected $casts = [
-
-        'fecha_diagnostico' => 'datetime',
-
-        'fi_sintomas' => 'datetime',
-
-        'fecha_registro' => 'datetime',
+        'fecha_diagnostico' => 'date:Y-m-d',
+        'fi_sintomas' => 'date:Y-m-d',
+        'fecha_registro' => 'date:Y-m-d',
     ];
-
 
     public function paciente()
     {

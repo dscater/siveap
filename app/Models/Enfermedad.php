@@ -22,4 +22,9 @@ class Enfermedad extends Model
     {
         return $this->belongsTo(TipoTransmision::class, 'tipo_transmision_id');
     }
+
+    public function enfermedad_contingencia()
+    {
+        return $this->hasOne(EnfermedadContingencia::class, 'enfermedad_id');
+    }
 }

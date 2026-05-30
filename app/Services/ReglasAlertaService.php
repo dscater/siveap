@@ -123,7 +123,6 @@ class ReglasAlertaService
      */
     public function eliminar(ReglasAlerta $reglas_alerta): bool|Exception
     {
-        // TODO: VERIFICAR RELACIONES
         $old_reglas_alerta = clone $reglas_alerta;
         $reglas_alerta->delete();
 

@@ -199,10 +199,10 @@
                     <td>{{ $item->paciente->comunidad->nombre }}</td>
                 </tr>
                 <tr>
+                    <td class="bold">Centro: </td>
+                    <td>{{ $item->centro->nombre }}</td>
                     <td class="bold">Hospitalización: </td>
                     <td>{{ $item->hospitalizacion == 1 ? 'SI' : 'NO' }}</td>
-                    <td></td>
-                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>
