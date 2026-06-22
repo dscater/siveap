@@ -173,6 +173,35 @@ class ModuloTableSeeder extends Seeder
             "descripcion" => "ELIMINAR CONTINGENCIAS"
         ]);
 
+        // SINTOMAS
+        Modulo::create([
+            "modulo" => "Gestión de sintomas",
+            "nombre" => "enfermedad_sintomas.index",
+            "accion" => "VER",
+            "descripcion" => "VER LA LISTA DE SINTOMAS"
+        ]);
+
+        Modulo::create([
+            "modulo" => "Gestión de sintomas",
+            "nombre" => "enfermedad_sintomas.create",
+            "accion" => "CREAR",
+            "descripcion" => "CREAR SINTOMAS"
+        ]);
+
+        Modulo::create([
+            "modulo" => "Gestión de sintomas",
+            "nombre" => "enfermedad_sintomas.edit",
+            "accion" => "EDITAR",
+            "descripcion" => "EDITAR SINTOMAS"
+        ]);
+
+        Modulo::create([
+            "modulo" => "Gestión de sintomas",
+            "nombre" => "enfermedad_sintomas.destroy",
+            "accion" => "ELIMINAR",
+            "descripcion" => "ELIMINAR SINTOMAS"
+        ]);
+
         // REGLAS DE ALERTA
         Modulo::create([
             "modulo" => "Gestión de reglas de alerta",
@@ -434,6 +463,13 @@ class ModuloTableSeeder extends Seeder
             "nombre" => "reportes.casos_epidemiologicos",
             "accion" => "REPORTE CASOS EPIDEMIOLÓGICOS",
             "descripcion" => "GENERAR REPORTES DE CASOS EPIDEMIOLÓGICOS"
+        ]);
+
+        Modulo::create([
+            "modulo" => "Reportes",
+            "nombre" => "reportes.fichas",
+            "accion" => "REPORTE FICHAS DE CASOS EPIDEMIOLÓGICOS",
+            "descripcion" => "GENERAR REPORTES DE FICHAS DE CASOS EPIDEMIOLÓGICOS"
         ]);
 
         Modulo::create([

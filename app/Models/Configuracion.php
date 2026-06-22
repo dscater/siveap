@@ -25,7 +25,7 @@ class Configuracion extends Model
 
     protected $casts = [];
 
-    protected $appends = ["url_logo", "url_logo2", "logo_b64", "logo2_b64"];
+    protected $appends = ["url_logo", "url_logo2", "logo_b64", "logo2_b64", "croquis64"];
     public function getUrlLogo2Attribute()
     {
         return asset("imgs/" . $this->logo2);
@@ -47,6 +47,17 @@ class Configuracion extends Model
         return asset("imgs/" . $this->logo);
     }
 
+    public function getCroquis64Attribute()
+    {
+        $path = public_path("imgs/" . "croquis.png");
+        if (file_exists($path)) {
+            $type = pathinfo($path, PATHINFO_EXTENSION);
+            $data = file_get_contents($path);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            return $base64;
+        }
+        return "";
+    }
     public function getLogoB64Attribute()
     {
         $path = public_path("imgs/" . $this->logo);

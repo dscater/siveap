@@ -8,6 +8,7 @@ use App\Http\Controllers\ComunidadController;
 use App\Http\Controllers\ConfiguracionController;
 use App\Http\Controllers\EnfermedadContingenciaController;
 use App\Http\Controllers\EnfermedadController;
+use App\Http\Controllers\EnfermedadSintomaController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\GravedadController;
 use App\Http\Controllers\InicioController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SeguimientoController;
 use App\Http\Controllers\TipoTransmisionController;
 use App\Http\Controllers\TipoCasoController;
+use App\Http\Controllers\TipoSintomaController;
 use App\Http\Controllers\TipoUsuarioController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsuarioController;
@@ -108,6 +110,9 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // TIPO CASOS
     Route::get("tipo_casos/listado", [TipoCasoController::class, 'listado'])->name("tipo_casos.listado");
 
+    // TIPO SINSTOMAS
+    Route::get("tipo_sintomas/listado", [TipoSintomaController::class, 'listado'])->name("tipo_sintomas.listado");
+
     // GRAVEDAD
     Route::get("gravedads/listado", [GravedadController::class, 'listado'])->name("gravedads.listado");
 
@@ -180,6 +185,13 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
         ["index", "store", "edit", "show", "update", "destroy"]
     );
 
+    // ENFERMEDAD SINTOMAS
+    Route::get("enfermedad_sintomas/paginado", [EnfermedadSintomaController::class, 'paginado'])->name("enfermedad_sintomas.paginado");
+    Route::get("enfermedad_sintomas/listado", [EnfermedadSintomaController::class, 'listado'])->name("enfermedad_sintomas.listado");
+    Route::resource("enfermedad_sintomas", EnfermedadSintomaController::class)->only(
+        ["index", "store", "edit", "show", "update", "destroy"]
+    );
+
     // PACIENTES
     Route::get("pacientes/paginado", [PacienteController::class, 'paginado'])->name("pacientes.paginado");
     Route::get("pacientes/listado", [PacienteController::class, 'listado'])->name("pacientes.listado");
@@ -205,6 +217,9 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // REPORTES
     Route::get('reportes/usuarios', [ReporteController::class, 'usuarios'])->name("reportes.usuarios");
     Route::get('reportes/r_usuarios', [ReporteController::class, 'r_usuarios'])->name("reportes.r_usuarios");
+
+    Route::get('reportes/fichas', [ReporteController::class, 'fichas'])->name("reportes.fichas");
+    Route::get('reportes/r_fichas', [ReporteController::class, 'r_fichas'])->name("reportes.r_fichas");
 
     Route::get('reportes/casos_epidemiologicos', [ReporteController::class, 'casos_epidemiologicos'])->name("reportes.casos_epidemiologicos");
     Route::get('reportes/r_casos_epidemiologicos', [ReporteController::class, 'r_casos_epidemiologicos'])->name("reportes.r_casos_epidemiologicos");

@@ -24,6 +24,7 @@ class CentroStoreRequest extends FormRequest
     {
         return [
             "nombre" => "required|unique:centros,nombre",
+            "fono_correo" => "nullable",
             "direccion" => "nullable",
         ];
     }

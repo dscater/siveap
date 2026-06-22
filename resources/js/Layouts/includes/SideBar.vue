@@ -240,6 +240,9 @@ onUnmounted(() => {});
                             :class="[
                                 route_current == 'enfermedads.index' ||
                                 route_current ==
+                                    'enfermedad_contingencias.index' ||
+                                route_current == 'enfermedad_sintomas.index' ||
+                                route_current ==
                                     'categoria_enfermedads.index' ||
                                 route_current == 'tipo_transmisions.index'
                                     ? 'active menu-is-opening menu-open'
@@ -281,6 +284,17 @@ onUnmounted(() => {});
                                 "
                                 :label="'Contingencias'"
                                 :ruta="'enfermedad_contingencias.index'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes(
+                                        'enfermedad_sintomas.index',
+                                    )
+                                "
+                                :label="'Sintomas'"
+                                :ruta="'enfermedad_sintomas.index'"
                                 :icon="'fa fa-angle-right'"
                             ></ItemMenu>
                             <ItemMenu
@@ -415,6 +429,7 @@ onUnmounted(() => {});
                                 route_current == 'reportes.usuarios' ||
                                 route_current ==
                                     'reportes.casos_epidemiologicos' ||
+                                route_current == 'reportes.fichas' ||
                                 route_current ==
                                     'reportes.alerta_epidemiologicas' ||
                                 route_current == 'reportes.seguimientos'
@@ -444,6 +459,15 @@ onUnmounted(() => {});
                                 "
                                 :label="'Lista de Usuarios'"
                                 :ruta="'reportes.usuarios'"
+                                :icon="'fa fa-angle-right'"
+                            ></ItemMenu>
+                            <ItemMenu
+                                v-if="
+                                    permisos == '*' ||
+                                    permisos.includes('reportes.fichas')
+                                "
+                                :label="'Fichas de Casos Epidemiológicos'"
+                                :ruta="'reportes.fichas'"
                                 :icon="'fa fa-angle-right'"
                             ></ItemMenu>
                             <ItemMenu

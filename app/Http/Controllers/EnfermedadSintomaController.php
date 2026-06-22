@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CasoEpidemiologicoStoreRequest;
-use App\Http\Requests\CasoEpidemiologicoUpdateRequest;
-use App\Models\CasoEpidemiologico;
+use App\Http\Requests\EnfermedadSintomaStoreRequest;
+use App\Http\Requests\EnfermedadSintomaUpdateRequest;
+use App\Models\EnfermedadSintoma;
 use App\Models\User;
-use App\Services\CasoEpidemiologicoService;
+use App\Services\EnfermedadSintomaService;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,9 +19,9 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response as ResponseInertia;
 
-class CasoEpidemiologicoController extends Controller
+class EnfermedadSintomaController extends Controller
 {
-    public function __construct(private CasoEpidemiologicoService $caso_epidemiologicoService) {}
+    public function __construct(private EnfermedadSintomaService $enfermedad_sintomaService) {}
 
     /**
      * Página index
@@ -30,18 +30,18 @@ class CasoEpidemiologicoController extends Controller
      */
     public function index(): ResponseInertia
     {
-        return Inertia::render("Admin/CasoEpidemiologicos/Index");
+        return Inertia::render("Admin/EnfermedadSintomas/Index");
     }
 
     /**
-     * Listado de caso_epidemiologicos sin ids: 1 y 2
+     * Listado de enfermedad_sintomas sin ids: 1 y 2
      *
      * @return JsonResponse
      */
-    public function listado()
+    public function listado(Request $request): JsonResponse
     {
         return response()->JSON([
-            "caso_epidemiologicos" => $this->caso_epidemiologicoService->listado()
+            "enfermedad_sintomas" => $this->enfermedad_sintomaService->listado($request->input("enfermedad_id", ""))
         ]);
     }
 
@@ -66,28 +66,28 @@ class CasoEpidemiologicoController extends Controller
             ];
         }
 
-        $caso_epidemiologicos = $this->caso_epidemiologicoService->listadoPaginado($perPage, $page, $search, $columnsSerachLike, $columnsFilter, $columnsBetweenFilter, $arrayOrderBy);
+        $enfermedad_sintomas = $this->enfermedad_sintomaService->listadoPaginado($perPage, $page, $search, $columnsSerachLike, $columnsFilter, $columnsBetweenFilter, $arrayOrderBy);
         return response()->JSON([
-            "data" => $caso_epidemiologicos->items(),
-            "total" => $caso_epidemiologicos->total(),
-            "lastPage" => $caso_epidemiologicos->lastPage()
+            "data" => $enfermedad_sintomas->items(),
+            "total" => $enfermedad_sintomas->total(),
+            "lastPage" => $enfermedad_sintomas->lastPage()
         ]);
     }
 
     /**
-     * Registrar un nuevo caso_epidemiologico
+     * Registrar un nuevo enfermedad_sintoma
      *
-     * @param CasoEpidemiologicoStoreRequest $request
+     * @param EnfermedadSintomaStoreRequest $request
      * @return RedirectResponse|Response
      */
-    public function store(CasoEpidemiologicoStoreRequest $request): RedirectResponse|Response
+    public function store(EnfermedadSintomaStoreRequest $request): RedirectResponse|Response
     {
         DB::beginTransaction();
         try {
-            // crear el CasoEpidemiologico
-            $this->caso_epidemiologicoService->crear($request->validated());
+            // crear el EnfermedadSintoma
+            $this->enfermedad_sintomaService->crear($request->validated());
             DB::commit();
-            return redirect()->route("caso_epidemiologicos.index")->with("bien", "Registro realizado");
+            return redirect()->route("enfermedad_sintomas.index")->with("bien", "Registro realizado");
         } catch (\Exception $e) {
             DB::rollBack();
             throw ValidationException::withMessages([
@@ -97,24 +97,24 @@ class CasoEpidemiologicoController extends Controller
     }
 
     /**
-     * Mostrar un caso_epidemiologico
+     * Mostrar un enfermedad_sintoma
      *
-     * @param CasoEpidemiologico $caso_epidemiologico
+     * @param EnfermedadSintoma $enfermedad_sintoma
      * @return JsonResponse
      */
-    public function show(CasoEpidemiologico $caso_epidemiologico): JsonResponse
+    public function show(EnfermedadSintoma $enfermedad_sintoma): JsonResponse
     {
-        return response()->JSON($caso_epidemiologico);
+        return response()->JSON($enfermedad_sintoma);
     }
 
-    public function update(CasoEpidemiologico $caso_epidemiologico, CasoEpidemiologicoUpdateRequest $request)
+    public function update(EnfermedadSintoma $enfermedad_sintoma, EnfermedadSintomaUpdateRequest $request)
     {
         DB::beginTransaction();
         try {
-            // actualizar caso_epidemiologico
-            $this->caso_epidemiologicoService->actualizar($request->validated(), $caso_epidemiologico);
+            // actualizar enfermedad_sintoma
+            $this->enfermedad_sintomaService->actualizar($request->validated(), $enfermedad_sintoma);
             DB::commit();
-            return redirect()->route("caso_epidemiologicos.index")->with("bien", "Registro actualizado");
+            return redirect()->route("enfermedad_sintomas.index")->with("bien", "Registro actualizado");
         } catch (\Exception $e) {
             DB::rollBack();
             // Log::debug($e->getMessage());
@@ -125,16 +125,16 @@ class CasoEpidemiologicoController extends Controller
     }
 
     /**
-     * Eliminar caso_epidemiologico
+     * Eliminar enfermedad_sintoma
      *
-     * @param CasoEpidemiologico $caso_epidemiologico
+     * @param EnfermedadSintoma $enfermedad_sintoma
      * @return JsonResponse|Response
      */
-    public function destroy(CasoEpidemiologico $caso_epidemiologico): JsonResponse|Response
+    public function destroy(EnfermedadSintoma $enfermedad_sintoma): JsonResponse|Response
     {
         DB::beginTransaction();
         try {
-            $this->caso_epidemiologicoService->eliminar($caso_epidemiologico);
+            $this->enfermedad_sintomaService->eliminar($enfermedad_sintoma);
             DB::commit();
             return response()->JSON([
                 'sw' => true,

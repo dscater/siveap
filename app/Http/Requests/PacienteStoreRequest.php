@@ -22,7 +22,8 @@ class PacienteStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+
+        $rules = [
             "nombre" => "required",
             "paterno" => "required",
             "materno" => "nullable",
@@ -34,8 +35,19 @@ class PacienteStoreRequest extends FormRequest
             "latitud" => "required",
             "longitud" => "required",
             "fono" => "nullable",
+            "ocupacion" => "nullable",
+            "departamento" => "nullable",
+            "municipio" => "nullable",
+            "zona" => "nullable",
+            "apoderado" => "nullable",
             "comunidad_id" => "required",
         ];
+
+        if ((int)$this->edad < 18) {
+            $rules["apoderado"] = "required";
+        }
+
+        return $rules;
     }
 
     public function messages()
@@ -50,6 +62,7 @@ class PacienteStoreRequest extends FormRequest
             "sexo.required" => "Debes completar este campo",
             "fecha_nac.required" => "Debes completar este campo",
             "dir.required" => "Debes completar este campo",
+            "apoderado.required" => "Debes completar este campo",
             "latitud.required" => "Debes indicar la ubicación",
             "longitud.required" => "Debes completar este campo",
             "fono.required" => "Debes completar este campo",

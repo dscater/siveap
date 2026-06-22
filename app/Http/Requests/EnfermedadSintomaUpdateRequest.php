@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class CentroUpdateRequest extends FormRequest
+class EnfermedadSintomaUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +23,20 @@ class CentroUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nombre" => "required|unique:centros,nombre," . $this->centro->id,
-            "fono_correo" => "nullable",
-            "direccion" => "nullable",
+            "enfermedad_id" => "required",
+            "nombre" => "required",
+            "tipo" => "required",
+            "input" => "required",
         ];
     }
 
     public function messages()
     {
         return [
+            "enfermedad_id.required" => "Debes completar este campo",
             "nombre.required" => "Debes completar este campo",
-            "nombre.unique" => "Este nombre no esta disponible",
+            "tipo.required" => "Debes completar este campo",
+            "input.required" => "Debes completar este campo",
         ];
     }
 }

@@ -24,6 +24,11 @@ return new class extends Migration
             $table->string("latitud");
             $table->string("longitud");
             $table->string("fono")->nullable();
+            $table->string("ocupacion")->nullable();
+            $table->string("departamento")->nullable();
+            $table->string("municipio")->nullable();
+            $table->string("zona")->nullable();
+            $table->string("apoderado")->nullable();
             $table->unsignedBigInteger("comunidad_id");
             $table->date("fecha_registro")->nullable();
             $table->timestamps();

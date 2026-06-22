@@ -83,6 +83,7 @@ class CentroService
     {
         $centro = Centro::create([
             "nombre" => mb_strtoupper($datos["nombre"]),
+            "fono_correo" => $datos["fono_correo"],
             "direccion" => mb_strtoupper($datos["direccion"]),
         ]);
 
@@ -105,6 +106,7 @@ class CentroService
 
         $centro->update([
             "nombre" => mb_strtoupper($datos["nombre"]),
+            "fono_correo" => $datos["fono_correo"],
             "direccion" => mb_strtoupper($datos["direccion"]),
         ]);
 

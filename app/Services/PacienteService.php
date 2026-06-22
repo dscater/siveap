@@ -94,6 +94,11 @@ class PacienteService
             "latitud" => $datos["latitud"],
             "longitud" => $datos["longitud"],
             "fono" => $datos["fono"],
+            "ocupacion" => mb_strtoupper($datos["ocupacion"]),
+            "departamento" => mb_strtoupper($datos["departamento"]),
+            "municipio" => mb_strtoupper($datos["municipio"]),
+            "zona" => mb_strtoupper($datos["zona"]),
+            "apoderado" => mb_strtoupper($datos["apoderado"]),
             "comunidad_id" => $datos["comunidad_id"],
             "fecha_registro" => date("Y-m-d")
         ]);
@@ -127,6 +132,11 @@ class PacienteService
             "latitud" => $datos["latitud"],
             "longitud" => $datos["longitud"],
             "fono" => $datos["fono"],
+            "ocupacion" => mb_strtoupper($datos["ocupacion"]),
+            "departamento" => mb_strtoupper($datos["departamento"]),
+            "municipio" => mb_strtoupper($datos["municipio"]),
+            "zona" => mb_strtoupper($datos["zona"]),
+            "apoderado" => mb_strtoupper($datos["apoderado"]),
             "comunidad_id" => $datos["comunidad_id"],
         ]);
 

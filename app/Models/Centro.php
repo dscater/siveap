@@ -8,6 +8,7 @@ class Centro extends Model
 {
     protected $fillable = [
         "nombre",
+        "fono_correo",
         "direccion",
         "fecha_registro",
     ];

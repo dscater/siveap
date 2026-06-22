@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('centros', function (Blueprint $table) {
+        Schema::create('enfermedad_sintomas', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre", 300)->unique();
-            $table->string("fono_correo", 900)->nullable();
-            $table->string("direccion", 900)->nullable();
-            $table->date("fecha_registro")->nullable();
+            $table->unsignedBigInteger("enfermedad_id");
+            $table->string("nombre");
+            $table->string("tipo");
+            $table->integer("input"); // 0:checkbox, 1:texto
             $table->timestamps();
+
+            $table->foreign("enfermedad_id")->on("enfermedads")->references("id");
         });
     }
 
@@ -26,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('centros');
+        Schema::dropIfExists('enfermedad_sintomas');
     }
 };

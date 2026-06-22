@@ -2,7 +2,7 @@
 import Content from "@/Components/Content.vue";
 import MiTable from "@/Components/MiTable.vue";
 import { Head, Link, usePage } from "@inertiajs/vue3";
-import { useCentros } from "@/composables/centros/useCentros";
+import { useEnfermedadSintomas } from "@/composables/enfermedad_sintomas/useEnfermedadSintomas";
 import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
@@ -15,7 +15,8 @@ onBeforeMount(() => {
     appStore.startLoading();
 });
 
-const { setCentro, limpiarCentro, form } = useCentros();
+const { setEnfermedadSintoma, limpiarEnfermedadSintoma, form } =
+    useEnfermedadSintomas();
 
 const miTable = ref(null);
 const headers = [
@@ -26,18 +27,23 @@ const headers = [
         width: "3%",
     },
     {
-        label: "NOMBRE",
+        label: "ENFERMEDAD",
+        key: "enfermedad.nombre",
+        sortable: true,
+    },
+    {
+        label: "NOMBRE SINTOMA",
         key: "nombre",
         sortable: true,
     },
     {
-        label: "TELÉFONO/CORREO",
-        key: "fono_correo",
+        label: "TIPO",
+        key: "tipo",
         sortable: true,
     },
     {
-        label: "DIRECCIÓN",
-        key: "direccion",
+        label: "TIPO DATO",
+        key: "input_txt",
         sortable: true,
     },
     {
@@ -57,22 +63,22 @@ const muestra_formulario = ref(false);
 const muestra_formulario_pass = ref(false);
 
 const agregarRegistro = () => {
-    limpiarCentro();
+    limpiarEnfermedadSintoma();
     muestra_formulario.value = true;
 };
 
 const updateDatatable = async () => {
     if (miTable.value) {
         await miTable.value.cargarDatos();
-        limpiarCentro();
+        limpiarEnfermedadSintoma();
         muestra_formulario.value = false;
     }
 };
 
-const eliminarCentro = (item) => {
+const eliminarEnfermedadSintoma = (item) => {
     Swal.fire({
         title: "¿Quierés eliminar este registro?",
-        html: `<strong>${item.nombre}</strong>`,
+        html: `<strong>${item.enfermedad.nombre}</strong>`,
         showCancelButton: true,
         confirmButtonText: "Si, eliminar",
         cancelButtonText: "No, cancelar",
@@ -85,7 +91,7 @@ const eliminarCentro = (item) => {
         /* Read more about isConfirmed, isDenied below */
         if (result.isConfirmed) {
             let respuesta = await axiosDelete(
-                route("centros.destroy", item.id),
+                route("enfermedad_sintomas.destroy", item.id),
             );
             if (respuesta && respuesta.sw) {
                 updateDatatable();
@@ -99,13 +105,13 @@ onMounted(async () => {
 });
 </script>
 <template>
-    <Head title="Centros"></Head>
+    <Head title="Sintomas"></Head>
 
     <Content>
         <template #header>
             <div class="row">
                 <div class="col-sm-6">
-                    <h3 class="m-0"><i class="fa fa-hospital"></i> Centros</h3>
+                    <h3 class="m-0"><i class="fa fa-list"></i> Sintomas</h3>
                 </div>
                 <!-- /.col -->
                 <div class="col-sm-6">
@@ -113,7 +119,7 @@ onMounted(async () => {
                         <li class="breadcrumb-item">
                             <Link :href="route('inicio')">Inicio</Link>
                         </li>
-                        <li class="breadcrumb-item active">Centros</li>
+                        <li class="breadcrumb-item active">Sintomas</li>
                     </ol>
                 </div>
                 <!-- /.col -->
@@ -129,14 +135,14 @@ onMounted(async () => {
                             v-if="
                                 props_page.auth?.user.permisos == '*' ||
                                 props_page.auth?.user.permisos.includes(
-                                    'centros.create',
+                                    'enfermedad_sintomas.create',
                                 )
                             "
                             type="button"
                             class="btn btn-primary text-sm"
                             @click="agregarRegistro"
                         >
-                            <i class="fa fa-plus"></i> Nuevo Centro
+                            <i class="fa fa-plus"></i> Nuevo Sintoma
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
@@ -171,7 +177,7 @@ onMounted(async () => {
                             ref="miTable"
                             :cols="headers"
                             :api="true"
-                            :url="route('centros.paginado')"
+                            :url="route('enfermedad_sintomas.paginado')"
                             :numPages="5"
                             :multiSearch="multiSearch"
                             :syncOrderBy="'id'"
@@ -209,7 +215,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'centros.edit',
+                                            'enfermedad_sintomas.edit',
                                         )
                                     "
                                 >
@@ -222,7 +228,7 @@ onMounted(async () => {
                                         <button
                                             class="btn btn-warning"
                                             @click="
-                                                setCentro(item);
+                                                setEnfermedadSintoma(item);
                                                 muestra_formulario = true;
                                             "
                                         >
@@ -233,7 +239,7 @@ onMounted(async () => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
-                                            'centros.destroy',
+                                            'enfermedad_sintomas.destroy',
                                         )
                                     "
                                 >
@@ -245,7 +251,9 @@ onMounted(async () => {
                                     >
                                         <button
                                             class="btn btn-danger"
-                                            @click="eliminarCentro(item)"
+                                            @click="
+                                                eliminarEnfermedadSintoma(item)
+                                            "
                                         >
                                             <i
                                                 class="fa fa-trash-alt"

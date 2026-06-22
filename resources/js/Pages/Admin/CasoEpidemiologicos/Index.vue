@@ -309,6 +309,32 @@ onBeforeUnmount(() => {
                                     v-if="
                                         props_page.auth?.user.permisos == '*' ||
                                         props_page.auth?.user.permisos.includes(
+                                            'caso_epidemiologicos.index',
+                                        )
+                                    "
+                                >
+                                    <el-tooltip
+                                        class="box-item"
+                                        effect="dark"
+                                        content="Ficha"
+                                        placement="left-start"
+                                    >
+                                        <a
+                                            class="btn btn-info"
+                                            target="_blank"
+                                            :href="
+                                                route('reportes.r_fichas') +
+                                                '?caso_epidemiologico_id=' +
+                                                item.id
+                                            "
+                                        >
+                                            <i class="fa fa-file-pdf"></i></a
+                                    ></el-tooltip>
+                                </template>
+                                <template
+                                    v-if="
+                                        props_page.auth?.user.permisos == '*' ||
+                                        props_page.auth?.user.permisos.includes(
                                             'caso_epidemiologicos.edit',
                                         )
                                     "

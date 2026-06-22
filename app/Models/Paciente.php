@@ -19,6 +19,11 @@ class Paciente extends Model
         "latitud",
         "longitud",
         "fono",
+        "ocupacion",
+        "departamento",
+        "municipio",
+        "zona",
+        "apoderado",
         "comunidad_id",
         "fecha_registro",
     ];
@@ -56,5 +61,23 @@ class Paciente extends Model
     public function comunidad()
     {
         return $this->belongsTo(Comunidad::class, 'comunidad_id');
+    }
+
+    public function scopeBuscarNombre($query, $texto)
+    {
+        if (!$texto) return $query;
+
+        $palabras = explode(' ', $texto);
+
+        foreach ($palabras as $palabra) {
+            $query->where(function ($q) use ($palabra) {
+                $q->where('nombre', 'like', "%$palabra%")
+                    ->orWhere('paterno', 'like', "%$palabra%")
+                    ->orWhere('materno', 'like', "%$palabra%")
+                    ->orWhere('ci', 'like', "%$palabra%");
+            });
+        }
+
+        return $query;
     }
 }

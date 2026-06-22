@@ -2,7 +2,6 @@
 import MiModal from "@/Components/MiModal.vue";
 import { useForm, usePage } from "@inertiajs/vue3";
 import { watch, ref, computed, defineEmits, onMounted, nextTick } from "vue";
-import MapMarker from "@/Components/MapMarker.vue";
 const props = defineProps({
     muestra_formulario: {
         type: Boolean,
@@ -19,8 +18,8 @@ const form = props.form;
 
 const tituloDialog = computed(() => {
     return form.id == 0
-        ? `<i class="fa fa-plus"></i> Nuevo Centro`
-        : `<i class="fa fa-edit"></i> Editar Centro`;
+        ? `<i class="fa fa-plus"></i> Nuevo Sintoma`
+        : `<i class="fa fa-edit"></i> Editar Regla de Alerta`;
 });
 
 const textBtn = computed(() => {
@@ -37,8 +36,8 @@ const enviarFormulario = () => {
     enviando.value = true;
     let url =
         form["_method"] == "POST"
-            ? route("centros.store")
-            : route("centros.update", form.id);
+            ? route("enfermedad_sintomas.store")
+            : route("enfermedad_sintomas.update", form.id);
 
     form.post(url, {
         preserveScroll: true,
@@ -110,7 +109,30 @@ const cerrarFormulario = () => {
     document.getElementsByTagName("body")[0].classList.remove("modal-open");
 };
 
-const cargarListas = () => {};
+const listEnfermedads = ref([]);
+const cargarEnfermedads = async () => {
+    await axios
+        .get(route("enfermedads.listado"))
+        .then((response) => {
+            listEnfermedads.value = response.data.enfermedads;
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+};
+
+const listTipoSintoma = ref([]);
+
+const cargarTipoSintomas = () => {
+    axios.get(route("tipo_sintomas.listado")).then((response) => {
+        listTipoSintoma.value = response.data;
+    });
+};
+
+const cargarListas = () => {
+    cargarEnfermedads();
+    cargarTipoSintomas();
+};
 
 onMounted(() => {
     cargarListas();
@@ -141,16 +163,34 @@ onMounted(() => {
                     <span class="text-danger">(*)</span> son obligatorios.
                 </p>
                 <div class="row">
-                    <div class="col-md-6 mt-2">
-                        <label class="required">Nombre del Centro</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            :class="{
-                                'parsley-error': form.errors?.nombre,
-                            }"
-                            v-model="form.nombre"
-                        />
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Seleccionar Enfermedad</label>
+                        <el-select
+                            v-model="form.enfermedad_id"
+                            placeholder="- Seleccione -"
+                            filterable
+                            no-data-text="Sin datos"
+                            no-match-text="Sin resultados"
+                        >
+                            <el-option
+                                v-for="item in listEnfermedads"
+                                :key="item.id"
+                                :value="item.id"
+                                :label="item.nombre"
+                            ></el-option>
+                        </el-select>
+                        <ul
+                            v-if="form.errors?.enfermedad_id"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.enfermedad_id }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Nombre de Sintoma</label>
+                        <input v-model="form.nombre" class="form-control" />
                         <ul
                             v-if="form.errors?.nombre"
                             class="list-unstyled text-danger"
@@ -160,41 +200,52 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-6 mt-2">
-                        <label class="">Teéfono/Correo</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            :class="{
-                                'parsley-error': form.errors?.fono_correo,
-                            }"
-                            v-model="form.fono_correo"
-                        />
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Seleccionar Tipo</label>
+                        <el-select
+                            v-model="form.tipo"
+                            placeholder="- Seleccione -"
+                            filterable
+                            no-data-text="Sin datos"
+                            no-match-text="Sin resultados"
+                        >
+                            <el-option
+                                v-for="item in listTipoSintoma"
+                                :key="item.value"
+                                :value="item.value"
+                                :label="item.label"
+                            ></el-option>
+                        </el-select>
                         <ul
-                            v-if="form.errors?.fono_correo"
+                            v-if="form.errors?.tipo"
                             class="list-unstyled text-danger"
                         >
                             <li class="parsley-required">
-                                {{ form.errors?.fono_correo }}
+                                {{ form.errors?.tipo }}
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-6 mt-2">
-                        <label class="">Dirección del Centro</label>
-                        <input
-                            type="text"
-                            class="form-control"
-                            :class="{
-                                'parsley-error': form.errors?.direccion,
-                            }"
-                            v-model="form.direccion"
+                    <div class="col-md-4 mt-2">
+                        <label class="required">Tipo de dato</label>
+                        <br />
+                        <el-switch
+                            size="large"
+                            active-text="TEXTO"
+                            inactive-text="CHECKBOX"
+                            v-model="form.input"
+                            :active-value="1"
+                            :inactive-value="0"
+                            style="
+                                --el-switch-on-color: #009047;
+                                --el-switch-off-color: #005f8d;
+                            "
                         />
                         <ul
-                            v-if="form.errors?.direccion"
+                            v-if="form.errors?.input"
                             class="list-unstyled text-danger"
                         >
                             <li class="parsley-required">
-                                {{ form.errors?.direccion }}
+                                {{ form.errors?.input }}
                             </li>
                         </ul>
                     </div>

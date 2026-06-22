@@ -396,6 +396,78 @@ class ReporteController extends Controller
         return $pdf->stream('casos_epidemiologicos.pdf');
     }
 
+
+    public function fichas()
+    {
+        return Inertia::render("Admin/Reportes/Fichas");
+    }
+
+    public function r_fichas(Request $request)
+    {
+        ini_set('memory_limit', '1024M');
+        set_time_limit(-1);
+        $caso_epidemiologico_id =  $request->caso_epidemiologico_id;
+        $comunidad_id =  $request->comunidad_id;
+        $centro_id =  $request->centro_id;
+        $enfermedad_id =  $request->enfermedad_id;
+        $tipo_caso =  $request->tipo_caso;
+        $gravedad =  $request->gravedad;
+        $estado =  $request->estado;
+        $fecha_ini =  $request->fecha_ini;
+        $fecha_fin =  $request->fecha_fin;
+        $formato =  $request->formato;
+        $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*");
+
+        if ($caso_epidemiologico_id == 'todos') {
+            if ($comunidad_id != 'todos') {
+                $caso_epidemiologicos->where('comunidad_id', $comunidad_id);
+            }
+
+            if ($centro_id != 'todos') {
+                $caso_epidemiologicos->where('centro_id', $centro_id);
+            }
+
+            if (Auth::user()->tipo == 'CENTRO MÉDICO') {
+                $caso_epidemiologicos->where("centro_id", Auth::user()->centro_id);
+            }
+
+            if ($enfermedad_id != 'todos') {
+                $caso_epidemiologicos->where('enfermedad_id', $enfermedad_id);
+            }
+
+            if ($tipo_caso != 'todos') {
+                $caso_epidemiologicos->where('tipo_caso', $tipo_caso);
+            }
+
+            if ($gravedad != 'todos') {
+                $caso_epidemiologicos->where('gravedad', $gravedad);
+            }
+
+            if ($estado != 'todos') {
+                $caso_epidemiologicos->where('estado', $estado);
+            }
+
+            if ($fecha_ini && $fecha_fin) {
+                $caso_epidemiologicos->whereBetween('fecha_diagnostico', [$fecha_ini, $fecha_fin]);
+            }
+        } else {
+            $caso_epidemiologicos->where('id', $caso_epidemiologico_id);
+        }
+
+        $caso_epidemiologicos = $caso_epidemiologicos->get();
+        $pdf = PDF::loadView('reportes.fichas', compact('caso_epidemiologicos'))->setPaper('letter', 'portrait');
+
+        // ENUMERAR LAS PÁGINAS USANDO CANVAS
+        $pdf->output();
+        $dom_pdf = $pdf->getDomPDF();
+        $canvas = $dom_pdf->get_canvas();
+        $alto = $canvas->get_height();
+        $ancho = $canvas->get_width();
+        $canvas->page_text($ancho - 90, $alto - 25, "Página {PAGE_NUM} de {PAGE_COUNT}", null, 9, array(0, 0, 0));
+
+        return $pdf->stream('fichas.pdf');
+    }
+
     public function alerta_epidemiologicas()
     {
         return Inertia::render("Admin/Reportes/AlertaEpidemiologicas");

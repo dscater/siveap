@@ -27,4 +27,9 @@ class Enfermedad extends Model
     {
         return $this->hasOne(EnfermedadContingencia::class, 'enfermedad_id');
     }
+
+    public function enfermedad_sintomas()
+    {
+        return $this->hasOne(EnfermedadSintoma::class, 'enfermedad_id');
+    }
 }

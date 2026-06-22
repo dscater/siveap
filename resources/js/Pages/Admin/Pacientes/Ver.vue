@@ -83,12 +83,32 @@ onMounted(() => {
                     <p><strong>Edad: </strong>{{ form.edad }} años</p>
                 </div>
                 <div class="col-6 mt-2">
+                    <p>
+                        <strong>Apoderado o Padre(s): </strong
+                        >{{ form.apoderado ?? "" }}
+                    </p>
+                </div>
+                <div class="col-6 mt-2">
                     <p><strong>Teléfono/Celuar: </strong>{{ form.fono }}</p>
+                </div>
+                <div class="col-6 mt-2">
+                    <p><strong>Ocupación: </strong>{{ form.ocupación }}</p>
+                </div>
+                <div class="col-6 mt-2">
+                    <p>
+                        <strong>Departamento: </strong>{{ form.departamento }}
+                    </p>
+                </div>
+                <div class="col-6 mt-2">
+                    <p><strong>Municipio: </strong>{{ form.municipio }}</p>
                 </div>
                 <div class="col-6 mt-2">
                     <p>
                         <strong>Comunidad: </strong>{{ form.comunidad.nombre }}
                     </p>
+                </div>
+                <div class="col-6 mt-2">
+                    <p><strong>Barrio/Zona/U.V.: </strong>{{ form.zona }}</p>
                 </div>
                 <div class="col-6 mt-2">
                     <p><strong>Dirección: </strong>{{ form.dir }}</p>

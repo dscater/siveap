@@ -134,6 +134,38 @@ const cerrarFormulario = () => {
     document.getElementsByTagName("body")[0].classList.remove("modal-open");
 };
 
+const calcularEdad = (fechaNacimiento) => {
+    if (!fechaNacimiento) return null;
+
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+
+    const mesActual = hoy.getMonth();
+    const diaActual = hoy.getDate();
+
+    const mesNacimiento = nacimiento.getMonth();
+    const diaNacimiento = nacimiento.getDate();
+
+    // Si todavía no cumplió años este año, restar 1
+    if (
+        mesActual < mesNacimiento ||
+        (mesActual === mesNacimiento && diaActual < diaNacimiento)
+    ) {
+        edad--;
+    }
+
+    return edad;
+};
+
+watch(
+    () => form.fecha_nac,
+    (fecha) => {
+        form.edad = calcularEdad(fecha);
+    },
+);
+
 const cargarListas = () => {
     cargarComunidads();
 };
@@ -314,6 +346,25 @@ onMounted(() => {
                             </li>
                         </ul>
                     </div>
+                    <div class="col-md-4 mt-2" v-if="form.edad < 18">
+                        <label class="required">Padres o Apoderado</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.apoderado,
+                            }"
+                            v-model="form.apoderado"
+                        />
+                        <ul
+                            v-if="form.errors?.apoderado"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.apoderado }}
+                            </li>
+                        </ul>
+                    </div>
                     <div class="col-md-4 mt-2">
                         <label class="required">Dirección</label>
                         <input
@@ -334,7 +385,7 @@ onMounted(() => {
                         </ul>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <label class="reuired">Teléfono/Celular</label>
+                        <label class="required">Teléfono/Celular</label>
                         <input
                             type="text"
                             class="form-control"
@@ -353,7 +404,66 @@ onMounted(() => {
                         </ul>
                     </div>
                     <div class="col-md-4 mt-2">
-                        <label class="required">Comunidad</label>
+                        <label class="">Ocupación</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.ocupacion,
+                            }"
+                            v-model="form.ocupacion"
+                        />
+                        <ul
+                            v-if="form.errors?.ocupacion"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.ocupacion }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="">Departamento</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.departamento,
+                            }"
+                            v-model="form.departamento"
+                        />
+                        <ul
+                            v-if="form.errors?.departamento"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.departamento }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="">Municipio</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.municipio,
+                            }"
+                            v-model="form.municipio"
+                        />
+                        <ul
+                            v-if="form.errors?.municipio"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.municipio }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="required"
+                            >Ciudad/Localidad/Comunidad</label
+                        >
                         <el-select
                             v-model="form.comunidad_id"
                             placeholder="- Seleccione -"
@@ -374,6 +484,25 @@ onMounted(() => {
                         >
                             <li class="parsley-required">
                                 {{ form.errors?.comunidad_id }}
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4 mt-2">
+                        <label class="">Barrio/Zona/U.V.:</label>
+                        <input
+                            type="text"
+                            class="form-control"
+                            :class="{
+                                'parsley-error': form.errors?.zona,
+                            }"
+                            v-model="form.zona"
+                        />
+                        <ul
+                            v-if="form.errors?.zona"
+                            class="list-unstyled text-danger"
+                        >
+                            <li class="parsley-required">
+                                {{ form.errors?.zona }}
                             </li>
                         </ul>
                     </div>
