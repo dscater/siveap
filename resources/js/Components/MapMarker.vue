@@ -2,6 +2,10 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
 import { onMounted, ref } from "vue";
 
 const props = defineProps({
@@ -68,6 +72,13 @@ const actualizarUbicacion = (lat, lng) => {
 };
 
 onMounted(() => {
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: markerIcon2x,
+        iconUrl: markerIcon,
+        shadowUrl: markerShadow,
+    });
+
     map = L.map(mapa.value).setView(
         [props.latitud, props.longitud],
         props.zoom,
