@@ -22,6 +22,7 @@ export const usePacientes = () => {
         zona: "",
         apoderado: "",
         comunidad_id: "",
+        capturaMapa: null,
         _method: "POST",
     };
 

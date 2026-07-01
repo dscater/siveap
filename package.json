@@ -27,6 +27,7 @@
         "bootstrap": "^5.3.8",
         "element-plus": "^2.13.6",
         "highcharts": "^12.5.0",
+        "html2canvas": "^1.4.1",
         "leaflet": "^1.9.4",
         "pinia": "^3.0.4",
         "sweetalert2": "^11.26.24",

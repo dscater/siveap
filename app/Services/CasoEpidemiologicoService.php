@@ -45,7 +45,7 @@ class CasoEpidemiologicoService
     public function listadoPaginado(int $length, int $page, string $search, array $columnsSerachLike = [], array $columnsFilter = [], array $columnsBetweenFilter = [], array $orderBy = []): LengthAwarePaginator
     {
         $caso_epidemiologicos = CasoEpidemiologico::select("caso_epidemiologicos.*")
-            ->with(["paciente", "enfermedad:id,nombre", "centro:id,nombre", "comunidad:id,nombre", "user:id,nombre,paterno,materno"])
+            ->with(["paciente", "enfermedad:id,nombre", "centro:id,nombre", "comunidad:id,nombre", "user:id,nombre,paterno,materno", "caso_sintomas.enfermedad_sintoma"])
             ->withCount(["seguimientos"]);
 
         if (Auth::user()->tipo == 'CENTRO MÉDICO') {
@@ -149,7 +149,7 @@ class CasoEpidemiologicoService
         $caso_epidemiologico->save();
 
         // sintomas
-        Log::debug($datos["caso_sintomas"]);
+        // Log::debug($datos["caso_sintomas"]);
         if (isset($datos["caso_sintomas"])) {
             foreach ($datos["caso_sintomas"] as $item) {
                 $caso_epidemiologico->caso_sintomas()->create([
@@ -268,12 +268,12 @@ class CasoEpidemiologicoService
                 if ($item["id"] == 0) {
                     $caso_epidemiologico->caso_sintomas()->create([
                         "enfermedad_sintoma_id" => $item["enfermedad_sintoma_id"],
-                        "valor" => $item["valor"],
+                        "valor" => $item["valor"] ?? '',
                     ]);
                 } else {
                     $caso_sintoma = CasoSintoma::findOrFail($item["id"]);
                     $caso_sintoma->update([
-                        "valor" => $item["valor"]
+                        "valor" => $item["valor"] ?? '',
                     ]);
                 }
             }

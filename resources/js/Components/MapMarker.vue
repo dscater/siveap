@@ -1,6 +1,7 @@
 <script setup>
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import html2canvas from "html2canvas";
 
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
@@ -25,9 +26,17 @@ const props = defineProps({
         type: Boolean,
         default: false,
     },
+    capturar: {
+        type: Boolean,
+        default: false,
+    },
 });
 
-const emit = defineEmits(["update:latitud", "update:longitud"]);
+const emit = defineEmits([
+    "update:latitud",
+    "update:longitud",
+    "update:captura",
+]);
 
 const mapa = ref(null);
 
@@ -55,8 +64,36 @@ const getUbicacion = () => {
     );
 };
 
+const capturarMapa = async () => {
+    if (!props.capturar) return;
+
+    const posicion = marker.getLatLng();
+    const zoomOriginal = map.getZoom();
+
+    // Escuchar solo un cambio de movimiento
+    map.once("moveend", async () => {
+        // Esperar un poco para que terminen de cargar los tiles
+        await new Promise((resolve) => setTimeout(resolve, 300));
+
+        const canvas = await html2canvas(mapa.value, {
+            useCORS: true,
+            logging: false,
+            scale: 3,
+        });
+
+        emit("update:captura", canvas.toDataURL("image/png"));
+
+        // Restaurar el zoom original
+        map.setView(posicion, zoomOriginal);
+    });
+
+    // Zoom solo para la captura
+    map.setView(posicion, 18);
+};
+
 const moverMapa = (lat, lon) => {
-    map.setView([lat, lon], props.zoom);
+    // map.setView([lat, lon], props.zoom);
+    map.setView([lat, lon], map.getZoom());
 };
 
 const resetPosicion = () => {
@@ -64,14 +101,17 @@ const resetPosicion = () => {
     moverMapa(-16.125102, -67.196268);
 };
 
-const actualizarUbicacion = (lat, lng) => {
+const actualizarUbicacion = async (lat, lng) => {
     marker.setLatLng([lat, lng]);
 
     emit("update:latitud", lat);
     emit("update:longitud", lng);
+
+    moverMapa(lat, lng);
+    await capturarMapa();
 };
 
-onMounted(() => {
+onMounted(async () => {
     delete L.Icon.Default.prototype._getIconUrl;
     L.Icon.Default.mergeOptions({
         iconRetinaUrl: markerIcon2x,
@@ -113,6 +153,10 @@ onMounted(() => {
 
             actualizarUbicacion(position.lat, position.lng);
         });
+    }
+
+    if (props.capturar) {
+        await capturarMapa();
     }
 });
 </script>

@@ -12,6 +12,7 @@ use Illuminate\Container\Attributes\Auth;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Str;
 
 class PacienteService
 {
@@ -103,10 +104,51 @@ class PacienteService
             "fecha_registro" => date("Y-m-d")
         ]);
 
+        $paciente->capturaMapa = $this->guardarImagenB64($datos["capturaMapa"], public_path("imgs/pacientes/mapas"), $paciente->id . Str::uuid());
+        $paciente->save();
+
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "CREACIÓN", "REGISTRO UN PACIENTE", $paciente);
 
         return $paciente;
+    }
+
+
+    public function guardarImagenB64($b64, string $ruta, string $nombre = null): string
+    {
+        if (empty($b64)) {
+            throw new \Exception("No se recibió ninguna imagen.");
+        }
+
+        if (!preg_match('/^data:image\/(\w+);base64,/', $b64, $tipo)) {
+            throw new \Exception("Formato de imagen no válido.");
+        }
+
+        $extension = strtolower($tipo[1]);
+
+        $b64 = substr($b64, strpos($b64, ',') + 1);
+        $b64 = str_replace(' ', '+', $b64);
+
+        $contenido = base64_decode($b64);
+
+        if ($contenido === false) {
+            throw new \Exception("La imagen Base64 es inválida.");
+        }
+
+        // Crear la carpeta si no existe
+        if (!is_dir($ruta)) {
+            mkdir($ruta, 0755, true);
+        }
+
+        $nombreArchivo = $nombre ?? Str::uuid();
+        $nombreArchivo .= '.' . $extension;
+
+        file_put_contents(
+            $ruta . DIRECTORY_SEPARATOR . $nombreArchivo,
+            $contenido
+        );
+
+        return $nombreArchivo;
     }
 
     /**
@@ -139,6 +181,13 @@ class PacienteService
             "apoderado" => mb_strtoupper($datos["apoderado"]),
             "comunidad_id" => $datos["comunidad_id"],
         ]);
+
+        if ($paciente->capturaMapa) {
+            \File::delete(public_path("imgs/pacientes/mapas/" . $paciente->capturaMapa));
+        }
+
+        $paciente->capturaMapa = $this->guardarImagenB64($datos["capturaMapa"], public_path("imgs/pacientes/mapas"), $paciente->id . Str::uuid());
+        $paciente->save();
 
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "MODIFICACIÓN", "ACTUALIZÓ UN PACIENTE", $old_paciente, $paciente->withoutRelations());

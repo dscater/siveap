@@ -454,8 +454,20 @@ class ReporteController extends Controller
             $caso_epidemiologicos->where('id', $caso_epidemiologico_id);
         }
 
-        $caso_epidemiologicos = $caso_epidemiologicos->get();
-        $pdf = PDF::loadView('reportes.fichas', compact('caso_epidemiologicos'))->setPaper('letter', 'portrait');
+        $caso_epidemiologicos = $caso_epidemiologicos->get()->map(function ($caso_epidemiologico) {
+            $lat = $caso_epidemiologico->paciente->latitud;
+            $lng = $caso_epidemiologico->paciente->longitud;
+
+            $url = 'https://staticmap.openstreetmap.de/staticmap.php?' . http_build_query([
+                'center' => "$lat,$lng",
+                'zoom' => 16,
+                'size' => '600x400',
+                'markers' => "$lat,$lng,red-pushpin",
+            ]);
+            $caso_epidemiologico->mapa_url = $url;
+            return $caso_epidemiologico;
+        });
+        $pdf = PDF::loadView('reportes.fichas', compact('caso_epidemiologicos'))->setPaper('legal', 'portrait');
 
         // ENUMERAR LAS PÁGINAS USANDO CANVAS
         $pdf->output();

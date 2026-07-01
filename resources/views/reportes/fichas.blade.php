@@ -45,14 +45,14 @@
 
         .logo img {
             position: absolute;
-            height: 90px;
+            height: 80px;
             top: -20px;
             left: 0px;
         }
 
         .logo2 img {
             position: absolute;
-            height: 90px;
+            height: 80px;
             top: -20px;
             right: 0px;
         }
@@ -144,11 +144,11 @@
         }
 
         .text-md {
-            font-size: 8.5pt;
+            font-size: 8pt;
         }
 
         .text-lg {
-            font-size: 9.5pt;
+            font-size: 9pt;
         }
 
         .firma {
@@ -176,7 +176,7 @@
             <h4 class="texto">FICHA EPIDEMIOLÓIGICA</h4>
         </div>
 
-        <table style="margin-top:30px;">
+        <table style="margin-top:18px;">
             <tbody>
                 <tr>
                     <td class="gray bold text-lg">1. DATOS GENERALES</td>
@@ -369,8 +369,9 @@
                             <td>
                                 {{ $sintoma->enfermedad_sintoma->nombre }}
                             </td>
-                            <td class="centreado" width="{{ $sintoma->input == 0 ? '3%' : '10%' }}">
-                                @if ($sintoma->input == 0)
+                            <td class="centreado"
+                                width="{{ $sintoma->enfermedad_sintoma->input == 0 ? '3%' : '10%' }}">
+                                @if ($sintoma->enfermedad_sintoma->input == 0)
                                     {{ $sintoma->valor == 'true' ? 'X' : '' }}
                                 @else
                                     {{ $sintoma->valor }}
@@ -536,8 +537,8 @@
         <table border="1">
             <tbody>
                 <tr>
-                    <td>
-                        <img src="{{ $configuracion->first()->croquis64 }}" alt="Croquis" width="100%">
+                    <td class="centreado">
+                        <img src="{{ $item->paciente->mapa64 }}" alt="Croquis" height="240px" width="100%">
                     </td>
                 </tr>
             </tbody>

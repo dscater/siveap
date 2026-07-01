@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class Paciente extends Model
 {
@@ -25,10 +26,23 @@ class Paciente extends Model
         "zona",
         "apoderado",
         "comunidad_id",
+        "capturaMapa",
         "fecha_registro",
     ];
 
-    protected $appends = ["full_name", "full_ci", "edad", "fecha_nac_t", "fecha_registro_t"];
+    protected $appends = ["full_name", "full_ci", "edad", "fecha_nac_t", "fecha_registro_t", "mapa64"];
+
+    public function getMapa64Attribute()
+    {
+        $path = public_path("imgs/pacientes/mapas/" . $this->capturaMapa);
+        if (!$this->capturaMapa || !file_exists($path)) {
+            $path = public_path("imgs/croquis.png");
+        }
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        return $base64;
+    }
 
     public function getFechaRegistroTAttribute()
     {

@@ -229,6 +229,8 @@ watch(
     () => form.enfermedad_id,
     (enfermedad_id) => {
         enfermedadSeleccionada.value = null;
+        listEnfermedadSintomas.value = [];
+        form.caso_sintomas = [];
         if (enfermedad_id) {
             enfermedadSeleccionada.value = listEnfermedads.value.filter(
                 (el) => el.id == enfermedad_id,
@@ -243,6 +245,13 @@ const listTipoSintoma = ref([]);
 const cargarTipoSintomas = () => {
     axios.get(route("tipo_sintomas.listado")).then((response) => {
         listTipoSintoma.value = response.data;
+
+        if (form.enfermedad_id && form.enfermedad_id != 0) {
+            enfermedadSeleccionada.value = listEnfermedads.value.filter(
+                (el) => el.id == form.enfermedad_id,
+            )[0];
+            cargarCasoSintomas(form.enfermedad_id);
+        }
     });
 };
 
@@ -256,22 +265,26 @@ const cargarCasoSintomas = (enfermedad_id) => {
         })
         .then((response) => {
             listEnfermedadSintomas.value = response.data.enfermedad_sintomas;
-            console.log(listEnfermedadSintomas.value);
+            // console.log(listEnfermedadSintomas.value);
             iniciaSintomas();
         });
 };
 
 const iniciaSintomas = () => {
+    // console.log("iniciaSintomas");
+    // console.log(form.caso_sintomas);
     listTipoSintoma.value.forEach((elem) => {
         const sintomas = listEnfermedadSintomas.value.filter(
             (elSin) => elSin.tipo == elem.value,
         );
-        console.log(sintomas);
-        console.log("--------------------");
+        // console.log(sintomas);
+        // console.log("--------------------");
         sintomas.forEach((sin, index) => {
             const existeForm = form.caso_sintomas.filter(
                 (elForm) => elForm.enfermedad_sintoma_id == sin.id,
             )[0];
+            console.log("existe?");
+            console.log(existeForm);
             if (!existeForm) {
                 form.caso_sintomas.push({
                     id: 0,
@@ -287,8 +300,8 @@ const iniciaSintomas = () => {
 
 const sintomasPorTipo = computed(() => {
     const grupos = {};
-    console.log("**************************");
-    console.log(form.caso_sintomas);
+    // console.log("**************************");
+    // console.log(form.caso_sintomas);
     form.caso_sintomas.forEach((item) => {
         const tipo = item.enfermedad_sintoma?.tipo;
 

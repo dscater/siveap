@@ -511,10 +511,11 @@ onMounted(() => {
                             >Indicar Ubicación
                             <i class="fa fa-map-marker-alt"></i
                         ></label>
-
                         <MapMarker
                             v-model:latitud="form.latitud"
                             v-model:longitud="form.longitud"
+                            v-model:captura="form.capturaMapa"
+                            :capturar="true"
                         ></MapMarker>
                     </div>
                 </div>
@@ -531,7 +532,7 @@ onMounted(() => {
             <button
                 type="button"
                 class="btn btn-primary"
-                :disabled="enviando"
+                :disabled="enviando || !form.capturaMapa"
                 @click.prevent="enviarFormulario"
                 v-html="textBtn"
             ></button>

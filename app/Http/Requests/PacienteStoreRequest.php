@@ -41,6 +41,7 @@ class PacienteStoreRequest extends FormRequest
             "zona" => "nullable",
             "apoderado" => "nullable",
             "comunidad_id" => "required",
+            "capturaMapa" => "nullable"
         ];
 
         if ((int)$this->edad < 18) {
