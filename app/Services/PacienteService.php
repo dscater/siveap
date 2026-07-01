@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\CasoEpidemiologico;
+use App\Models\Comunidad;
 use App\Services\HistorialAccionService;
 use App\Models\Paciente;
 use App\Models\User;
@@ -13,6 +14,10 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PacienteService
 {
@@ -213,6 +218,66 @@ class PacienteService
 
         // registrar accion
         $this->historialAccionService->registrarAccion($this->modulo, "ELIMINACIÓN", "ELIMINÓ UN PACIENTE", $old_paciente, $paciente);
+
+        return true;
+    }
+
+    public function importar($archivo)
+    {
+        $spreadsheet = IOFactory::load($archivo);
+        $hoja = $spreadsheet->getActiveSheet();
+
+        $filas = $hoja->toArray();
+
+        // Eliminar la fila de encabezados
+        unset($filas[0]);
+
+        foreach ($filas as $fila) {
+            // Ignorar filas vacías
+            if (empty(array_filter($fila))) {
+                continue;
+            }
+            $fechaNacimiento = null;
+            if (!empty($fila[6])) {
+                // Si Excel guarda la fecha como número
+                if (is_numeric($fila[6])) {
+                    $fechaNacimiento = Carbon::instance(
+                        \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($fila[6])
+                    )->format('Y-m-d');
+                } else {
+                    // Si viene como texto (01/01/2000, 2000-01-01, etc.)
+                    $fechaNacimiento = Carbon::parse($fila[6])->format('Y-m-d');
+                }
+            }
+
+            $comunidad = Comunidad::firstOrCreate(['nombre' => mb_strtoupper(trim($fila[13]))]);
+
+            $existe = Paciente::where('ci', trim($fila[3]))->first();
+            if (!$existe) {
+                Log::debug($fila);
+                Paciente::create([
+                    'nombre' => trim($fila[0]),
+                    'paterno' => trim($fila[1]),
+                    'materno' => trim($fila[2]),
+                    'ci' => trim($fila[3]),
+                    'ci_exp' => trim($fila[4]),
+                    'sexo' => trim($fila[5]),
+                    'fecha_nac' => $fechaNacimiento,
+                    'apoderado' => trim($fila[7]),
+                    'dir' => trim($fila[8]),
+                    'fono' => trim($fila[9]),
+                    'ocupacion' => trim($fila[10]),
+                    'departamento' => trim($fila[11]),
+                    'municipio' => trim($fila[12]),
+                    'comunidad_id' => $comunidad->id,
+                    'zona' => trim($fila[14]),
+                    "capturaMapa" => null,
+                    "latitud" => trim($fila[15]) ?? NULL,
+                    "longitud" => trim($fila[16]) ?? NULL,
+                    'fecha_registro' => date("Y-m-d"),
+                ]);
+            }
+        }
 
         return true;
     }

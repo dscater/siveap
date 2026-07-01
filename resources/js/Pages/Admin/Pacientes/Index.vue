@@ -5,6 +5,7 @@ import { Head, Link, usePage } from "@inertiajs/vue3";
 import { usePacientes } from "@/composables/pacientes/usePacientes";
 import { ref, onMounted, onBeforeMount } from "vue";
 import Formulario from "./Formulario.vue";
+import Importar from "./Importar.vue";
 import Ver from "./Ver.vue";
 import { useAppStore } from "@/stores/aplicacion/appStore";
 import { useAxios } from "@/composables/axios/useAxios";
@@ -76,6 +77,7 @@ const multiSearch = ref({
 
 const muestra_formulario = ref(false);
 const muestra_formulario_ver = ref(false);
+const muestra_importar = ref(false);
 
 const agregarRegistro = () => {
     limpiarPaciente();
@@ -87,6 +89,7 @@ const updateDatatable = async () => {
         await miTable.value.cargarDatos();
         limpiarPaciente();
         muestra_formulario.value = false;
+        muestra_importar.value = false;
     }
 };
 
@@ -160,6 +163,19 @@ onMounted(async () => {
                             @click="agregarRegistro"
                         >
                             <i class="fa fa-plus"></i> Nuevo Paciente
+                        </button>
+                        <button
+                            v-if="
+                                props_page.auth?.user.permisos == '*' ||
+                                props_page.auth?.user.permisos.includes(
+                                    'pacientes.create',
+                                )
+                            "
+                            type="button"
+                            class="btn btn-success text-sm ms-1"
+                            @click="muestra_importar = true"
+                        >
+                            <i class="fa fa-upload"></i> Importar Pacientes
                         </button>
                     </div>
                     <div class="col-md-8 my-1">
@@ -280,7 +296,6 @@ onMounted(async () => {
             </div>
         </div>
     </Content>
-
     <Formulario
         v-if="muestra_formulario"
         :muestra_formulario="muestra_formulario"
@@ -288,11 +303,16 @@ onMounted(async () => {
         @envio-formulario="updateDatatable"
         @cerrar-formulario="muestra_formulario = false"
     ></Formulario>
-
     <Ver
         v-if="muestra_formulario_ver"
         :muestra_formulario="muestra_formulario_ver"
         :form="form"
         @cerrar-formulario="muestra_formulario_ver = false"
     ></Ver>
+    <Importar
+        v-if="muestra_importar"
+        :muestra_formulario="muestra_importar"
+        @cerrar-formulario="muestra_importar = false"
+        @envio-formulario="updateDatatable"
+    ></Importar>
 </template>

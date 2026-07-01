@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response as ResponseInertia;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class PacienteController extends Controller
 {
@@ -146,5 +148,60 @@ class PacienteController extends Controller
                 'error' =>  $e->getMessage(),
             ]);
         }
+    }
+
+    public function formato()
+    {
+        $filePath = public_path('files/formato_importacion_pacientes.xlsx');
+        return Response::download($filePath);
+    }
+
+    public function importar(Request $request): RedirectResponse|Response
+    {
+        // maximo 10MB
+        $request->validate([
+            "archivo" => "required|file|mimes:xlsx,xls,csv|max:10240",
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // crear el Paciente
+            $this->pacienteService->importar($request->file("archivo"));
+            DB::commit();
+            return redirect()->route("pacientes.index")->with("bien", "Registro realizado");
+        } catch (\Exception $e) {
+            DB::rollBack();
+            throw ValidationException::withMessages([
+                'error' =>  $e->getMessage(),
+            ]);
+        }
+    }
+
+    function pruebaMapa($lat, $lng)
+    {
+        $url = "https://maps.googleapis.com/maps/api/staticmap"
+            . "?center={$lat},{$lng}"
+            . "&zoom=16"
+            . "&size=600x400"
+            . "&markers={$lat},{$lng},red"
+            . "&key=" . env('GOOGLE_MAPS_KEY');
+
+        $response = Http::timeout(10)->get($url);
+
+        if (!$response->successful()) {
+            return null;
+        }
+
+        $dir = public_path('imgs/pacientes/mapas');
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        $file = Str::uuid() . '.png';
+
+        file_put_contents($dir . '/' . $file, $response->body());
+
+        return 'imgs/pacientes/mapas/' . $file;
     }
 }

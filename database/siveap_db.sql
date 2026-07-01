@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 01-07-2026 a las 16:15:59
+-- Tiempo de generación: 01-07-2026 a las 18:40:21
 -- Versión del servidor: 8.0.30
 -- Versión de PHP: 8.2.22
 
@@ -231,8 +231,8 @@ INSERT INTO `centros` (`id`, `nombre`, `fono_correo`, `direccion`, `fecha_regist
 CREATE TABLE `comunidads` (
   `id` bigint UNSIGNED NOT NULL,
   `nombre` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `latitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `longitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `latitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -243,7 +243,8 @@ CREATE TABLE `comunidads` (
 
 INSERT INTO `comunidads` (`id`, `nombre`, `latitud`, `longitud`, `created_at`, `updated_at`) VALUES
 (1, 'COMUNIDAD 1', '-16.128238712979083', '-67.19536542892457', '2026-05-14 21:01:40', '2026-05-14 21:02:15'),
-(2, 'COMUNIDAD 2', '-16.121604388819243', '-67.19697475433351', '2026-05-14 21:02:36', '2026-05-14 21:02:36');
+(2, 'COMUNIDAD 2', '-16.121604388819243', '-67.19697475433351', '2026-05-14 21:02:36', '2026-05-14 21:02:36'),
+(3, 'COMUNIDAD 3', NULL, NULL, '2026-07-01 18:34:55', '2026-07-01 18:34:55');
 
 -- --------------------------------------------------------
 
@@ -727,8 +728,8 @@ CREATE TABLE `pacientes` (
   `ci_exp` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `fecha_nac` date NOT NULL,
   `dir` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `latitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `longitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `latitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `longitud` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `fono` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `ocupacion` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `departamento` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -753,7 +754,9 @@ INSERT INTO `pacientes` (`id`, `nombre`, `paterno`, `materno`, `sexo`, `ci`, `ci
 (4, 'MARIA', 'MARTINEZ', '', 'FEMENINO', '24234', 'LP', '1970-01-01', 'ASUNTA #$43345', '-16.125102', '-67.196268', NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, '2026-05-26', '2026-05-26 21:54:08', '2026-05-26 21:54:08'),
 (5, 'SANDRA', 'CACERES', '', 'FEMENINO', '54645645', 'CB', '2000-01-01', 'ASUNTA #2323', '-16.125102', '-67.196268', NULL, '', '', '', '', '', 1, '5d0f531a0-d664-459b-91dc-7d377cd0c176.png', '2026-05-29', '2026-05-29 20:16:57', '2026-07-01 15:34:07'),
 (6, 'JUAN', 'GONZALES', '', 'FEMENINO', '123123', 'LP', '2000-01-01', 'LOSOLIVOS #2323', '-16.125102', '-67.196268', NULL, NULL, NULL, NULL, NULL, NULL, 2, NULL, '2026-05-30', '2026-05-30 20:19:21', '2026-05-30 20:19:34'),
-(7, 'JOSE', 'MARTINEZ', '', 'MASCULINO', '1323131', 'LP', '2012-01-01', 'LOS PEDREGALES', '-16.12674224970019', '-67.19530324430777', '67676767', 'ESTUDIANTE', 'LA PAZ', 'ASUNTA', 'ZONA', 'JUAN MARTINEZ', 1, '73a4b7f1c-d2c7-4dea-898d-6857d84821af.png', '2026-06-22', '2026-06-22 13:52:13', '2026-07-01 15:59:22');
+(7, 'JOSE', 'MARTINEZ', '', 'MASCULINO', '1323131', 'LP', '2012-01-01', 'LOS PEDREGALES', '-16.12674224970019', '-67.19530324430777', '67676767', 'ESTUDIANTE', 'LA PAZ', 'ASUNTA', 'ZONA', 'JUAN MARTINEZ', 1, '73a4b7f1c-d2c7-4dea-898d-6857d84821af.png', '2026-06-22', '2026-06-22 13:52:13', '2026-07-01 15:59:22'),
+(14, 'Juan', 'Martinez', '', 'MASCULINO', '454545454', 'LP', '1999-04-02', 'LOS PEDREGALES', '-16.12674224970019', '-67.19530324430777', '78787878', 'VENDEDOR', 'LA PAZ', 'LA PAZ', 'ZONA 1', '', 1, NULL, '2026-07-01', '2026-07-01 18:34:55', '2026-07-01 18:34:55'),
+(15, 'Alejandra', 'Gonzales', 'Gonzales', 'FEMENINO', '546456654', 'LP', '2012-01-10', 'LOS OLIVOS', '', '', '68686868', 'estudiante', 'LA PAZ', 'LA PAZ', 'ZONA 2', 'ALVARLO GONZALES', 3, NULL, '2026-07-01', '2026-07-01 18:34:55', '2026-07-01 18:34:55');
 
 -- --------------------------------------------------------
 
@@ -1234,7 +1237,7 @@ ALTER TABLE `centros`
 -- AUTO_INCREMENT de la tabla `comunidads`
 --
 ALTER TABLE `comunidads`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `comunidad_enfermedads`
@@ -1300,7 +1303,7 @@ ALTER TABLE `notificacion_users`
 -- AUTO_INCREMENT de la tabla `pacientes`
 --
 ALTER TABLE `pacientes`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `permisos`

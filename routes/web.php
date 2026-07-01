@@ -47,6 +47,8 @@ Route::get('/login', function () {
 
 Route::get("configuracions/getConfiguracion", [ConfiguracionController::class, 'getConfiguracion'])->name("configuracions.getConfiguracion");
 
+Route::get("pruebaMapa", [PacienteController::class, 'pruebaMapa'])->name("pruebaMapa");
+
 Route::get('/clear-cache', function () {
     Artisan::call('config:cache');
     Artisan::call('config:clear');
@@ -195,6 +197,8 @@ Route::middleware(['auth', 'permisoUsuario'])->prefix("admin")->group(function (
     // PACIENTES
     Route::get("pacientes/paginado", [PacienteController::class, 'paginado'])->name("pacientes.paginado");
     Route::get("pacientes/listado", [PacienteController::class, 'listado'])->name("pacientes.listado");
+    Route::get("pacientes/formato", [PacienteController::class, 'formato'])->name("pacientes.formato");
+    Route::post("pacientes/importar", [PacienteController::class, 'importar'])->name("pacientes.importar");
     Route::resource("pacientes", PacienteController::class)->only(
         ["index", "store", "edit", "show", "update", "destroy"]
     );
