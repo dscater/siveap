@@ -16,7 +16,7 @@ const appStore = useAppStore();
 const filtro = ref({
     dias_predecir: 7,
     comunidad_id: "",
-    enfermedad_id_id: "",
+    enfermedad_id: "",
 });
 const prediccions = ref([]);
 const cargarPrediccions = () => {

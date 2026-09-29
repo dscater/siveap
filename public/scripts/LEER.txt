@@ -9,6 +9,9 @@
 	(verificar versión python --version)
 
 3) Instalar librerías para usar Modelo Lineal General (GLM) con Poisson
+
+pip install -r requirements.txt
+
  pip install fastapi uvicorn pandas statsmodels numpy
 
 	fastapi: Para crear Api's consumibles en Python
