@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Notificacion;
 use App\Models\NotificacionUser;
+use App\Services\AlertaEpidemiologicaService;
 use App\Services\NotificacionUserService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,7 +12,7 @@ use Inertia\Inertia;
 
 class NotificacionUserController extends Controller
 {
-    public function __construct(private NotificacionUserService $notificacion_user_service) {}
+    public function __construct(private NotificacionUserService $notificacion_user_service, private AlertaEpidemiologicaService $alerta_epidemiologica_service) {}
 
     public function index()
     {
@@ -69,6 +70,8 @@ class NotificacionUserController extends Controller
         $notificacion_users = NotificacionUser::with(["notificacion"])
             ->where("user_id", Auth::user()->id)->where("visto", 0)
             ->orderBy("created_at", "desc")->get();
+
+        $this->alerta_epidemiologica_service->verificarAlertas();
 
         return response()->JSON([
             "notificacion_users" => $notificacion_users,

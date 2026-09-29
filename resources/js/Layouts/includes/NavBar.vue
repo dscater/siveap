@@ -70,7 +70,7 @@ onMounted(() => {
         getNotificacionUsers();
         intervalNotifaciones.value = setInterval(() => {
             getNotificacionUsers();
-        }, 1500);
+        }, 2500);
     }
 });
 
