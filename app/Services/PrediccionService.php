@@ -94,7 +94,7 @@ class PrediccionService
                     ->whereBetween(
                         'fecha_diagnostico',
                         [
-                            now()->subDays(30),
+                            now()->subDays(120),
                             now()
                         ]
                     )
